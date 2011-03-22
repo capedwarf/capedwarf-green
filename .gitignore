@@ -1,0 +1,12 @@
+.idea
+*.iml
+*.ipr
+*.iws
+common/target/
+connect/target/
+jpa/target/
+jpa2/target/
+social/target/
+server-api/target/
+server-gae/target/
+server-jee/target/
