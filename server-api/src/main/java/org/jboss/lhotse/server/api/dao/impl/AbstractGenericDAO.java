@@ -22,20 +22,20 @@
 
 package org.jboss.lhotse.server.api.dao.impl;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import java.util.Collection;
-import java.util.List;
-
 import org.jboss.lhotse.jpa.ProxyingEnum;
 import org.jboss.lhotse.server.api.dao.GenericDAO;
 import org.jboss.lhotse.server.api.domain.AbstractEntity;
+import org.jboss.lhotse.server.api.persistence.EMInjector;
 import org.jboss.lhotse.server.api.persistence.Proxying;
-import org.jboss.lhotse.server.api.tx.TransactionInterceptor;
 import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
 import org.jboss.lhotse.server.api.tx.Transactional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Abstract generic DAO.
@@ -46,11 +46,19 @@ import org.jboss.lhotse.server.api.tx.Transactional;
 @ApplicationScoped
 public abstract class AbstractGenericDAO<T extends AbstractEntity> implements GenericDAO<T>
 {
+   private EMInjector emInjector;
+
+   @Inject
+   public void setEmInjector(EMInjector emInjector)
+   {
+      this.emInjector = emInjector;
+   }
+
    protected abstract Class<T> entityClass();
 
    protected EntityManager getEM()
    {
-      return TransactionInterceptor.getEntityManager();
+      return emInjector.getEM();
    }
 
    @SuppressWarnings({"unchecked"})
