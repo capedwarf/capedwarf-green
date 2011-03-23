@@ -48,6 +48,7 @@
     <version.javax.servlet>2.5</version.javax.servlet>
     <version.javax.servlet.jsp>2.1</version.javax.servlet.jsp>
     <version.javax.faces>2.0.RC2_GAE</version.javax.faces>
+    <version.javax.cache>1.0-dev-2</version.javax.cache>
     <version.javax.el>1.2</version.javax.el>
     <version.javax.el.impl>1.2</version.javax.el.impl>
     <version.org.datanucleus>1.1.5.SP2</version.org.datanucleus>
@@ -403,6 +404,12 @@
             <groupId>javax.el</groupId>
             <artifactId>el-api</artifactId>
             <version>${version.javax.el}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jcache</groupId>
+            <artifactId>jcache</artifactId>
+            <version>${version.javax.cache}</version>
         </dependency>
 
         <dependency>

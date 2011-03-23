@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.lhotse</groupId>
+    <artifactId>lhotse-build</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>lhotse-social</artifactId>
+  <packaging>jar</packaging>
+  <name>Lhotse Social</name>
+  <url>http://www.jboss.org/lhotse</url>
+  <description>Lhotse Social</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.jboss.lhotse</groupId>
+      <artifactId>lhotse-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+     <dependency>
+        <groupId>org.jboss.weld</groupId>
+        <artifactId>weld-core</artifactId>
+         <exclusions>
+             <exclusion>
+                 <groupId>org.jboss.weld</groupId>
+                 <artifactId>weld-spi</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.jboss.weld</groupId>
+                 <artifactId>weld-api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>com.google.collections</groupId>
+                 <artifactId>google-collections</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.jboss.interceptor</groupId>
+                 <artifactId>jboss-interceptor</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.jboss.interceptor</groupId>
+                 <artifactId>jboss-interceptor-api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.slf4j</groupId>
+                 <artifactId>slf4j-api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>org.slf4j</groupId>
+                 <artifactId>slf4j-ext</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>xml-apis</groupId>
+                 <artifactId>xml-apis</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>javax.faces</groupId>
+                 <artifactId>jsf-api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>javax-el</groupId>
+                 <artifactId>el-api</artifactId>
+             </exclusion>
+             <exclusion>
+                 <groupId>javassist</groupId>
+                 <artifactId>javassist</artifactId>
+             </exclusion>
+         </exclusions>
+        <scope>provided</scope>
+     </dependency>
+
+     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+         <scope>test</scope>
+     </dependency>
+
+  </dependencies>
+
+</project>

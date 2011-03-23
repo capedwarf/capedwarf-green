@@ -49,6 +49,11 @@
        <artifactId>json</artifactId>
     </dependency>
 
+       <dependency>
+           <groupId>jcache</groupId>
+           <artifactId>jcache</artifactId>
+       </dependency>
+
      <!-- dependency>
            <groupId>com.google.gae</groupId>
            <artifactId>appengine-mapper</artifactId>

@@ -1,0 +1,89 @@
+package org.jboss.lhotse.server.api.cache.impl;
+
+import org.jboss.lhotse.server.api.cache.CacheConfig;
+import org.jboss.weld.extensions.resourceLoader.Resource;
+
+import javax.cache.Cache;
+import javax.cache.CacheException;
+import javax.cache.CacheFactory;
+import javax.cache.CacheManager;
+import javax.inject.Inject;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * Cache config impl.
+ *
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
+ */
+public abstract class AbstractCacheConfig implements CacheConfig
+{
+   private Properties props;
+
+   private CacheManager manager;
+
+   /**
+    * Create config.
+    *
+    * @param name the cache name
+    * @return config map
+    */
+   protected abstract Map createConfig(String name);
+
+   public Cache findCache(String name)
+   {
+      return manager.getCache(name);
+   }
+
+   public Cache configureCache(String name) throws CacheException
+   {
+      Cache cache = manager.getCache(name);
+      if (cache != null)
+         return cache;
+
+      Map config = createConfig(name);
+      CacheFactory factory = manager.getCacheFactory();
+      cache = factory.createCache(config);
+      manager.registerCache(name, cache);
+      return cache;
+   }
+
+   public boolean evictCache(String name)
+   {
+      Cache cache = manager.getCache(name);
+      if (cache != null)
+      {
+         cache.evict();
+         return true;
+      }
+      return false;
+   }
+
+   public boolean clearCache(String name)
+   {
+      Cache cache = manager.getCache(name);
+      if (cache != null)
+      {
+         cache.clear();
+         return true;
+      }
+      return false;
+   }
+
+   @Inject
+   public void setManager(CacheManager manager)
+   {
+      this.manager = manager;
+   }
+
+   protected Properties getProps()
+   {
+      return props;
+   }
+
+   @Inject
+   public void setProps(@Resource("cache.properties") Properties props)
+   {
+      this.props = props;
+   }
+}
