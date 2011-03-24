@@ -26,7 +26,6 @@ import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
 import org.jboss.lhotse.server.api.tx.Transactional;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -51,7 +50,6 @@ import java.util.Map;
  */
 @Transactional
 @Interceptor
-@Alternative
 public class TransactionInterceptor implements Serializable
 {
    private static final long serialVersionUID = 1L;

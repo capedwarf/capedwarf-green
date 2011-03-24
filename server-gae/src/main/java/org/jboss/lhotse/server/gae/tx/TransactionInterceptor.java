@@ -20,7 +20,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.server.gae.tx;
+
+import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
+import org.jboss.lhotse.server.api.tx.Transactional;
+import org.jboss.lhotse.server.api.tx.Work;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -29,7 +33,6 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.OptimisticLockException;
-
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

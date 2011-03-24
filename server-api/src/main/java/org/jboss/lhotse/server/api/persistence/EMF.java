@@ -22,20 +22,19 @@
 
 package org.jboss.lhotse.server.api.persistence;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
 import org.jboss.lhotse.jpa.EntityManagerProvider;
 import org.jboss.lhotse.jpa.ProxyingEntityManagerFactory;
 import org.jboss.lhotse.jpa.ProxyingFactory;
 import org.jboss.lhotse.server.api.lifecycle.AfterImpl;
 import org.jboss.lhotse.server.api.lifecycle.BeforeImpl;
 import org.jboss.lhotse.server.api.lifecycle.Notification;
-import org.jboss.lhotse.server.api.tx.TransactionInterceptor;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  * EntityManagerFactory provider.
@@ -50,28 +49,28 @@ public class EMF
 
    @Produces
    @ApplicationScoped
-   public EntityManagerFactory produceFactory()
+   public EntityManagerFactory produceFactory(EMInjector emInjector)
    {
       produceEvent.select(new BeforeImpl()).fire(new EMFNotification(null)); // let app know we're about to create EMF
-      EntityManagerFactory entityManagerFactory = getFactory();
+      EntityManagerFactory entityManagerFactory = getFactory(emInjector);
       produceEvent.select(new AfterImpl()).fire(new EMFNotification(entityManagerFactory)); // let app know we created EMF
       return entityManagerFactory;
    }
 
    @Produces
    @ApplicationScoped
-   public ProxyingFactory produceProxyingFactory()
+   public ProxyingFactory produceProxyingFactory(EMInjector emInjector)
    {
-      return (ProxyingFactory) getFactory();
+      return (ProxyingFactory) getFactory(emInjector);
    }
 
-   public static EntityManagerFactory getFactory()
+   public static EntityManagerFactory getFactory(EMInjector emInjector)
    {
       EntityManagerFactory temp = emf;
       if (temp == null)
       {
          EntityManagerFactory delegate = new LazyEntityManagerFactory();
-         temp = new ProxyingEntityManagerFactory(delegate, new CurrentEntityManagerProvider(delegate));
+         temp = new ProxyingEntityManagerFactory(delegate, new CurrentEntityManagerProvider(delegate, emInjector));
          emf = temp;
       }      
       return emf;
@@ -86,21 +85,23 @@ public class EMF
    private static class CurrentEntityManagerProvider implements EntityManagerProvider
    {
       private EntityManagerFactory emf;
+      private EMInjector emInjector;
 
-      private CurrentEntityManagerProvider(EntityManagerFactory emf)
+      private CurrentEntityManagerProvider(EntityManagerFactory emf, EMInjector emInjector)
       {
          this.emf = emf;
+         this.emInjector = emInjector;
       }
 
       public EntityManager getEntityManager()
       {
-         EntityManager em = TransactionInterceptor.getEntityManager();
+         EntityManager em = emInjector.getEM();
          return (em != null) ? em : emf.createEntityManager();
       }
 
       public void close(EntityManager em)
       {
-         EntityManager tmp = TransactionInterceptor.getEntityManager();
+         EntityManager tmp = emInjector.getEM();
          if (tmp != em)
             em.close();
       }

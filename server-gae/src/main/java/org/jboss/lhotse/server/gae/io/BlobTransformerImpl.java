@@ -20,21 +20,20 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.server.gae.io;
+
+import org.jboss.lhotse.server.api.io.Blob;
+import org.jboss.lhotse.server.api.io.BlobTransformer;
 
 /**
- * Try handling optimistic lock exception.
+ * Blob transformer impl.
  *
- * @param <T> exact result type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface OptimisticLockExceptionHandler<T>
+public class BlobTransformerImpl implements BlobTransformer
 {
-   /**
-    * Handle version conflict.
-    *
-    * @param args the previous args
-    * @return null or fallback result
-    */
-    T handleVersionConflict(Object... args);
+   public Blob toBlob(byte[] bytes)
+   {
+      return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
+   }
 }

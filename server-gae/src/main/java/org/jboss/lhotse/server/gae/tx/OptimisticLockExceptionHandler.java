@@ -20,23 +20,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
-
-import org.jboss.lhotse.server.api.persistence.EMInjector;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
+package org.jboss.lhotse.server.gae.tx;
 
 /**
- * Tx EM injector.
+ * Try handling optimistic lock exception.
  *
+ * @param <T> exact result type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@ApplicationScoped
-public class TxEMInjector implements EMInjector
+public interface OptimisticLockExceptionHandler<T>
 {
-   public EntityManager getEM()
-   {
-      return TransactionInterceptor.getEntityManager();
-   }
+   /**
+    * Handle version conflict.
+    *
+    * @param args the previous args
+    * @return null or fallback result
+    */
+    T handleVersionConflict(Object... args);
 }
