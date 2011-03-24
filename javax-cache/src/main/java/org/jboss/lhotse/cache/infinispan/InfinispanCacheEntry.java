@@ -27,7 +27,7 @@ import org.infinispan.container.entries.InternalCacheEntry;
 import javax.cache.CacheEntry;
 
 /**
- * Infinispan javax.cache wrapper.
+ * Infinispan javax.cache entry wrapper.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */

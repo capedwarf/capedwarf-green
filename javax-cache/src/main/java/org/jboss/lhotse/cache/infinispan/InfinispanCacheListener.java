@@ -48,25 +48,25 @@ class InfinispanCacheListener
    @CacheEntryEvicted
    public void onEvict(CacheEntryEvictedEvent event)
    {
-      listener.onEvict(event.getValue());
+      listener.onEvict(event.getKey());
    }
 
    @CacheEntryLoaded
    public void onLoad(CacheEntryEvictedEvent event)
    {
-      listener.onLoad(event.getValue());
+      listener.onLoad(event.getKey());
    }
 
    @CacheEntryCreated
    public void onPut(CacheEntryEvictedEvent event)
    {
-      listener.onPut(event.getValue());
+      listener.onPut(event.getKey());
    }
 
    @CacheEntryRemoved
    public void onRemove(CacheEntryEvictedEvent event)
    {
-      listener.onRemove(event.getValue());
+      listener.onRemove(event.getKey());
    }
 
    @Override
