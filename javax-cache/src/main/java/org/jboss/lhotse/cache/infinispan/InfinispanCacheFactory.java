@@ -20,53 +20,36 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.cache.infinispan;
+
+import org.infinispan.manager.DefaultCacheManager;
+import org.infinispan.manager.EmbeddedCacheManager;
+
+import javax.cache.Cache;
+import javax.cache.CacheException;
+import javax.cache.CacheFactory;
+import java.io.IOException;
+import java.util.Map;
 
 /**
- * Transaction types.
- * 
+ * Infinispan javax.cache factory implementation.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
+public class InfinispanCacheFactory implements CacheFactory
 {
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
+   private final EmbeddedCacheManager cacheManager;
 
-   public boolean isNewTransactionRequired(boolean transactionActive)
+   public InfinispanCacheFactory() throws IOException
    {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
+      String configurationFile = System.getProperty("org.jboss.lhotse.cache.configurationFile", "infinispan-config.xml");
+      cacheManager = new DefaultCacheManager(configurationFile, true);
+   }
+
+   public Cache createCache(Map map) throws CacheException
+   {
+      String cacheName = (String) map.get("cache-name");
+      org.infinispan.Cache cache = cacheManager.getCache(cacheName);
+      return new InfinispanCache(cache);
    }
 }

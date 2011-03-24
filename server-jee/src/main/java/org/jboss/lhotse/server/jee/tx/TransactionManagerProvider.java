@@ -20,53 +20,32 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.server.jee.tx;
+
+import javax.annotation.Resource;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.transaction.TransactionManager;
 
 /**
- * Transaction types.
- * 
+ * Provide Tx manager.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
+@ApplicationScoped
+public class TransactionManagerProvider
 {
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
+   private TransactionManager tm;
 
-   public boolean isNewTransactionRequired(boolean transactionActive)
+   @Produces
+   public TransactionManager getTransactionManager()
    {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
+      return tm;
+   }
+
+   @Resource(name = "java:/TransactionManager")
+   public void setTransactionManager(TransactionManager transactionManager)
+   {
+      this.tm = transactionManager;
    }
 }

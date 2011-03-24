@@ -20,53 +20,25 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.server.jee.cache;
+
+import org.jboss.lhotse.server.api.cache.impl.AbstractCacheConfig;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.util.Collections;
+import java.util.Map;
 
 /**
- * Transaction types.
- * 
+ * JEE cache config impl.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
+@ApplicationScoped
+public class CacheConfigImpl extends AbstractCacheConfig
 {
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
-
-   public boolean isNewTransactionRequired(boolean transactionActive)
+   @Override
+   protected Map createConfig(String name)
    {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
+      return Collections.emptyMap();
    }
 }

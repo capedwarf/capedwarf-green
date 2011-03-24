@@ -20,53 +20,53 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.cache.infinispan;
+
+import org.infinispan.AdvancedCache;
+import org.infinispan.stats.Stats;
+
+import javax.cache.CacheStatistics;
 
 /**
- * Transaction types.
- * 
+ * Infinispan javax.cache stats.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
+class InfinispanCacheStatistics implements CacheStatistics
 {
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
+   private AdvancedCache cache;
 
-   public boolean isNewTransactionRequired(boolean transactionActive)
+   InfinispanCacheStatistics(AdvancedCache cache)
    {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
+      this.cache = cache;
+   }
+
+   protected Stats getStats()
+   {
+      return cache.getStats();
+   }
+
+   public void clearStatistics()
+   {
+   }
+
+   public int getCacheHits()
+   {
+      return new Long(getStats().getHits()).intValue();
+   }
+
+   public int getCacheMisses()
+   {
+      return new Long(getStats().getMisses()).intValue();
+   }
+
+   public int getObjectCount()
+   {
+      return getStats().getCurrentNumberOfEntries();
+   }
+
+   public int getStatisticsAccuracy()
+   {
+      return CacheStatistics.STATISTICS_ACCURACY_GUARANTEED;
    }
 }

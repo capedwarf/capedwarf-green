@@ -20,53 +20,78 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.tx;
+package org.jboss.lhotse.cache.infinispan;
+
+import org.infinispan.container.entries.InternalCacheEntry;
+
+import javax.cache.CacheEntry;
 
 /**
- * Transaction types.
- * 
+ * Infinispan javax.cache wrapper.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
+class InfinispanCacheEntry implements CacheEntry
 {
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
+   private InternalCacheEntry entry;
 
-   public boolean isNewTransactionRequired(boolean transactionActive)
+   InfinispanCacheEntry(InternalCacheEntry entry)
    {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
+      this.entry = entry;
+   }
+
+   public long getCost()
+   {
+      return -1L;
+   }
+
+   public long getCreationTime()
+   {
+      return entry.getCreated();
+   }
+
+   public long getExpirationTime()
+   {
+      return entry.getExpiryTime();
+   }
+
+   public int getHits()
+   {
+      return -1;
+   }
+
+   public long getLastAccessTime()
+   {
+      return entry.getLastUsed();
+   }
+
+   public long getLastUpdateTime()
+   {
+      return -1L;
+   }
+
+   public long getVersion()
+   {
+      return -1L;
+   }
+
+   public boolean isValid()
+   {
+      return entry.isValid();
+   }
+
+   public Object getKey()
+   {
+      return entry.getKey();
+   }
+
+   public Object getValue()
+   {
+      return entry.getValue();
+   }
+
+   public Object setValue(Object value)
+   {
+      return entry.setValue(value);
    }
 }

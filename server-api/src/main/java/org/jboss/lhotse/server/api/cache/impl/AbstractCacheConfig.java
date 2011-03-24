@@ -8,6 +8,7 @@ import javax.cache.CacheException;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -35,6 +36,7 @@ public abstract class AbstractCacheConfig implements CacheConfig
       return manager.getCache(name);
    }
 
+   @SuppressWarnings({"unchecked"})
    public Cache configureCache(String name) throws CacheException
    {
       Cache cache = manager.getCache(name);
@@ -42,8 +44,10 @@ public abstract class AbstractCacheConfig implements CacheConfig
          return cache;
 
       Map config = createConfig(name);
+      Map wrappedConfig = new HashMap(config);
+      wrappedConfig.put("cache-name", name);
       CacheFactory factory = manager.getCacheFactory();
-      cache = factory.createCache(config);
+      cache = factory.createCache(wrappedConfig);
       manager.registerCache(name, cache);
       return cache;
    }

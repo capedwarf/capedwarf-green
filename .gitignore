@@ -4,6 +4,7 @@
 *.iws
 common/target/
 connect/target/
+javax-cache/target/
 jpa/target/
 jpa2/target/
 social/target/

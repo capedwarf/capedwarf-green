@@ -16,6 +16,7 @@
   <modules>
     <module>common</module>
     <module>connect</module>
+    <module>javax-cache</module>
     <module>jpa</module>
     <!-- module>jpa2</module -->
     <module>social</module>
@@ -49,8 +50,10 @@
     <version.javax.servlet.jsp>2.1</version.javax.servlet.jsp>
     <version.javax.faces>2.0.RC2_GAE</version.javax.faces>
     <version.javax.cache>1.0-dev-2</version.javax.cache>
+    <version.javax.mail>1.4</version.javax.mail>
     <version.javax.el>1.2</version.javax.el>
     <version.javax.el.impl>1.2</version.javax.el.impl>
+    <version.org.infinispan>4.2.0.FINAL</version.org.infinispan>
     <version.org.datanucleus>1.1.5.SP2</version.org.datanucleus>
     <version.org.datanucleus.gae>1.0.8</version.org.datanucleus.gae>
     <version.org.datanucleus.jdo>2.3-eb</version.org.datanucleus.jdo>
@@ -209,11 +212,11 @@
         <artifactId>lhotse-jpa</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
+      <!-- dependency>
         <groupId>org.jboss.lhotse</groupId>
-        <artifactId>radar-jpa2</artifactId>
+        <artifactId>lhotse-jpa2</artifactId>
         <version>${project.version}</version>
-      </dependency>
+      </dependency -->
       <dependency>
         <groupId>org.jboss.lhotse</groupId>
         <artifactId>lhotse-social</artifactId>
@@ -222,6 +225,11 @@
       <dependency>
         <groupId>org.jboss.lhotse</groupId>
         <artifactId>lhotse-server-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.lhotse</groupId>
+        <artifactId>lhotse-javax-cache</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -464,6 +472,19 @@
            <artifactId>datanucleus-cache</artifactId>
            <version>${version.org.datanucleus.cache}</version>
        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${version.org.infinispan}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${version.javax.mail}</version>
+        </dependency>
 
         <!--JBoss Weld / CDI -->
 
