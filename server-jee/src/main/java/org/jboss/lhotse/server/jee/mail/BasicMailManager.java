@@ -25,6 +25,7 @@ package org.jboss.lhotse.server.jee.mail;
 import org.jboss.lhotse.server.api.mail.impl.AbstractMailManager;
 
 import javax.annotation.Resource;
+import javax.enterprise.context.ApplicationScoped;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -37,6 +38,7 @@ import javax.mail.internet.MimeMessage;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class BasicMailManager extends AbstractMailManager
 {
    @Resource(mappedName = "java:/Mail")
