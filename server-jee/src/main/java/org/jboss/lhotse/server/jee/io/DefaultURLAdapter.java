@@ -24,6 +24,7 @@ package org.jboss.lhotse.server.jee.io;
 
 import org.jboss.lhotse.social.io.URLAdapter;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class DefaultURLAdapter implements URLAdapter
 {
    public InputStream fetch(URL url) throws IOException
