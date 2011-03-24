@@ -24,6 +24,7 @@ package org.jboss.lhotse.cache.infinispan;
 
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
+import org.kohsuke.MetaInfServices;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -36,6 +37,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@MetaInfServices
 public class InfinispanCacheFactory implements CacheFactory
 {
    private final EmbeddedCacheManager cacheManager;

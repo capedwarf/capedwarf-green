@@ -1,31 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <!-- Parent -->
-  <parent>
-    <groupId>org.jboss.lhotse</groupId>
-    <artifactId>lhotse-build</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.lhotse</groupId>
+        <artifactId>lhotse-build</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>lhotse-javax-cache</artifactId>
-  <packaging>jar</packaging>
-  <name>Lhotse javax.cache</name>
-  <url>http://www.jboss.org/lhotse</url>
-  <description>Lhotse javax.cache</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>lhotse-javax-cache</artifactId>
+    <packaging>jar</packaging>
+    <name>Lhotse javax.cache</name>
+    <url>http://www.jboss.org/lhotse</url>
+    <description>Lhotse javax.cache</description>
 
-   <dependencies>
+    <dependencies>
 
-       <dependency>
-           <groupId>jcache</groupId>
-           <artifactId>jcache</artifactId>
-       </dependency>
+        <dependency>
+            <groupId>jcache</groupId>
+            <artifactId>jcache</artifactId>
+        </dependency>
 
-       <dependency>
-           <groupId>org.infinispan</groupId>
-           <artifactId>infinispan-core</artifactId>
-           <scope>provided</scope>
-       </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-  </dependencies>
+        <dependency>
+            <groupId>org.kohsuke.metainf-services</groupId>
+            <artifactId>metainf-services</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
 
 </project>
