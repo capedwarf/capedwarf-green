@@ -22,12 +22,16 @@
 
 package org.jboss.lhotse.social.facebook;
 
+import org.jboss.lhotse.common.serialization.JSONSerializator;
+import org.jboss.lhotse.common.social.SocialEvent;
+import org.jboss.lhotse.social.io.URLAdapter;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
-
-import java.io.ByteArrayInputStream;
+import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -36,9 +40,6 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.jboss.lhotse.common.serialization.JSONSerializator;
-import org.jboss.lhotse.common.social.SocialEvent;
 
 /**
  * Facebook observer.
@@ -57,12 +58,7 @@ public class FacebookObserver
    static final String FEED = "feed";
    static final String COMMENTS = "comments";
 
-   // private URLFetchService urlFetchService;
-
-   public FacebookObserver()
-   {
-      // urlFetchService = URLFetchServiceFactory.getURLFetchService();
-   }
+   private URLAdapter urlAdapter;
 
    /**
     * Handle social event.
@@ -98,14 +94,9 @@ public class FacebookObserver
                args.add(URLEncoder.encode(event.content(), "UTF-8"));
                String query = new Formatter().format(CONNECTION_URL, args.toArray()).toString();
                URL url = new URL(query);
-
-               /*
-               HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
-               HTTPResponse response = urlFetchService.fetch(request);
-               PostId postId = JSONSerializator.INSTANCE.deserialize(new ByteArrayInputStream(response.getContent()), PostId.class);
-               System.out.println("postId = " + postId.getId());
+               InputStream is = urlAdapter.fetch(url);
+               PostId postId = JSONSerializator.INSTANCE.deserialize(is, PostId.class);
                return postId.getId();
-               */
             }
             catch (IOException e)
             {
@@ -137,5 +128,11 @@ public class FacebookObserver
    protected String readPostId(Long userId, Long parentId)
    {
       return null;
+   }
+
+   @Inject
+   public void setUrlAdapter(URLAdapter urlAdapter)
+   {
+      this.urlAdapter = urlAdapter;
    }
 }
