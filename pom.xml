@@ -219,6 +219,11 @@
         <artifactId>lhotse-social</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jboss.lhotse</groupId>
+        <artifactId>lhotse-server-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
         <!-- Common code -->
 
