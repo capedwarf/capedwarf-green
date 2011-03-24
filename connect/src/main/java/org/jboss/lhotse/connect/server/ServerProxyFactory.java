@@ -1,8 +1,10 @@
 package org.jboss.lhotse.connect.server;
 
-import java.lang.reflect.Proxy;
-
 import org.jboss.lhotse.connect.config.Configuration;
+
+import java.lang.reflect.Proxy;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Create ServerProxy instance.
@@ -14,23 +16,26 @@ public class ServerProxyFactory
    /**
     * The proxy instance
     */
-   private static ServerProxyHandle instance;
+   private static Map<Class<?>, ServerProxyHandle> instances = new WeakHashMap<Class<?>, ServerProxyHandle>();
 
    /**
     * Create ServerProxy proxy.
     *
+    * @param proxyClass the proxy class
     * @return the ServerProxy proxy
     */
    @SuppressWarnings({"unchecked"})
-   public synchronized static <T> T create()
+   public synchronized static <T> T create(Class<T> proxyClass)
    {
+      T instance = (T) instances.get(proxyClass);
       if (instance == null)
       {
          Configuration<T> config = Configuration.getInstance();
-         instance = (ServerProxyHandle) create(config);
+         config.setProxyClass(proxyClass);
+         instance = create(config);
+         instances.put(proxyClass, (ServerProxyHandle) instance);
       }
-
-      return (T) instance;
+      return instance;
    }
 
    /**
@@ -47,10 +52,11 @@ public class ServerProxyFactory
    /**
     * Create ServerProxy proxy.
     *
-    * @param handler the server proxy invocation handler
+    * @param handler    the server proxy invocation handler
     * @param proxyClass the proxy class
     * @return the ServerProxy proxy
     */
+   @SuppressWarnings({"unchecked"})
    public static <T> T create(ServerProxyInvocationHandler handler, Class<T> proxyClass)
    {
       Object proxy = Proxy.newProxyInstance(
@@ -62,12 +68,12 @@ public class ServerProxyFactory
 
    /**
     * Shutdown the server proxy.
+    *
+    * @param proxyClass the proxy class
     */
-   public synchronized static void shutdown()
+   public synchronized static void shutdown(Class<?> proxyClass)
    {
-      ServerProxyHandle handle = instance;
-      instance = null; // nullify
-      
+      ServerProxyHandle handle = instances.remove(proxyClass);
       if (handle != null)
       {
          handle.shutdown();
