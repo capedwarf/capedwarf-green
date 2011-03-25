@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
 
 import org.jboss.lhotse.common.tools.DebugTools;
 
@@ -25,8 +26,7 @@ public class BufferedSerializator extends DelegateSerializator
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       delegate.serialize(instance, baos);
       baos.flush();
-      String content = baos.toString();
-      System.out.println("Content: " + content);
+      log.log(Level.FINEST, "Content: " + baos.toString());
       out.write(baos.toByteArray());
    }
 

@@ -2,6 +2,7 @@ package org.jboss.lhotse.common.serialization;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Abstract serializator.
@@ -10,6 +11,8 @@ import java.io.IOException;
  */
 public abstract class AbstractSerializator implements Serializator
 {
+   protected Logger log = Logger.getLogger(getClass().getName());
+
    protected AbstractSerializator()
    {
    }
