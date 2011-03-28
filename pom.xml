@@ -42,7 +42,7 @@
     <version.org.jboss.weld.int>1.1.0.Final</version.org.jboss.weld.int>
     <version.org.jboss.weld.extensions>1.0.0.Beta1</version.org.jboss.weld.extensions>
     <version.org.jboss.logging>3.0.0.Beta3</version.org.jboss.logging>
-    <version.javassist>3.12.1.GA</version.javassist>
+    <version.javassist>3.14.0-GA</version.javassist>
     <version.slf4j>1.5.10</version.slf4j>
     <version.javax.validation>1.0.0.GA</version.javax.validation>
     <version.javax.servlet>2.5</version.javax.servlet>
@@ -515,7 +515,7 @@
        </dependency>
 
         <dependency>
-           <groupId>javassist</groupId>
+           <groupId>org.javassist</groupId>
            <artifactId>javassist</artifactId>
            <version>${version.javassist}</version>
         </dependency>
