@@ -182,7 +182,7 @@
 
       <dependency>
          <groupId>org.jboss.weld.servlet</groupId>
-         <artifactId>weld-servlet-int</artifactId>
+         <artifactId>weld-servlet</artifactId>
          <exclusions>
              <exclusion>
                  <groupId>xml-apis</groupId>

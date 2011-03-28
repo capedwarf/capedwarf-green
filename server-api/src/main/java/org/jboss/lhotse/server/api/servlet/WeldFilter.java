@@ -22,13 +22,18 @@
 
 package org.jboss.lhotse.server.api.servlet;
 
+import java.io.IOException;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 /**
  * Exposes request and response as beans.
@@ -43,9 +48,7 @@ public class WeldFilter implements Filter
    public void init(FilterConfig config) throws ServletException
    {
       ServletContext context = config.getServletContext();
-      manager = (BeanManager) context.getAttribute(BeanManager.class.getName());
-      if (manager == null)
-         throw new IllegalArgumentException("No Weld manager present.");
+      manager = BeanManagerLookup.lookup(context);
    }
 
    protected <T> T getBean(Class<T> beanType)

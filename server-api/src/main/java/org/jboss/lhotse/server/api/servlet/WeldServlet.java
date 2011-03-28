@@ -22,16 +22,22 @@
 
 package org.jboss.lhotse.server.api.servlet;
 
+import java.io.IOException;
+import java.io.Writer;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Wrap plain request into Weld aware context.
@@ -62,9 +68,7 @@ public class WeldServlet extends HttpServlet implements Filter
       if (wrapperClass == null)
          throw new IllegalArgumentException("Missing handler class parameter");
 
-      BeanManager manager = (BeanManager) context.getAttribute(BeanManager.class.getName());
-      if (manager == null)
-         throw new IllegalArgumentException("No Weld manager present");
+      BeanManager manager = BeanManagerLookup.lookup(context);
 
       try
       {
