@@ -32,7 +32,7 @@ import javax.persistence.Transient;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-// @Entity // TODO -- see why this was here
+@Entity
 @MappedSuperclass
 public abstract class TimestampedEntity extends AbstractEntity implements TimestampAware
 {

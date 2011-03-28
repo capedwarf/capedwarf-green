@@ -22,19 +22,19 @@
 
 package org.jboss.lhotse.server.api.persistence;
 
-import org.jboss.lhotse.jpa.EntityManagerProvider;
-import org.jboss.lhotse.jpa.ProxyingEntityManagerFactory;
-import org.jboss.lhotse.jpa.ProxyingFactory;
-import org.jboss.lhotse.server.api.lifecycle.AfterImpl;
-import org.jboss.lhotse.server.api.lifecycle.BeforeImpl;
-import org.jboss.lhotse.server.api.lifecycle.Notification;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
+import org.jboss.lhotse.jpa.EntityManagerProvider;
+import org.jboss.lhotse.jpa.ProxyingEntityManagerFactory;
+import org.jboss.lhotse.jpa.ProxyingFactory;
+import org.jboss.lhotse.server.api.lifecycle.AfterImpl;
+import org.jboss.lhotse.server.api.lifecycle.BeforeImpl;
+import org.jboss.lhotse.server.api.lifecycle.Notification;
 
 /**
  * EntityManagerFactory provider.
@@ -49,28 +49,28 @@ public class EMF
 
    @Produces
    @ApplicationScoped
-   public EntityManagerFactory produceFactory(EMInjector emInjector)
+   public EntityManagerFactory produceFactory(EMFInfo info)
    {
       produceEvent.select(new BeforeImpl()).fire(new EMFNotification(null)); // let app know we're about to create EMF
-      EntityManagerFactory entityManagerFactory = getFactory(emInjector);
+      EntityManagerFactory entityManagerFactory = getFactory(info);
       produceEvent.select(new AfterImpl()).fire(new EMFNotification(entityManagerFactory)); // let app know we created EMF
       return entityManagerFactory;
    }
 
    @Produces
    @ApplicationScoped
-   public ProxyingFactory produceProxyingFactory(EMInjector emInjector)
+   public ProxyingFactory produceProxyingFactory(EMFInfo info)
    {
-      return (ProxyingFactory) getFactory(emInjector);
+      return (ProxyingFactory) getFactory(info);
    }
 
-   public static EntityManagerFactory getFactory(EMInjector emInjector)
+   public static EntityManagerFactory getFactory(EMFInfo info)
    {
       EntityManagerFactory temp = emf;
       if (temp == null)
       {
-         EntityManagerFactory delegate = new LazyEntityManagerFactory();
-         temp = new ProxyingEntityManagerFactory(delegate, new CurrentEntityManagerProvider(delegate, emInjector));
+         EntityManagerFactory delegate = new LazyEntityManagerFactory(info.getUnitName());
+         temp = new ProxyingEntityManagerFactory(delegate, new CurrentEntityManagerProvider(delegate, info.getEmInjector()));
          emf = temp;
       }      
       return emf;

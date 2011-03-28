@@ -22,62 +22,39 @@
 
 package org.jboss.lhotse.server.api.persistence;
 
-import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
- * Lazy EMF
+ * EMF info.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class LazyEntityManagerFactory implements EntityManagerFactory
+@ApplicationScoped
+public class EMFInfo
 {
-   private String puName;
-   private volatile EntityManagerFactory delegate;
+   private String unitName;
+   private EMInjector emInjector;
 
-   LazyEntityManagerFactory(String puName)
+   public String getUnitName()
    {
-      if (puName == null)
-         throw new IllegalArgumentException("Null PU name");
-      this.puName = puName;
+      return unitName;
    }
 
-   private EntityManagerFactory getDelegate()
+   public EMInjector getEmInjector()
    {
-      if (delegate == null)
-      {
-         synchronized (this)
-         {
-            if (delegate == null)
-               delegate = Persistence.createEntityManagerFactory(puName);
-         }
-      }
-      return delegate;
+      return emInjector;
    }
 
-   public EntityManager createEntityManager()
+   @Inject
+   public void setUnitName(@PersistenceUnitName String unitName)
    {
-      return getDelegate().createEntityManager();
+      this.unitName = unitName;
    }
 
-   public EntityManager createEntityManager(Map map)
+   @Inject
+   public void setEmInjector(EMInjector emInjector)
    {
-      return getDelegate().createEntityManager(map);
-   }
-
-   public void close()
-   {
-      EntityManagerFactory temp = delegate;
-      if (temp != null)
-      {
-         temp.close();
-      }
-   }
-
-   public boolean isOpen()
-   {
-      return getDelegate().isOpen();
+      this.emInjector = emInjector;
    }
 }
