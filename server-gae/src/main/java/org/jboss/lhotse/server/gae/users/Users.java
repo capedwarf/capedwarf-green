@@ -22,18 +22,20 @@
 
 package org.jboss.lhotse.server.gae.users;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import org.jboss.lhotse.server.api.quilifiers.Current;
 import org.jboss.lhotse.server.api.users.User;
-
-import javax.enterprise.inject.Produces;
 
 /**
  * User provider.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class Users
 {
    private UserService userService = UserServiceFactory.getUserService();
