@@ -24,6 +24,7 @@ package org.jboss.lhotse.server.api.mvc.impl;
 
 import org.jboss.lhotse.common.env.Secure;
 import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
+import org.jboss.lhotse.server.api.servlet.BeanManagerLookup;
 import org.jboss.lhotse.server.api.servlet.RequestHandler;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -84,10 +85,7 @@ public abstract class BasicPath2Controller extends AbstractRequestHandler implem
    @SuppressWarnings({"unchecked"})
    protected void doInitialize(ServletContext context)
    {
-      BeanManager manager = (BeanManager) context.getAttribute(BeanManager.class.getName());
-      if (manager == null)
-         throw new IllegalArgumentException("No Weld manager present");
-
+      BeanManager manager = BeanManagerLookup.lookup(context);
       InjectionTarget it = manager.createInjectionTarget(manager.createAnnotatedType(getHandlerClass()));
       CreationalContext cc = manager.createCreationalContext(null);
       handler = (RequestHandler) it.produce(cc);
