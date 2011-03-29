@@ -22,20 +22,20 @@
 
 package org.jboss.lhotse.server.api.mvc.impl;
 
-import org.jboss.lhotse.common.env.Secure;
-import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
-import org.jboss.lhotse.server.api.servlet.BeanManagerLookup;
-import org.jboss.lhotse.server.api.servlet.RequestHandler;
-
+import java.io.IOException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.jboss.lhotse.common.env.Secure;
+import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
+import org.jboss.lhotse.server.api.servlet.RequestHandler;
 
 /**
  * Basic path 2 controller bridge.
@@ -47,6 +47,13 @@ public abstract class BasicPath2Controller extends AbstractRequestHandler implem
 {
    private volatile String path;
    private RequestHandler handler;
+   private BeanManager manager;
+
+   @Inject
+   public void setManager(BeanManager manager)
+   {
+      this.manager = manager;
+   }
 
    /**
     * Get handler class.
@@ -85,7 +92,6 @@ public abstract class BasicPath2Controller extends AbstractRequestHandler implem
    @SuppressWarnings({"unchecked"})
    protected void doInitialize(ServletContext context)
    {
-      BeanManager manager = BeanManagerLookup.lookup(context);
       InjectionTarget it = manager.createInjectionTarget(manager.createAnnotatedType(getHandlerClass()));
       CreationalContext cc = manager.createCreationalContext(null);
       handler = (RequestHandler) it.produce(cc);

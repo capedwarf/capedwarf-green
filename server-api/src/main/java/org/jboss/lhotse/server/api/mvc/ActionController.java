@@ -22,19 +22,19 @@
 
 package org.jboss.lhotse.server.api.mvc;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
 import org.jboss.lhotse.server.api.servlet.RequestHandler;
@@ -53,15 +53,16 @@ public abstract class ActionController extends AbstractRequestHandler
    private Map<String, RequestHandler> actions = Collections.emptyMap();
    private Map<String, Class> classes = Collections.emptyMap();
 
+   @Inject
+   public void setBeanManager(BeanManager beanManager)
+   {
+      this.beanManager = beanManager;
+   }
+
    @Override
    protected void doInitialize(ServletContext context)
    {
-      BeanManager manager = (BeanManager) context.getAttribute(BeanManager.class.getName());
-      if (manager == null)
-         throw new IllegalArgumentException("No Weld manager present");
-
       this.context = context;
-      this.beanManager = manager;
    }
 
    @SuppressWarnings({"unchecked"})
