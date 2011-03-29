@@ -14,12 +14,12 @@ import java.util.List;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class ProxyingQuery extends ProxyingHelper implements Query
+public class ProxyingQuery extends ProxyingHelper implements Query
 {
    private EntityManagerProvider provider;
    private Query delegate;
 
-   ProxyingQuery(EntityManagerProvider provider, Query delegate)
+   protected ProxyingQuery(EntityManagerProvider provider, Query delegate)
    {
       if (provider == null)
          throw new IllegalArgumentException("Null provider");
@@ -30,7 +30,7 @@ class ProxyingQuery extends ProxyingHelper implements Query
       this.delegate = delegate;
    }
 
-   EntityManagerProvider getProvider()
+   protected EntityManagerProvider getProvider()
    {
       return provider;
    }

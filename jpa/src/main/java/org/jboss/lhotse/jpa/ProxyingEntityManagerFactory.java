@@ -32,20 +32,30 @@ public class ProxyingEntityManagerFactory implements EntityManagerFactory, Proxy
       this.provider = provider;
       this.factory = new ProxyingHelper()
       {
-         EntityManagerProvider getProvider()
+         protected EntityManagerProvider getProvider()
          {
             return ProxyingEntityManagerFactory.this.provider;
          }
       };
    }
 
-   private EntityManager proxy(final EntityManager delegate)
+   /**
+    * Get EM provider internal.
+    *
+    * @return the EM provider
+    */
+   protected EntityManagerProvider getProviderInternal()
+   {
+      return provider;
+   }
+
+   protected EntityManager proxy(final EntityManager delegate)
    {
       return new ProxyingEntityManager(delegate)
       {
-         EntityManagerProvider getProvider()
+         protected EntityManagerProvider getProvider()
          {
-            return provider;
+            return getProviderInternal();
          }
       };
    }

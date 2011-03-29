@@ -39,7 +39,7 @@ abstract class ProxyingHelper implements ProxyingFactory
     *
     * @return the entity manager provider
     */
-   abstract EntityManagerProvider getProvider();
+   protected abstract EntityManagerProvider getProvider();
 
    /**
     * Get real entity from proxy.
@@ -66,13 +66,26 @@ abstract class ProxyingHelper implements ProxyingFactory
    }
 
    /**
+    * Safe wrap real entity into proxy.
+    * e.g. null is allowed as entity parameter
+    *
+    * @param entity the real entity
+    * @return proxy entity or null ir entity is null
+    */
+   @SuppressWarnings({"unchecked"})
+   protected <T> T safeWrap(final T entity)
+   {
+      return (entity != null) ? wrap(entity) : null;
+   }
+
+   /**
     * Wrap real entity into proxy.
     *
     * @param entity the real entity
     * @return proxy entity
     */
    @SuppressWarnings({"unchecked"})
-    protected <T> T wrap(final T entity)
+   protected <T> T wrap(final T entity)
    {
       if (entity == null)
          throw new IllegalArgumentException("Null entity");

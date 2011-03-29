@@ -18,7 +18,7 @@
     <module>connect</module>
     <module>javax-cache</module>
     <module>jpa</module>
-    <!-- module>jpa2</module -->
+    <module>jpa2</module>
     <module>social</module>
     <module>server-api</module>
     <module>server-gae</module>
@@ -52,6 +52,7 @@
     <version.javax.mail>1.4</version.javax.mail>
     <version.javax.el>1.2</version.javax.el>
     <version.javax.el.impl>1.2</version.javax.el.impl>
+    <version.javax.jpa2>1.0.0.Final</version.javax.jpa2>
     <version.org.infinispan>4.2.0.FINAL</version.org.infinispan>
     <version.org.datanucleus>1.1.5.SP2</version.org.datanucleus>
     <version.org.datanucleus.gae>1.0.8</version.org.datanucleus.gae>
@@ -239,6 +240,14 @@
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
           <version>${version.com.google.guava}</version>
+        </dependency>
+
+        <!-- JPA2 -->
+
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>${version.javax.jpa2}</version>
         </dependency>
 
        <!-- Google AppEngine -->

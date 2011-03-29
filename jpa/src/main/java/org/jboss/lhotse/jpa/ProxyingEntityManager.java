@@ -11,11 +11,11 @@ import javax.persistence.Query;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-abstract class ProxyingEntityManager extends ProxyingHelper implements EntityManager
+public abstract class ProxyingEntityManager extends ProxyingHelper implements EntityManager
 {
    private EntityManager delegate;
 
-   ProxyingEntityManager(EntityManager delegate)
+   protected ProxyingEntityManager(EntityManager delegate)
    {
       if (delegate == null)
          throw new IllegalArgumentException("Null delegate");
@@ -45,13 +45,13 @@ abstract class ProxyingEntityManager extends ProxyingHelper implements EntityMan
    public <T> T find(Class<T> tClass, Object o)
    {
       T result = delegate.find(tClass, o);
-      return (result != null) ? wrap(result) : null;
+      return safeWrap(result);
    }
 
    public <T> T getReference(Class<T> tClass, Object o)
    {
       T result = delegate.getReference(tClass, o);
-      return (result != null) ? wrap(result) : null;
+      return safeWrap(result);
    }
 
    public void flush()
