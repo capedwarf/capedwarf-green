@@ -44,7 +44,7 @@ import org.jboss.lhotse.server.api.lifecycle.Notification;
 @ApplicationScoped
 public class EMF
 {
-   private static volatile EntityManagerFactory emf;
+   private volatile EntityManagerFactory emf;
    private Event<Notification<EntityManagerFactory>> produceEvent;
 
    @Produces
@@ -64,16 +64,33 @@ public class EMF
       return (ProxyingFactory) getFactory(info);
    }
 
-   public static EntityManagerFactory getFactory(EMFInfo info)
+   private EntityManagerFactory getFactory(EMFInfo info)
    {
-      EntityManagerFactory temp = emf;
-      if (temp == null)
+      if (emf == null)
       {
-         EntityManagerFactory delegate = new LazyEntityManagerFactory(info.getUnitName());
-         temp = new ProxyingEntityManagerFactory(delegate, new CurrentEntityManagerProvider(delegate, info.getEmInjector()));
-         emf = temp;
+         synchronized (this)
+         {
+            if (emf == null)
+            {
+               EntityManagerFactory delegate = new LazyEntityManagerFactory(info.getUnitName());
+               EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
+               emf = proxyingEMF(delegate, provider);
+            }
+         }
       }      
       return emf;
+   }
+
+   /**
+    * Wrap EMF to proxying EMF.
+    *
+    * @param delegate the delegate
+    * @param provider the EM provider
+    * @return new proxying EMF
+    */
+   protected EntityManagerFactory proxyingEMF(EntityManagerFactory delegate, EntityManagerProvider provider)
+   {
+      return new ProxyingEntityManagerFactory(delegate, provider);
    }
 
    @Inject

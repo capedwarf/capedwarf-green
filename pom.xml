@@ -213,11 +213,11 @@
         <artifactId>lhotse-jpa</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- dependency>
+      <dependency>
         <groupId>org.jboss.lhotse</groupId>
         <artifactId>lhotse-jpa2</artifactId>
         <version>${project.version}</version>
-      </dependency -->
+      </dependency>
       <dependency>
         <groupId>org.jboss.lhotse</groupId>
         <artifactId>lhotse-social</artifactId>
