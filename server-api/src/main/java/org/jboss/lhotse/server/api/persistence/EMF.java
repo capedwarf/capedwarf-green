@@ -30,8 +30,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import org.jboss.lhotse.jpa.EntityManagerProvider;
-import org.jboss.lhotse.jpa.ProxyingEntityManagerFactory;
 import org.jboss.lhotse.jpa.ProxyingFactory;
+import org.jboss.lhotse.jpa.ProxyingWrapper;
 import org.jboss.lhotse.server.api.lifecycle.AfterImpl;
 import org.jboss.lhotse.server.api.lifecycle.BeforeImpl;
 import org.jboss.lhotse.server.api.lifecycle.Notification;
@@ -74,23 +74,12 @@ public class EMF
             {
                EntityManagerFactory delegate = new LazyEntityManagerFactory(info.getUnitName());
                EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
-               emf = proxyingEMF(delegate, provider);
+               ProxyingWrapper wrapper = info.getWrapper();
+               emf = wrapper.wrap(delegate, provider);
             }
          }
       }      
       return emf;
-   }
-
-   /**
-    * Wrap EMF to proxying EMF.
-    *
-    * @param delegate the delegate
-    * @param provider the EM provider
-    * @return new proxying EMF
-    */
-   protected EntityManagerFactory proxyingEMF(EntityManagerFactory delegate, EntityManagerProvider provider)
-   {
-      return new ProxyingEntityManagerFactory(delegate, provider);
    }
 
    @Inject

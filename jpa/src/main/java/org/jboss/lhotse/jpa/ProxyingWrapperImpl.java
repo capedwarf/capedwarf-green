@@ -20,55 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.persistence;
+package org.jboss.lhotse.jpa;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.jboss.lhotse.jpa.ProxyingWrapper;
+import javax.persistence.EntityManagerFactory;
 
 /**
- * EMF info.
+ * JPA proxying wrapper.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@ApplicationScoped
-public class EMFInfo
+public class ProxyingWrapperImpl implements ProxyingWrapper
 {
-   private String unitName;
-   private EMInjector emInjector;
-   private ProxyingWrapper wrapper;
-
-   public String getUnitName()
+   public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider)
    {
-      return unitName;
-   }
-
-   public EMInjector getEmInjector()
-   {
-      return emInjector;
-   }
-
-   public ProxyingWrapper getWrapper()
-   {
-      return wrapper;
-   }
-
-   @Inject
-   public void setUnitName(@PersistenceUnitName String unitName)
-   {
-      this.unitName = unitName;
-   }
-
-   @Inject
-   public void setEmInjector(EMInjector emInjector)
-   {
-      this.emInjector = emInjector;
-   }
-
-   @Inject
-   public void setWrapper(ProxyingWrapper wrapper)
-   {
-      this.wrapper = wrapper;
+      return new ProxyingEntityManagerFactory(delegate, provider);
    }
 }

@@ -20,24 +20,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.persistence;
+package org.jboss.lhotse.jpa2;
 
-import javax.enterprise.inject.Alternative;
 import javax.persistence.EntityManagerFactory;
 
 import org.jboss.lhotse.jpa.EntityManagerProvider;
-import org.jboss.lhotse.jpa2.NewProxyingEntityManagerFactory;
+import org.jboss.lhotse.jpa.ProxyingWrapper;
 
 /**
- * JPA2 EntityManagerFactory provider.
+ * JPA2 proxying wrapper.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@Alternative
-public class NewEMF extends EMF
+public class NewProxyingWrapperImpl implements ProxyingWrapper
 {
-   @Override
-   protected EntityManagerFactory proxyingEMF(EntityManagerFactory delegate, EntityManagerProvider provider)
+   public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider)
    {
       return new NewProxyingEntityManagerFactory(delegate, provider);
    }
