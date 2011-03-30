@@ -36,7 +36,7 @@
 
     <dependency>
       <groupId>org.jboss.lhotse</groupId>
-      <artifactId>lhotse-jpa</artifactId>
+      <artifactId>lhotse-jpa2</artifactId>
     </dependency>
 
     <dependency>
