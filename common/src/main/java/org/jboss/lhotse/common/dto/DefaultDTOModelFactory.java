@@ -20,6 +20,14 @@ public class DefaultDTOModelFactory implements DTOModelFactory
       if (model != null)
          return model;
 
+      model = createModelInternal(clazz);
+      models.put(clazz, model);
+
+      return model;
+   }
+
+   protected <E extends Serializable> DTOModel createModelInternal(Class<E> clazz)
+   {
       DTOClass dtoClass = clazz.getAnnotation(DTOClass.class);
       if (dtoClass == null)
          throw new IllegalArgumentException("No such DTOClass: " + clazz);
@@ -29,7 +37,7 @@ public class DefaultDTOModelFactory implements DTOModelFactory
       {
          try
          {
-            model = modelClass.newInstance();
+            return modelClass.newInstance();
          }
          catch (Exception e)
          {
@@ -39,13 +47,9 @@ public class DefaultDTOModelFactory implements DTOModelFactory
       else
       {
          if (clazz == dtoClass.value())
-            model = new NoopDTOModel<E>();
+            return new NoopDTOModel<E>();
          else
-            model = new DefaultDTOModel<E>(clazz);
+            return new DefaultDTOModel<E>(clazz);
       }
-
-      models.put(clazz, model);
-
-      return model;
    }
 }

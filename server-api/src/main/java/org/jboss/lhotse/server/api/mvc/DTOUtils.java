@@ -22,11 +22,18 @@
 
 package org.jboss.lhotse.server.api.mvc;
 
+import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.InjectionTarget;
+import javax.inject.Inject;
+
+import org.jboss.lhotse.common.dto.DTOModel;
 import org.jboss.lhotse.common.dto.DTOModelFactory;
 import org.jboss.lhotse.common.dto.DefaultDTOModelFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import org.jboss.lhotse.server.api.servlet.RequestHandler;
 
 /**
  * Simple dto utils.
@@ -36,10 +43,32 @@ import javax.enterprise.inject.Produces;
 @ApplicationScoped
 public class DTOUtils
 {
+   private BeanManager beanManager;
+
    @Produces
    @ApplicationScoped
    public DTOModelFactory produce()
    {
-      return new DefaultDTOModelFactory();
+      return new EnhancedDTOModelFactory();
+   }
+
+   private class EnhancedDTOModelFactory extends DefaultDTOModelFactory
+   {
+      @SuppressWarnings({"unchecked"})
+      @Override
+      protected <E extends Serializable> DTOModel createModelInternal(Class<E> clazz)
+      {
+         DTOModel model = super.createModelInternal(clazz);
+         InjectionTarget it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(model.getClass()));
+         CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
+         it.inject(model, cc);
+         return model;
+      }
+   }
+
+   @Inject
+   public void setBeanManager(BeanManager beanManager)
+   {
+      this.beanManager = beanManager;
    }
 }
