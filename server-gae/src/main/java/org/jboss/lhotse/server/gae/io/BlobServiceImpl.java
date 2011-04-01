@@ -27,6 +27,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import org.jboss.lhotse.server.api.io.Blob;
 import org.jboss.lhotse.server.api.io.BlobService;
 
 /**
@@ -48,5 +49,10 @@ public class BlobServiceImpl implements BlobService
    public String storeBytes(byte[] bytes)
    {
       return null;
+   }
+
+   public Blob toBlob(byte[] bytes)
+   {
+      return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
    }
 }

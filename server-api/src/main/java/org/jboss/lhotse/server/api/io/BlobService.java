@@ -27,7 +27,7 @@ package org.jboss.lhotse.server.api.io;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BlobService
+public interface BlobService extends BlobTransformer
 {
    /**
     * Load the bytes.
