@@ -20,41 +20,42 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.gae.io;
-
-import javax.enterprise.context.ApplicationScoped;
-
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import org.jboss.lhotse.server.api.io.AbstractBlobService;
-import org.jboss.lhotse.server.api.io.Blob;
+package org.jboss.lhotse.server.api.io;
 
 /**
- * GAE blob service impl.
+ * Abstract byte[] handling service.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@ApplicationScoped
-public class BlobServiceImpl extends AbstractBlobService
+public abstract class AbstractBlobService implements BlobService
 {
-   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
-   public byte[] loadBytesInternal(String key)
+   public Blob toBlob(byte[] bytes)
    {
-      BlobKey bk = new BlobKey(key);
-      return blobstoreService.fetchData(bk, 0, Long.MAX_VALUE); // TODO
+      if (bytes == null)
+         return null;
+
+      return toBlobInternal(bytes);
    }
 
-   @Override
-   protected Blob toBlobInternal(byte[] bytes)
+   protected abstract Blob toBlobInternal(byte[] bytes);
+
+   public byte[] loadBytes(String key)
    {
-      return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
+      if (key == null)
+         return null;
+
+      return loadBytesInternal(key);
    }
 
-   @Override
-   protected String storeBytesInternal(byte[] bytes)
+   protected abstract byte[] loadBytesInternal(String key);
+
+   public String storeBytes(byte[] bytes)
    {
-      return null;
+      if (bytes == null)
+         return null;
+
+      return storeBytesInternal(bytes);
    }
+
+   protected abstract String storeBytesInternal(byte[] bytes);
 }
