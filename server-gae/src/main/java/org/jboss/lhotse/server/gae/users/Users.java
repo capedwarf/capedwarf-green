@@ -29,6 +29,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import org.jboss.lhotse.server.api.quilifiers.Current;
 import org.jboss.lhotse.server.api.users.User;
+import org.jboss.lhotse.server.api.users.UserHandler;
 
 /**
  * User provider.
@@ -36,7 +37,7 @@ import org.jboss.lhotse.server.api.users.User;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class Users
+public class Users implements UserHandler
 {
    private UserService userService = UserServiceFactory.getUserService();
 
@@ -46,5 +47,25 @@ public class Users
    {
       com.google.appengine.api.users.User user = userService.getCurrentUser();
       return (user != null) ? new UserImpl(user) : null;
+   }
+
+   public String loginURL(String requestURI)
+   {
+      return userService.createLoginURL(requestURI);
+   }
+
+   private static class UserImpl implements User
+   {
+      com.google.appengine.api.users.User user;
+
+      private UserImpl(com.google.appengine.api.users.User user)
+      {
+         this.user = user;
+      }
+
+      public String getEmail()
+      {
+         return user.getEmail();
+      }
    }
 }

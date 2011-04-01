@@ -23,6 +23,7 @@
 package org.jboss.lhotse.server.gae.mail;
 
 import com.google.appengine.api.mail.MailService;
+import com.google.appengine.api.mail.MailServiceFactory;
 import org.jboss.lhotse.server.api.mail.impl.AbstractMailManager;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -40,7 +41,8 @@ import java.util.logging.Logger;
 public class BasicMailManager extends AbstractMailManager
 {
    private Logger log = Logger.getLogger(BasicMailManager.class.getName());
-   private MailService mailService;
+
+   private MailService mailService = MailServiceFactory.getMailService();
 
    public void sendEmail(String sender, String subject, String textBody, String... tos)
    {
@@ -73,11 +75,5 @@ public class BasicMailManager extends AbstractMailManager
          String info = Arrays.asList(sender, subject, textBody).toString();
          log.log(Level.WARNING, "Failed to send email: " + info, t);
       }
-   }
-
-   @Inject
-   public void setMailService(MailService mailService)
-   {
-      this.mailService = mailService;
    }
 }
