@@ -32,9 +32,8 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.Set;
 
-import org.jboss.weld.extensions.resourceLoader.Resource;
-
 import org.jboss.lhotse.server.api.io.ResourceReader;
+import org.jboss.seam.solder.resourceLoader.Resource;
 
 /**
  * Read resources.

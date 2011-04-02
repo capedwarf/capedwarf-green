@@ -1,7 +1,7 @@
 package org.jboss.lhotse.server.api.cache.impl;
 
 import org.jboss.lhotse.server.api.cache.CacheConfig;
-import org.jboss.weld.extensions.resourceLoader.Resource;
+import org.jboss.seam.solder.resourceLoader.Resource;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;

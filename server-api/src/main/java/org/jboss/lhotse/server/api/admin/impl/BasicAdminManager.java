@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import org.jboss.lhotse.server.api.admin.AdminManager;
-import org.jboss.weld.extensions.resourceLoader.Resource;
+import org.jboss.seam.solder.resourceLoader.Resource;
 
 
 /**
