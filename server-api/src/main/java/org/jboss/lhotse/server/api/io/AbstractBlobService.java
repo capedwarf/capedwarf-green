@@ -59,6 +59,11 @@ public abstract class AbstractBlobService implements BlobService
 
    protected abstract byte[] loadBytesInternal(String key, long startIndex, long endIndex);
 
+   public void serveBytes(String key, HttpServletResponse response) throws IOException
+   {
+      serveBytes(key, 0, response);
+   }
+
    public void serveBytes(String key, long start, HttpServletResponse response) throws IOException
    {
       serveBytes(key, start, -1, response);

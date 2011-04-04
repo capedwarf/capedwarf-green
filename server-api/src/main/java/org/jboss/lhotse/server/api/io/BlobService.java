@@ -54,6 +54,15 @@ public interface BlobService extends BlobTransformer
     * Serve bytes directly into repsonse.
     *
     * @param key the blob key
+    * @param response the http response
+    * @throws IOException for any I/O error
+    */
+   void serveBytes(String key, HttpServletResponse response) throws IOException;
+
+   /**
+    * Serve bytes directly into repsonse.
+    *
+    * @param key the blob key
     * @param start start index of data to fetch.
     * @param response the http response
     * @throws IOException for any I/O error
