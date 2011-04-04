@@ -22,15 +22,22 @@
 
 package org.jboss.lhotse.cache.infinispan;
 
-import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.manager.EmbeddedCacheManager;
-import org.kohsuke.MetaInfServices;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheFactory;
-import java.io.IOException;
-import java.util.Map;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.infinispan.manager.DefaultCacheManager;
+import org.infinispan.manager.EmbeddedCacheManager;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Infinispan javax.cache factory implementation.
@@ -40,12 +47,78 @@ import java.util.Map;
 @MetaInfServices
 public class InfinispanCacheFactory implements CacheFactory
 {
-   private final EmbeddedCacheManager cacheManager;
+   private static Logger log = Logger.getLogger(InfinispanCacheFactory.class.getName());
+   private EmbeddedCacheManager cacheManager;
 
    public InfinispanCacheFactory() throws IOException
    {
+      try
+      {
+         cacheManager = doJNDILookup();
+      }
+      catch (Throwable t)
+      {
+         log.warning("Failed to do JNDI lookup, using standalone configuration: " + t);
+         cacheManager = doStandalone();
+      }
+   }
+
+   protected EmbeddedCacheManager doJNDILookup() throws IOException
+   {
+      Properties jndiProperties = new Properties();
+      URL jndiPropertiesURL = getClass().getClassLoader().getResource("jndi.properties");
+      if (jndiPropertiesURL != null)
+      {
+         InputStream is = jndiPropertiesURL.openStream();
+         try
+         {
+            jndiProperties.load(is);
+         }
+         finally
+         {
+            try
+            {
+               is.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+      }
+      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name", "java:CacheManager");
+
+      Context ctx = null;
+      try
+      {
+         ctx = new InitialContext(jndiProperties);
+         return (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
+      }
+      catch (NamingException ne)
+      {
+         String msg = "Unable to retrieve CacheManager from JNDI [" + jndiNamespace + "]";
+         log.info(msg + ": " + ne);
+         throw new IOException(msg);
+      }
+      finally
+      {
+         if (ctx != null)
+         {
+            try
+            {
+               ctx.close();
+            }
+            catch (NamingException ne)
+            {
+               log.info("Unable to release initial context: " + ne);
+            }
+         }
+      }
+   }
+
+   protected EmbeddedCacheManager doStandalone() throws IOException
+   {
       String configurationFile = System.getProperty("org.jboss.lhotse.cache.configurationFile", "infinispan-config.xml");
-      cacheManager = new DefaultCacheManager(configurationFile, true);
+      return new DefaultCacheManager(configurationFile, true);
    }
 
    public Cache createCache(Map map) throws CacheException
