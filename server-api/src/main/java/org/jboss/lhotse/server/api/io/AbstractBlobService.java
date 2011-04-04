@@ -22,6 +22,9 @@
 
 package org.jboss.lhotse.server.api.io;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Abstract byte[] handling service.
  *
@@ -41,21 +44,43 @@ public abstract class AbstractBlobService implements BlobService
 
    public byte[] loadBytes(String key)
    {
-      if (key == null)
-         return null;
-
-      return loadBytesInternal(key);
+      return loadBytesInternal(key, 0, Long.MAX_VALUE);
    }
 
-   protected abstract byte[] loadBytesInternal(String key);
+   public byte[] loadBytes(String key, long startIndex, long endIndex)
+   {
+      if (key == null || (startIndex > endIndex))
+         return null;
+      if (startIndex == endIndex)
+         return new byte[0];
 
-   public String storeBytes(byte[] bytes)
+      return loadBytesInternal(key, startIndex, endIndex);
+   }
+
+   protected abstract byte[] loadBytesInternal(String key, long startIndex, long endIndex);
+
+   public void serveBytes(String key, long start, HttpServletResponse response) throws IOException
+   {
+      serveBytes(key, start, -1, response);
+   }
+
+   public void serveBytes(String key, long start, long end, HttpServletResponse response) throws IOException
+   {
+      if (key == null)
+         return;
+
+      serveBytesInternal(key, start, end, response);
+   }
+
+   protected abstract void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException;
+
+   public String storeBytes(String mimeType, byte[] bytes) throws IOException
    {
       if (bytes == null)
          return null;
 
-      return storeBytesInternal(bytes);
+      return storeBytesInternal(mimeType, bytes);
    }
 
-   protected abstract String storeBytesInternal(byte[] bytes);
+   protected abstract String storeBytesInternal(String mimeType, byte[] bytes) throws IOException;
 }

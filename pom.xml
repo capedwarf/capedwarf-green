@@ -29,9 +29,9 @@
     <version.com.google.android>1.5_r4</version.com.google.android>
     <version.com.google.android.maps>3_r3</version.com.google.android.maps>
     <version.com.db4o.core>7.12.156</version.com.db4o.core>
-    <version.com.google.gae>1.3.7</version.com.google.gae>
-    <version.com.google.gae.api>1.4.2</version.com.google.gae.api>
-    <version.com.google.gae.labs>1.4.2</version.com.google.gae.labs>
+    <version.com.google.gae>1.4.3</version.com.google.gae>
+    <version.com.google.gae.api>1.4.3</version.com.google.gae.api>
+    <version.com.google.gae.labs>1.4.3</version.com.google.gae.labs>
     <version.com.google.gae.mapreduce>1.0.0.Alpha1</version.com.google.gae.mapreduce>
     <version.com.google.guava>1.0.0.R05</version.com.google.guava>
     <version.org.apache.hadoop>0.20.2</version.org.apache.hadoop>
@@ -146,6 +146,16 @@
          </releases>
       </repository>
       <repository>
+          <id>mvnrepository</id>
+          <name>Maven Repository</name>
+          <url>http://mvnrepository.com/artifact/</url>
+         <layout>default</layout>
+         <releases>
+           <enabled>true</enabled>
+           <updatePolicy>never</updatePolicy>
+         </releases>
+      </repository>
+      <repository>
           <id>atlassian</id>
           <name>Atlassian Repository</name>
           <url>https://maven.atlassian.com/content/groups/public</url>
@@ -251,12 +261,6 @@
         </dependency>
 
        <!-- Google AppEngine -->
-
-      <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-local-runtime</artifactId>
-            <version>${version.com.google.gae}</version>
-      </dependency>
 
       <dependency>
             <groupId>com.google.appengine</groupId>

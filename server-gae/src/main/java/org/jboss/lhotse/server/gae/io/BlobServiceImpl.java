@@ -22,11 +22,19 @@
 
 package org.jboss.lhotse.server.gae.io;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import javax.enterprise.context.ApplicationScoped;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.ByteRange;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
 import org.jboss.lhotse.server.api.io.AbstractBlobService;
 import org.jboss.lhotse.server.api.io.Blob;
 
@@ -39,22 +47,38 @@ import org.jboss.lhotse.server.api.io.Blob;
 public class BlobServiceImpl extends AbstractBlobService
 {
    private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+   private FileService fileService = FileServiceFactory.getFileService();
 
-   public byte[] loadBytesInternal(String key)
-   {
-      BlobKey bk = new BlobKey(key);
-      return blobstoreService.fetchData(bk, 0, Long.MAX_VALUE); // TODO
-   }
-
-   @Override
    protected Blob toBlobInternal(byte[] bytes)
    {
       return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
    }
 
-   @Override
-   protected String storeBytesInternal(byte[] bytes)
+   protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
    {
-      return null;
+      BlobKey blobKey = new BlobKey(key);
+      return blobstoreService.fetchData(blobKey, startIndex, endIndex);
+   }
+
+   protected void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException
+   {
+      BlobKey blobKey = new BlobKey(key);
+      ByteRange range = (end >= 0) ? new ByteRange(start, end) : new ByteRange(start);
+      blobstoreService.serve(blobKey, range, response);
+   }
+
+   protected String storeBytesInternal(String mimeType, byte[] bytes) throws IOException
+   {
+      AppEngineFile file = fileService.createNewBlobFile(mimeType);
+      FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+      try
+      {
+         writeChannel.write(ByteBuffer.wrap(bytes));
+         return fileService.getBlobKey(file).getKeyString();
+      }
+      finally
+      {
+         writeChannel.closeFinally();
+      }
    }
 }

@@ -22,6 +22,9 @@
 
 package org.jboss.lhotse.server.api.io;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * byte[] handling service.
  *
@@ -38,10 +41,44 @@ public interface BlobService extends BlobTransformer
    byte[] loadBytes(String key);
 
    /**
-    * Store bytes.
+    * Load the bytes.
     *
+    * @param key the blob key
+    * @param startIndex start index of data to fetch.
+    * @param endIndex end index (inclusive) of data to fetch.
+    * @return bytes or null if no such blob found
+    */
+   byte[] loadBytes(String key, long startIndex, long endIndex);
+
+   /**
+    * Serve bytes directly into repsonse.
+    *
+    * @param key the blob key
+    * @param start start index of data to fetch.
+    * @param response the http response
+    * @throws IOException for any I/O error
+    */
+   void serveBytes(String key, long start, HttpServletResponse response) throws IOException;
+
+   /**
+    * Serve bytes directly into repsonse.
+    *
+    * @param key the blob key
+    * @param start start index of data to fetch.
+    * @param end end index (inclusive) of data to fetch.
+    * @param response the http response
+    * @throws IOException for any I/O error
+    */
+   void serveBytes(String key, long start, long end, HttpServletResponse response) throws IOException;
+
+   /**
+    * Store bytes.
+    * See http://www.w3schools.com/media/media_mimeref.asp.
+    *
+    * @param mimeType the mime type
     * @param bytes the bytes
     * @return the blob key or null if cannot store
+    * @throws IOException for any I/O error
     */
-   String storeBytes(byte[] bytes);
+   String storeBytes(String mimeType, byte[] bytes) throws IOException;
 }
