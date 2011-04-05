@@ -141,7 +141,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static <T> SQLiteEntityModel<T> getEntityModel(Class<T> entityClass)
+   public static <T> SQLiteEntityModel<T> getEntityModel(Class<T> entityClass)
    {
       SQLiteEntityModel<T> em = models.get(entityClass);
       if (em == null)
@@ -164,7 +164,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static <T> SQLiteEntityModel<T> putEntityModel(Class<T> clazz, SQLiteEntityModel<T> em)
+   public static <T> SQLiteEntityModel<T> putEntityModel(Class<T> clazz, SQLiteEntityModel<T> em)
    {
       if (em == null)
          return models.remove(clazz);
@@ -172,12 +172,12 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
          return models.put(clazz, em);
    }
 
-   protected static <T> T getSingleResult(List<T> results)
+   public static <T> T getSingleResult(List<T> results)
    {
       return (results == null || results.isEmpty()) ? null : results.get(0);
    }
 
-   protected static SQLiteDatabase getDB()
+   public static SQLiteDatabase getDB()
    {
       SQLiteDatabase db = dbTL.get();
       if (db == null)
@@ -185,31 +185,31 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return db;
    }
 
-   protected void begin()
+   public void begin()
    {
       SQLiteDatabase db = getWritableDatabase();
       dbTL.set(db);
       db.beginTransaction();
    }
 
-   protected void commit()
+   public void commit()
    {
       SQLiteDatabase db = getDB();
       db.setTransactionSuccessful();
    }
 
-   protected void rollback()
+   public void rollback()
    {
    }
 
-   protected void end()
+   public void end()
    {
       SQLiteDatabase db = getDB();
       dbTL.remove();
       db.endTransaction();
    }
 
-   protected boolean initialize(int currentVersion)
+   public boolean initialize(int currentVersion)
    {
       SQLiteDatabase db = getWritableDatabase();
       int version = db.getVersion();
@@ -221,12 +221,12 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return isNew;
    }
 
-   protected <T> T load(Class<T> entityClass, long pk)
+   public <T> T load(Class<T> entityClass, long pk)
    {
       return load(getReadableDatabase(), entityClass, pk);
    }
 
-   protected static long persist(SQLObject entity)
+   public static long persist(SQLObject entity)
    {
       if (entity == null)
          return -1;
@@ -235,7 +235,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return insertOrUpdate(db, entity);
    }
 
-   protected static int update(SQLObject entity)
+   public static int update(SQLObject entity)
    {
       if (entity == null)
          return 0;
@@ -244,31 +244,31 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return update(db, getEntityModel(entity.getClass()), entity, entity.getPk(), "pk");
    }
 
-   protected static int delete(SQLObject entity)
+   public static int delete(SQLObject entity)
    {
       SQLiteDatabase db = getDB();
       return delete(db, entity, "pk = ?", entity.getPk());
    }
 
-   protected <T> List<T> select(Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
+   public <T> List<T> select(Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       SQLiteDatabase db = getReadableDatabase();
       return select(db, entityClass, selection, selectionArgs, orderBy, limit);
    }
 
-   protected <T> List select(Class<T> entityClass, List<ColumnMapper> mappers, String selection, String[] selectionArgs, String orderBy, String limit)
+   public <T> List select(Class<T> entityClass, List<ColumnMapper> mappers, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       SQLiteDatabase db = getReadableDatabase();
       return select(db, entityClass, mappers, selection, selectionArgs, orderBy, limit);
    }
 
-   protected <T> List<Long> pks(Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
+   public <T> List<Long> pks(Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       SQLiteDatabase db = getReadableDatabase();
       return pks(db, entityClass, selection, selectionArgs, orderBy, limit);
    }
 
-   protected int count(Class<?> entityClass, String selection, String[] selectionArgs)
+   public int count(Class<?> entityClass, String selection, String[] selectionArgs)
    {
       SQLiteDatabase db = getReadableDatabase();
       return count(db, entityClass, selection, selectionArgs);
@@ -276,37 +276,37 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
 
    // --- helper methods
 
-   protected static <T> T load(SQLiteDatabase db, Class<T> entityClass, Long pk)
+   public static <T> T load(SQLiteDatabase db, Class<T> entityClass, Long pk)
    {
       SQLiteEntityModel<T> em = getEntityModel(entityClass);
       return getSingleResult(select(db, em, em.getKey() + " = ?", toSelectionArgs(pk), null, "1"));
    }
 
-   protected static <T extends Identity> T loadIdentity(SQLiteDatabase db, Class<T> entityClass, Long id)
+   public static <T extends Identity> T loadIdentity(SQLiteDatabase db, Class<T> entityClass, Long id)
    {
       SQLiteEntityModel<T> em = getEntityModel(entityClass);
       return getSingleResult(select(db, em, "id = ?", toSelectionArgs(id), null, "1"));
    }
 
-   protected static <T> List<T> select(SQLiteDatabase db, Class<T> entityClass, String selection, Object selectionArg)
+   public static <T> List<T> select(SQLiteDatabase db, Class<T> entityClass, String selection, Object selectionArg)
    {
       return select(db, entityClass, selection, toSelectionArgs(selectionArg), null, null);
    }
 
-   protected static <T> List<T> select(SQLiteDatabase db, Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
+   public static <T> List<T> select(SQLiteDatabase db, Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       SQLiteEntityModel<T> em = getEntityModel(entityClass);
       return select(db, em, selection, selectionArgs, orderBy, limit);
    }
 
-   protected static <T> List select(SQLiteDatabase db, Class<T> entityClass, List<ColumnMapper> mappers, String selection, String[] selectionArgs, String orderBy, String limit)
+   public static <T> List select(SQLiteDatabase db, Class<T> entityClass, List<ColumnMapper> mappers, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       SQLiteEntityModel<T> em = getEntityModel(entityClass);
       return select(db, em.getTable(), mappers, selection, selectionArgs, orderBy, limit);
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static <T> List<Long> pks(SQLiteDatabase db, Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
+   public static <T> List<Long> pks(SQLiteDatabase db, Class<T> entityClass, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       final SQLiteEntityModel<T> em = getEntityModel(entityClass);
       ColumnMapper idMapper = new ColumnMapper<Long>()
@@ -370,7 +370,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static <T> List<T> select(SQLiteDatabase db, SQLiteEntityModel<T> em, String selection, String[] selectionArgs, String orderBy, String limit)
+   public static <T> List<T> select(SQLiteDatabase db, SQLiteEntityModel<T> em, String selection, String[] selectionArgs, String orderBy, String limit)
    {
       EntityListener listener = em.onLoad();
 
@@ -388,12 +388,12 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return result;
    }
 
-   protected static long insertOrUpdate(SQLiteDatabase db, SQLObject entity)
+   public static long insertOrUpdate(SQLiteDatabase db, SQLObject entity)
    {
       return insertOrUpdate(db, entity, entity.getPk(), "pk");
    }
 
-   protected static long insertOrUpdate(SQLiteDatabase db, Object entity, Long pk, String key)
+   public static long insertOrUpdate(SQLiteDatabase db, Object entity, Long pk, String key)
    {
       SQLiteEntityModel em = getEntityModel(entity.getClass());
 
@@ -409,7 +409,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static Long insert(SQLiteDatabase db, SQLiteEntityModel em, Object entity)
+   public static Long insert(SQLiteDatabase db, SQLiteEntityModel em, Object entity)
    {
       EntityListener listener = em.onInsert();
       if (listener != null)
@@ -427,7 +427,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static int update(SQLiteDatabase db, SQLiteEntityModel em, Object entity, Long pk, String key)
+   public static int update(SQLiteDatabase db, SQLiteEntityModel em, Object entity, Long pk, String key)
    {
       EntityListener listener = em.onUpdate();
 
@@ -446,7 +446,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static int delete(SQLiteDatabase db, Object entity, String selection, Object selectionArg)
+   public static int delete(SQLiteDatabase db, Object entity, String selection, Object selectionArg)
    {
       SQLiteEntityModel em = getEntityModel(entity.getClass());
       EntityListener listener = em.onDelete();
@@ -463,7 +463,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
    }
 
    @SuppressWarnings({"unchecked"})
-   protected static int count(SQLiteDatabase db, Class<?> entityClass, String selection, String[] selectionArgs)
+   public static int count(SQLiteDatabase db, Class<?> entityClass, String selection, String[] selectionArgs)
    {
       SQLiteEntityModel em = getEntityModel(entityClass);
       Cursor cursor = db.query(em.getTable(), new String[]{em.getKey()}, selection, selectionArgs, null, null, null);
@@ -478,7 +478,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       }
    }
 
-   protected static String toQuery(Iterable arg)
+   public static String toQuery(Iterable arg)
    {
       StringBuilder builder = new StringBuilder();
       //noinspection UnusedDeclaration
@@ -491,7 +491,7 @@ public abstract class AbstractSQLiteOpenHelper extends SQLiteOpenHelper
       return builder.toString();
    }
 
-   protected static String[] toSelectionArgs(Object... args)
+   public static String[] toSelectionArgs(Object... args)
    {
       if (args == null)
          return null;
