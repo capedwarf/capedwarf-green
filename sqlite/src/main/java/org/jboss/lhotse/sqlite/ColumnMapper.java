@@ -20,40 +20,30 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.jpa;
+package org.jboss.lhotse.sqlite;
+
+import android.database.Cursor;
 
 /**
- * Proxying utils.
+ * Map column value to actual value.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ProxyingUtils
+public interface ColumnMapper<T>
 {
-   private static ThreadLocal<Object> proxyingTL = new ThreadLocal<Object>();
-
    /**
-    * Enable proxying.
-    */
-   public static void enable()
-   {
-      proxyingTL.remove();
-   }
-
-   /**
-    * Disable proxying.
-    */
-   public static void disable()
-   {
-      proxyingTL.set(ProxyingUtils.class);
-   }
-
-   /**
-    * Is proxying disabled.
+    * Get column name.
     *
-    * @return true if disabled, false otherwise
+    * @return the column name
     */
-   public static boolean isDisabled()
-   {
-      return (proxyingTL.get() != null);  
-   }
+   String column();
+
+   /**
+    * The value.
+    *
+    * @param cursor the cursor
+    * @param index the column index
+    * @return the value
+    */
+   T value(Cursor cursor, int index);
 }

@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.lhotse</groupId>
+    <artifactId>lhotse-build</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>lhotse-sqlite</artifactId>
+  <packaging>jar</packaging>
+  <name>Lhotse SQLite</name>
+  <url>http://www.jboss.org/lhotse</url>
+  <description>Lhotse SQLite</description>
+
+  <dependencies>
+
+     <dependency>
+       <groupId>org.jboss.lhotse</groupId>
+       <artifactId>lhotse-common</artifactId>
+       <exclusions>
+          <exclusion>
+             <groupId>javax.validation</groupId>
+             <artifactId>validation-api</artifactId>
+          </exclusion>
+          <!-- exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+          </exclusion -->
+          <exclusion>
+              <groupId>org.json</groupId>
+              <artifactId>json</artifactId>
+          </exclusion>
+        </exclusions>
+     </dependency>
+
+      <dependency>
+          <groupId>com.google.android</groupId>
+          <artifactId>android</artifactId>
+      </dependency>
+
+     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <scope>test</scope>
+     </dependency>
+
+  </dependencies>
+</project>

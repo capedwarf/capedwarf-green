@@ -20,40 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.jpa;
+package org.jboss.lhotse.sqlite;
 
 /**
- * Proxying utils.
+ * On sql op.
  *
+ * @param <DB> exact database type
+ * @param <T> exact entity type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ProxyingUtils
+public interface EntityListener<DB, T>
 {
-   private static ThreadLocal<Object> proxyingTL = new ThreadLocal<Object>();
-
    /**
-    * Enable proxying.
-    */
-   public static void enable()
-   {
-      proxyingTL.remove();
-   }
-
-   /**
-    * Disable proxying.
-    */
-   public static void disable()
-   {
-      proxyingTL.set(ProxyingUtils.class);
-   }
-
-   /**
-    * Is proxying disabled.
+    * Perform on sql op.
     *
-    * @return true if disabled, false otherwise
+    * @param db the database.
+    * @param entity the current entity
+    * @param phase the sql op phase
     */
-   public static boolean isDisabled()
-   {
-      return (proxyingTL.get() != null);  
-   }
+   void action(DB db, T entity, Phase phase);
 }
+

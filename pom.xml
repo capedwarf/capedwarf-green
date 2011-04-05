@@ -16,6 +16,7 @@
   <modules>
     <module>common</module>
     <module>connect</module>
+    <module>sqlite</module>
     <module>javax-cache</module>
     <module>jpa</module>
     <module>jpa2</module>
@@ -250,6 +251,14 @@
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
           <version>${version.com.google.guava}</version>
+        </dependency>
+
+        <!-- Android code -->
+
+        <dependency>
+          <groupId>com.google.android</groupId>
+          <artifactId>android</artifactId>
+          <version>${version.com.google.android}</version>
         </dependency>
 
         <!-- JPA2 -->

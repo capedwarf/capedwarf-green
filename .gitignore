@@ -4,6 +4,7 @@
 *.iws
 common/target/
 connect/target/
+sqlite/target/
 javax-cache/target/
 jpa/target/
 jpa2/target/

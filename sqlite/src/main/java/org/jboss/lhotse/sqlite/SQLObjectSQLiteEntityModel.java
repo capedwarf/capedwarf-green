@@ -20,40 +20,46 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.jpa;
+package org.jboss.lhotse.sqlite;
+
+import org.jboss.lhotse.common.sql.SQLObject;
+
+import java.lang.reflect.Method;
+
 
 /**
- * Proxying utils.
+ * SQLObject based sqlite entity model.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ProxyingUtils
+public class SQLObjectSQLiteEntityModel<T extends SQLObject> extends ReflectionSQLiteEntityModel<T>
 {
-   private static ThreadLocal<Object> proxyingTL = new ThreadLocal<Object>();
-
-   /**
-    * Enable proxying.
-    */
-   public static void enable()
+   public SQLObjectSQLiteEntityModel(Class<T> entityClass) throws Exception
    {
-      proxyingTL.remove();
+      super(entityClass);
    }
 
-   /**
-    * Disable proxying.
-    */
-   public static void disable()
+   @Override
+   protected void readKey(Method m) throws NoSuchMethodException
    {
-      proxyingTL.set(ProxyingUtils.class);
    }
 
-   /**
-    * Is proxying disabled.
-    *
-    * @return true if disabled, false otherwise
-    */
-   public static boolean isDisabled()
+   public String getKey()
    {
-      return (proxyingTL.get() != null);  
+      return "pk";
+   }
+
+   public Long getKeyValue(SQLObject entity)
+   {
+      if (entity == null)
+         return null;
+
+      return entity.getPk();
+   }
+
+   public void setKeyValue(SQLObject entity, Long id)
+   {
+      if (entity != null)
+         entity.setPk(id);
    }
 }
