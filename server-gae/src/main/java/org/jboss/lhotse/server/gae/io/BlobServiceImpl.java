@@ -74,11 +74,12 @@ public class BlobServiceImpl extends AbstractBlobService
       try
       {
          writeChannel.write(ByteBuffer.wrap(bytes));
-         return fileService.getBlobKey(file).getKeyString();
       }
       finally
       {
          writeChannel.closeFinally();
       }
+      BlobKey blobKey = fileService.getBlobKey(file);
+      return blobKey.getKeyString();
    }
 }
