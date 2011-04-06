@@ -15,8 +15,13 @@ public class DefaultConfiguration<T> extends Configuration<T>
 {
    public DefaultConfiguration()
    {
-      setDebugMode(false);
-      setDebugLogging(false);
+      this(false);
+   }
+
+   public DefaultConfiguration(boolean debug)
+   {
+      setDebugMode(debug);
+      setDebugLogging(debug);
       
       String localhost = "localhost";
       Environment env = EnvironmentFactory.getEnvironment();
