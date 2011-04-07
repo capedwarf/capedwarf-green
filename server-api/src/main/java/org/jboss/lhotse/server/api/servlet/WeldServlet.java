@@ -68,7 +68,7 @@ public class WeldServlet extends HttpServlet implements Filter
       if (wrapperClass == null)
          throw new IllegalArgumentException("Missing handler class parameter");
 
-      BeanManager manager = BeanManagerLookup.lookup(context);
+      BeanManager manager = BeanManagerUtils.lookup(context);
 
       try
       {

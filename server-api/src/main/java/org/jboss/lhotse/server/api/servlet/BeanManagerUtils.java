@@ -22,21 +22,42 @@
 
 package org.jboss.lhotse.server.api.servlet;
 
+import java.util.ServiceLoader;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.servlet.ServletContext;
 
 /**
- * BM lookup contract.
+ * BM lookup impl.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BeanManagerLookup
+public class BeanManagerUtils
 {
+   /** The impl detail */
+   private static final String BM_KEY = "org.jboss.weld.environment.servlet" + "." + BeanManager.class.getName();
+
    /**
     * Get bean manager.
     *
     * @param context the servlet context
     * @return bean manager
     */
-   BeanManager lookup(ServletContext context);
+   public static BeanManager lookup(ServletContext context)
+   {
+      ServiceLoader<BeanManagerLookup> bmls = ServiceLoader.load(BeanManagerLookup.class, BeanManagerUtils.class.getClassLoader());
+      for (BeanManagerLookup bml : bmls)
+      {
+         BeanManager bm = bml.lookup(context);
+         if (bm != null)
+            return bm;
+      }
+
+
+      // Use Weld default
+      BeanManager manager = (BeanManager) context.getAttribute(BM_KEY);
+      if (manager == null)
+         throw new IllegalArgumentException("No Weld manager present");
+
+      return manager;
+   }
 }

@@ -48,7 +48,7 @@ public class WeldFilter implements Filter
    public void init(FilterConfig config) throws ServletException
    {
       ServletContext context = config.getServletContext();
-      manager = BeanManagerLookup.lookup(context);
+      manager = BeanManagerUtils.lookup(context);
    }
 
    protected <T> T getBean(Class<T> beanType)
