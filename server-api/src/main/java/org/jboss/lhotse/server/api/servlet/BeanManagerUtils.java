@@ -44,14 +44,28 @@ public class BeanManagerUtils
     */
    public static BeanManager lookup(ServletContext context)
    {
+      // check cache
+      BeanManager manager = (BeanManager) context.getAttribute(BeanManagerUtils.class.getName());
+      if (manager != null)
+         return manager;
+
+      manager = doLookup(context);
+
+      // cache it
+      context.setAttribute(BeanManagerUtils.class.getName(), manager);
+
+      return manager;
+   }
+
+   protected static BeanManager doLookup(ServletContext context)
+   {
       ServiceLoader<BeanManagerLookup> bmls = ServiceLoader.load(BeanManagerLookup.class, BeanManagerUtils.class.getClassLoader());
       for (BeanManagerLookup bml : bmls)
       {
-         BeanManager bm = bml.lookup(context);
-         if (bm != null)
-            return bm;
+         BeanManager manager = bml.lookup(context);
+         if (manager != null)
+            return manager;
       }
-
 
       // Use Weld default
       BeanManager manager = (BeanManager) context.getAttribute(BM_KEY);
