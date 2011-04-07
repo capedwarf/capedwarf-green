@@ -42,7 +42,6 @@ import java.util.List;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@Transactional
 @ApplicationScoped
 public abstract class AbstractGenericDAO<T extends AbstractEntity> implements GenericDAO<T>
 {
@@ -105,6 +104,7 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       return (value != null);
    }
 
+   @Transactional
    public void save(T entity)
    {
       if (entity == null)
@@ -118,6 +118,7 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       getEM().persist(entity);
    }
 
+   @Transactional
    public void merge(T entity)
    {
       if (entity == null)
@@ -127,6 +128,7 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
    }
 
    @Proxying(ProxyingEnum.DISABLE)
+   @Transactional
    public int delete(Long id)
    {
       if (id == null || id <= 0)
@@ -137,6 +139,7 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       return query.executeUpdate();
    }
 
+   @Transactional
    public void delete(T entity)
    {
       if (entity == null)
