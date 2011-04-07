@@ -21,57 +21,10 @@
       <scope>provided</scope>
     </dependency>
 
-     <dependency>
-        <groupId>org.jboss.weld</groupId>
-        <artifactId>weld-core</artifactId>
-         <exclusions>
-             <exclusion>
-                 <groupId>org.jboss.weld</groupId>
-                 <artifactId>weld-spi</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>org.jboss.weld</groupId>
-                 <artifactId>weld-api</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>com.google.collections</groupId>
-                 <artifactId>google-collections</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>org.jboss.interceptor</groupId>
-                 <artifactId>jboss-interceptor</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>org.jboss.interceptor</groupId>
-                 <artifactId>jboss-interceptor-api</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>org.slf4j</groupId>
-                 <artifactId>slf4j-api</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>org.slf4j</groupId>
-                 <artifactId>slf4j-ext</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>xml-apis</groupId>
-                 <artifactId>xml-apis</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>javax.faces</groupId>
-                 <artifactId>jsf-api</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>javax-el</groupId>
-                 <artifactId>el-api</artifactId>
-             </exclusion>
-             <exclusion>
-                 <groupId>javassist</groupId>
-                 <artifactId>javassist</artifactId>
-             </exclusion>
-         </exclusions>
-        <scope>provided</scope>
-     </dependency>
+      <dependency>
+         <groupId>javax.enterprise</groupId>
+         <artifactId>cdi-api</artifactId>
+      </dependency>
 
      <dependency>
         <groupId>junit</groupId>

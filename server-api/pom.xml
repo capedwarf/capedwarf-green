@@ -175,27 +175,10 @@
        </dependency>
 
        <dependency>
-         <groupId>org.jboss.weld</groupId>
-         <artifactId>weld-core</artifactId>
-          <exclusions>
-              <exclusion>
-                  <groupId>xml-apis</groupId>
-                  <artifactId>xml-apis</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>javax.faces</groupId>
-                  <artifactId>jsf-api</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>javax-el</groupId>
-                  <artifactId>el-api</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>javassist</groupId>
-                  <artifactId>javassist</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
+          <groupId>javax.enterprise</groupId>
+          <artifactId>cdi-api</artifactId>
+       </dependency>
+
       <dependency>
          <groupId>org.jboss.logging</groupId>
          <artifactId>jboss-logging</artifactId>

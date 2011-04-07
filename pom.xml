@@ -27,6 +27,7 @@
   </modules>
 
   <properties>
+    <version.cdi.api>1.0-SP4</version.cdi.api>
     <version.com.google.android>1.5_r4</version.com.google.android>
     <version.com.google.android.maps>3_r3</version.com.google.android.maps>
     <version.com.db4o.core>7.12.156</version.com.db4o.core>
@@ -39,8 +40,6 @@
     <version.org.apache.commons-logging>1.1.1</version.org.apache.commons-logging>
     <version.json>20090211</version.json>
     <version.charts4j>1.2</version.charts4j>
-    <version.org.jboss.weld>1.1.1.Final</version.org.jboss.weld>
-    <version.org.jboss.weld.int>1.1.1.Final</version.org.jboss.weld.int>
     <version.org.jboss.seam>3.0.0.Final</version.org.jboss.seam>
     <version.org.jboss.logging>3.0.0.Beta3</version.org.jboss.logging>
     <version.javassist>3.14.0-GA</version.javassist>
@@ -511,23 +510,15 @@
         <!--JBoss Weld / CDI -->
 
         <dependency>
-             <groupId>org.jboss.weld</groupId>
-             <artifactId>weld-core-bom</artifactId>
-            <version>${version.org.jboss.weld}</version>
-             <type>pom</type>
-             <scope>import</scope>
+           <groupId>javax.enterprise</groupId>
+           <artifactId>cdi-api</artifactId>
+           <version>${version.cdi.api}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.seam.solder</groupId>
             <artifactId>seam-solder</artifactId>
             <version>${version.org.jboss.seam}</version>
-        </dependency>
-
-        <dependency>
-           <groupId>org.jboss.weld.servlet</groupId>
-           <artifactId>weld-servlet</artifactId>
-           <version>${version.org.jboss.weld.int}</version>
         </dependency>
 
        <dependency>
