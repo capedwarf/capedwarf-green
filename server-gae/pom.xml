@@ -93,59 +93,12 @@
          <artifactId>appengine-api-labs</artifactId>
       </dependency>
       <dependency>
-          <groupId>javax.faces</groupId>
-          <artifactId>jsf-api</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>javax.faces</groupId>
-          <artifactId>jsf-impl</artifactId>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-          <groupId>javax.el</groupId>
-          <artifactId>el-api</artifactId>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.el</groupId>
-         <artifactId>el-ri</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.datanucleus</groupId>
-          <artifactId>datanucleus-cache</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.datanucleus</groupId>
-          <artifactId>datanucleus-jpa</artifactId>
-          <exclusions>
-             <exclusion>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jpa_3.0_spec</artifactId>
-             </exclusion>
-          </exclusions>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.datanucleus</groupId>
-          <artifactId>datanucleus-core</artifactId>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.google.appengine.orm</groupId>
-          <artifactId>datanucleus-appengine</artifactId>
-      </dependency>
-      <dependency>
           <groupId>com.google.appengine</groupId>
           <artifactId>geronimo-jpa_3.0_spec</artifactId>
       </dependency>
       <dependency>
           <groupId>com.google.appengine</groupId>
           <artifactId>geronimo-jta_1.1_spec</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.google.appengine</groupId>
-          <artifactId>jdo2-api</artifactId>
-          <scope>compile</scope>
       </dependency>
 
       <dependency>
@@ -158,11 +111,6 @@
         <artifactId>arquillian-junit</artifactId>
         <scope>test</scope>
      </dependency>
-     <dependency>
-          <groupId>org.jboss.arquillian.container</groupId>
-          <artifactId>arquillian-appengine-embedded-1.3</artifactId>
-       <scope>test</scope>
-      </dependency>
 
   </dependencies>
 

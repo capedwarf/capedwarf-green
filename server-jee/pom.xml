@@ -80,29 +80,6 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>javax.servlet.jsp</groupId>
-         <artifactId>jsp-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>javax.faces</groupId>
-          <artifactId>jsf-api</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>javax.faces</groupId>
-          <artifactId>jsf-impl</artifactId>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-          <groupId>javax.el</groupId>
-          <artifactId>el-api</artifactId>
-          <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.el</groupId>
-         <artifactId>el-ri</artifactId>
-      </dependency>
-      <dependency>
           <groupId>com.google.appengine</groupId>
           <artifactId>geronimo-jta_1.1_spec</artifactId>
       </dependency>
