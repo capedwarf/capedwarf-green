@@ -76,11 +76,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.lhotse</groupId>
-      <artifactId>lhotse-social</artifactId>
-    </dependency>
-
-    <dependency>
        <groupId>org.json</groupId>
        <artifactId>json</artifactId>
     </dependency>
