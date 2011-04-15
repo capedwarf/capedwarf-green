@@ -20,14 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.lhotse.server.api.validation;
-
-import org.jboss.lhotse.common.validation.AbstractValidatorFactoryProvider;
-import org.jboss.lhotse.common.validation.SimpleValidatorFactory;
+package org.jboss.lhotse.server.gae.validation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.validation.ValidatorFactory;
+
+import org.jboss.lhotse.common.validation.AbstractValidatorFactoryProvider;
+import org.jboss.lhotse.common.validation.SimpleValidatorFactory;
+import org.jboss.lhotse.server.api.validation.BlobSize;
+import org.jboss.lhotse.server.api.validation.BlobSizeValidator;
+import org.jboss.lhotse.server.api.validation.JpaEmail;
+import org.jboss.lhotse.server.api.validation.JpaEmailValidator;
 
 
 
