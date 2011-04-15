@@ -22,7 +22,7 @@
 
       <dependency>
          <groupId>org.jboss.lhotse</groupId>
-         <artifactId>lhotse-validation</artifactId>
+         <artifactId>lhotse-validation-api</artifactId>
       </dependency>
 
      <dependency>

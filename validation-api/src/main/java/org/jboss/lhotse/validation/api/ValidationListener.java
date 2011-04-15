@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;

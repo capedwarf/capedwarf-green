@@ -27,9 +27,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.validation.ValidatorFactory;
 
-import org.jboss.lhotse.validation.ValidationListener;
 import org.jboss.lhotse.server.api.lifecycle.After;
 import org.jboss.lhotse.server.api.lifecycle.Notification;
+import org.jboss.lhotse.validation.api.ValidationListener;
 
 
 /**

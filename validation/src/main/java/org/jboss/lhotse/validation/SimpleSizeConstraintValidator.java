@@ -20,6 +20,6 @@ class SimpleSizeConstraintValidator implements ConstraintValidator<Size, Object>
 
    public boolean isValid(Object value, ConstraintValidatorContext context)
    {
-      return ValidationHelper.doValidate(size,  value);
+      return ValidationHelper.doValidate(size, value);
    }
 }

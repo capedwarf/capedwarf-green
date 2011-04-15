@@ -17,6 +17,21 @@
 
     <dependency>
       <groupId>org.jboss.lhotse</groupId>
+      <artifactId>lhotse-validation</artifactId>
+      <exclusions>
+         <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+         </exclusion>
+         <exclusion>
+             <groupId>org.json</groupId>
+             <artifactId>json</artifactId>
+         </exclusion>
+       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.lhotse</groupId>
       <artifactId>lhotse-common</artifactId>
       <exclusions>
          <exclusion>
