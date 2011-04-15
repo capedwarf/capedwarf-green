@@ -26,6 +26,8 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jboss.lhotse.jpa.EntityManagerProvider;
+import org.jboss.lhotse.jpa2.NewProxyingEntityManager;
 import org.jboss.lhotse.server.api.persistence.EMInjector;
 
 /**
@@ -40,6 +42,22 @@ public class JeeEMInjector implements EMInjector, Serializable
 
    public EntityManager getEM()
    {
-      return em;
+      return new NewProxyingEntityManager(em)
+      {
+         protected EntityManagerProvider getProvider()
+         {
+            return new EntityManagerProvider()
+            {
+               public EntityManager getEntityManager()
+               {
+                  return em;
+               }
+
+               public void close(EntityManager em)
+               {
+               }
+            };
+         }
+      };
    }
 }

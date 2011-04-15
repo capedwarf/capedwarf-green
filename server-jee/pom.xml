@@ -89,6 +89,11 @@
           <groupId>com.google.appengine</groupId>
           <artifactId>geronimo-jta_1.1_spec</artifactId>
       </dependency>
+       <dependency>
+           <groupId>org.hibernate.javax.persistence</groupId>
+           <artifactId>hibernate-jpa-2.0-api</artifactId>
+           <scope>provided</scope>
+       </dependency>
 
        <dependency>
            <groupId>org.infinispan</groupId>
