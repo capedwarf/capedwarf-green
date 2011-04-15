@@ -5,7 +5,7 @@ import javax.validation.Validator;
 
 import java.util.Set;
 
-import org.jboss.lhotse.common.validation.ValidationHelper;
+import org.jboss.lhotse.validation.ValidationHelper;
 import org.jboss.test.lhotse.validation.support.DummyInfo;
 import org.junit.Assert;
 import org.junit.Test;

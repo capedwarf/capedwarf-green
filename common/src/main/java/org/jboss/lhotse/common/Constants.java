@@ -14,9 +14,6 @@ public class Constants
 
    public static final String ADMINISTRATOR = "administrator";
 
-   public static final String USERNAME_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
-   public static final String PASSWORD_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
-
    public static final String Lhotse = "Lhotse_";
    public static final String lhotse = "lhotse";
    public static final String LHOTSE_ = "lhotse_";

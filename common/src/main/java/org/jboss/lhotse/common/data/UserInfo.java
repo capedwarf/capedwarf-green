@@ -5,9 +5,9 @@ import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
-import org.jboss.lhotse.common.Constants;
 import org.jboss.lhotse.common.serialization.JSONAware;
 import org.jboss.lhotse.common.serialization.JSONUtils;
+import org.jboss.lhotse.validation.api.Constants;
 import org.jboss.lhotse.validation.api.Email;
 import org.jboss.lhotse.validation.api.MessageTemplateKey;
 

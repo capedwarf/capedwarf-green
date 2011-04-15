@@ -4,9 +4,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.jboss.lhotse.common.Constants;
-import org.jboss.lhotse.common.validation.Email;
-import org.jboss.lhotse.common.validation.MessageTemplateKey;
+import org.jboss.lhotse.validation.api.Constants;
+import org.jboss.lhotse.validation.api.Email;
+import org.jboss.lhotse.validation.api.MessageTemplateKey;
+
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
