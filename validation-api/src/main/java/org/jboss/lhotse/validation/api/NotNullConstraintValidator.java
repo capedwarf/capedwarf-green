@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class NotNullConstraintValidator implements ConstraintValidator<NotNull, Object>
+public class NotNullConstraintValidator implements ConstraintValidator<NotNull, Object>
 {
    public void initialize(NotNull constraintAnnotation)
    {

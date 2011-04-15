@@ -12,5 +12,6 @@ social/target/
 server-api/target/
 server-gae/target/
 server-jee/target/
+validation-api/target/
 validation/target/
 

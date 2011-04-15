@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jboss.lhotse.validation.api.MessageTemplateKey;
+
 /**
  * javax.validation property descriptor.
  *

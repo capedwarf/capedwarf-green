@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 /**
  * javax.validation email validator.

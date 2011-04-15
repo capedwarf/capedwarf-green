@@ -13,6 +13,11 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jboss.lhotse.validation.api.Email;
+import org.jboss.lhotse.validation.api.EmailConstraintValidator;
+import org.jboss.lhotse.validation.api.NotNullConstraintValidator;
+import org.jboss.lhotse.validation.api.PatternConstraintValidator;
+
 /**
  * javax.validation validator factory.
  *

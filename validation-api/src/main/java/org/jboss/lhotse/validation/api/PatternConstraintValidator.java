@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;

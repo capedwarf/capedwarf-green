@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 import java.lang.annotation.Annotation;
 import java.util.regex.Pattern;

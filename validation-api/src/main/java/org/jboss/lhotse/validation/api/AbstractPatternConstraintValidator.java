@@ -1,4 +1,4 @@
-package org.jboss.lhotse.validation;
+package org.jboss.lhotse.validation.api;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
