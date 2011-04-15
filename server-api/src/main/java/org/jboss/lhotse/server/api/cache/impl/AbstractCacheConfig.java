@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * Cache config impl.
@@ -19,6 +20,7 @@ import java.util.Properties;
  */
 public abstract class AbstractCacheConfig implements CacheConfig
 {
+   protected Logger log = Logger.getLogger(getClass().getName());
    private Properties props;
 
    private CacheManager manager;
@@ -72,6 +74,11 @@ public abstract class AbstractCacheConfig implements CacheConfig
          return true;
       }
       return false;
+   }
+
+   public void disposeCache(Cache cache)
+   {
+      // do nothing by default
    }
 
    @Inject

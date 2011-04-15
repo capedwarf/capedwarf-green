@@ -26,6 +26,7 @@ import org.jboss.lhotse.server.api.quilifiers.Name;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
@@ -43,6 +44,11 @@ public class CacheProvider
    public Cache createAppCache(InjectionPoint ip) throws CacheException
    {
       return config.configureCache(ip.getAnnotated().getAnnotation(Name.class).value());
+   }
+
+   public void disposeAppCache(@Disposes @Name("") Cache cache)
+   {
+      config.disposeCache(cache);
    }
 
    @Inject

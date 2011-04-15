@@ -51,6 +51,16 @@ class InfinispanCache implements Cache
       this.stats = new InfinispanCacheStatistics(cache.getAdvancedCache());
    }
 
+   public void start()
+   {
+      cache.start();
+   }
+
+   public void stop()
+   {
+      cache.stop();
+   }
+
    public void addListener(CacheListener cacheListener)
    {
       cache.addListener(new InfinispanCacheListener(cacheListener));

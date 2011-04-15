@@ -24,7 +24,10 @@ package org.jboss.lhotse.server.jee.cache;
 
 import org.jboss.lhotse.server.api.cache.impl.AbstractCacheConfig;
 
+import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 
@@ -36,9 +39,52 @@ import java.util.Map;
 @ApplicationScoped
 public class CacheConfigImpl extends AbstractCacheConfig
 {
+   private String disposeMethodName = "stop";
+   private Method disposeMethod;
+   private boolean checked;
+
    @Override
    protected Map createConfig(String name)
    {
       return Collections.emptyMap();
+   }
+
+   @Override
+   public void disposeCache(Cache cache)
+   {
+      if (cache == null)
+         return;
+
+      if (checked == false)
+      {
+         try
+         {
+            Class<?> clazz = cache.getClass();
+            disposeMethod = clazz.getMethod(disposeMethodName);
+            disposeMethod.setAccessible(true);
+         }
+         catch (Throwable t)
+         {
+            log.info("Cannot dispose cache: " + t);
+         }
+         checked = true;
+      }
+
+      if (disposeMethod != null)
+      {
+         try
+         {
+            disposeMethod.invoke(cache);
+         }
+         catch (Throwable t)
+         {
+            log.finest("Error disposing cache: " + t);
+         }
+      }
+   }
+
+   public void setDisposeMethodName(String disposeMethodName)
+   {
+      this.disposeMethodName = disposeMethodName;
    }
 }

@@ -65,4 +65,11 @@ public interface CacheConfig
     * @return true if such cache exists and was successfully cleared
     */
    boolean clearCache(String name);
+
+   /**
+    * Dispose cache.
+    *
+    * @param cache the cache to dispose
+    */
+   void disposeCache(Cache cache);
 }
