@@ -39,6 +39,14 @@ public class GeoPt implements Serializable, Comparable<GeoPt>
    private float latitude;
    private float longitude;
 
+   /**
+    * Not to be used -- per jpa only.
+    */
+   @Deprecated
+   public GeoPt()
+   {
+   }
+
    public GeoPt(float latitude, float longitude)
    {
       this.latitude = latitude;
