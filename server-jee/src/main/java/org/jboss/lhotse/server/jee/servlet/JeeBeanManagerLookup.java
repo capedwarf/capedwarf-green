@@ -47,33 +47,33 @@ public class JeeBeanManagerLookup implements BeanManagerLookup
 
    public BeanManager lookup(ServletContext context)
    {
-      Context nc = null;
-      try
+      if (beanManager == null)
       {
-         if (beanManager == null)
+         Context nc = null;
+         try
          {
             nc = new InitialContext();
             beanManager = (BeanManager) nc.lookup(STANDARD_BEAN_MANAGER_JNDI_NAME);
          }
-         return beanManager;
-      }
-      catch (Exception e)
-      {
-         log.warning("Cannot find BeanManager: " + e);
-         return null;
-      }
-      finally
-      {
-         if (nc != null)
+         catch (Exception e)
          {
-            try
+            log.warning("Cannot find BeanManager: " + e);
+            return null;
+         }
+         finally
+         {
+            if (nc != null)
             {
-               nc.close();
-            }
-            catch (NamingException ignored)
-            {
+               try
+               {
+                  nc.close();
+               }
+               catch (NamingException ignored)
+               {
+               }
             }
          }
       }
+      return beanManager;
    }
 }
