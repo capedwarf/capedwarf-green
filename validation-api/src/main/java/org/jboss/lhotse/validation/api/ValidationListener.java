@@ -16,9 +16,9 @@ import java.util.logging.Logger;
 public class ValidationListener
 {
    private static Logger log = Logger.getLogger(ValidationListener.class.getName());
-   private static ValidatorFactory factory;
+   private static boolean warning;
 
-   private boolean warning;
+   private static ValidatorFactory factory;
 
    @SuppressWarnings("unchecked")
    public void validate(Object object) throws Exception
