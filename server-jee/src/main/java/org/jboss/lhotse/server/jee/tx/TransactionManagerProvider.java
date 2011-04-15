@@ -43,7 +43,7 @@ public class TransactionManagerProvider
       return tm;
    }
 
-   @Resource(name = "java:/TransactionManager")
+   @Resource(mappedName = "java:/TransactionManager")
    public void setTransactionManager(TransactionManager transactionManager)
    {
       this.tm = transactionManager;

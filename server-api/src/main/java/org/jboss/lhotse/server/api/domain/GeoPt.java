@@ -22,8 +22,8 @@
 
 package org.jboss.lhotse.server.api.domain;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.persistence.Embeddable;
 
 /**
  * Geo point.
@@ -50,9 +50,21 @@ public class GeoPt implements Serializable, Comparable<GeoPt>
       return latitude;
    }
 
+   @Deprecated
+   public void setLatitude(float latitude)
+   {
+      this.latitude = latitude;
+   }
+
    public float getLongitude()
    {
       return longitude;
+   }
+
+   @Deprecated
+   public void setLongitude(float longitude)
+   {
+      this.longitude = longitude;
    }
 
    public boolean equals(Object obj)
