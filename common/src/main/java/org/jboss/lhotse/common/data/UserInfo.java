@@ -8,8 +8,8 @@ import java.io.Serializable;
 import org.jboss.lhotse.common.Constants;
 import org.jboss.lhotse.common.serialization.JSONAware;
 import org.jboss.lhotse.common.serialization.JSONUtils;
-import org.jboss.lhotse.common.validation.Email;
-import org.jboss.lhotse.common.validation.MessageTemplateKey;
+import org.jboss.lhotse.validation.Email;
+import org.jboss.lhotse.validation.MessageTemplateKey;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -20,7 +20,7 @@ import org.jboss.lhotse.common.env.EnvironmentFactory;
 import org.jboss.lhotse.common.env.Secure;
 import org.jboss.lhotse.common.io.ClosedInputStream;
 import org.jboss.lhotse.common.serialization.*;
-import org.jboss.lhotse.common.validation.ValidationHelper;
+import org.jboss.lhotse.validation.ValidationHelper;
 import org.jboss.lhotse.connect.config.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

@@ -23,7 +23,7 @@
 package org.jboss.lhotse.server.api.validation;
 
 
-import org.jboss.lhotse.common.validation.AbstractEmailConstraintValidator;
+import org.jboss.lhotse.validation.AbstractEmailConstraintValidator;
 
 /**
  * Blob size validator.

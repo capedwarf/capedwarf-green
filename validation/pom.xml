@@ -7,27 +7,17 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>lhotse-common</artifactId>
+  <artifactId>lhotse-validation</artifactId>
   <packaging>jar</packaging>
-  <name>Lhotse Common Utils</name>
+  <name>Lhotse Validation</name>
   <url>http://www.jboss.org/lhotse</url>
-  <description>Lhotse Common Utils</description>
+  <description>Lhotse Validation</description>
 
   <dependencies>
 
-     <!-- dependency>
-         <groupId>com.google.guava</groupId>
-         <artifactId>guava</artifactId>
-     </dependency -->
-
-      <dependency>
-         <groupId>org.jboss.lhotse</groupId>
-         <artifactId>lhotse-validation</artifactId>
-      </dependency>
-
      <dependency>
-         <groupId>org.json</groupId>
-         <artifactId>json</artifactId>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
      </dependency>
 
      <dependency>

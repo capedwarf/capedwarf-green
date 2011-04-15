@@ -26,8 +26,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.validation.ValidatorFactory;
 
-import org.jboss.lhotse.common.validation.AbstractValidatorFactoryProvider;
-import org.jboss.lhotse.common.validation.SimpleValidatorFactory;
+import org.jboss.lhotse.validation.AbstractValidatorFactoryProvider;
+import org.jboss.lhotse.validation.SimpleValidatorFactory;
 import org.jboss.lhotse.server.api.validation.BlobSize;
 import org.jboss.lhotse.server.api.validation.BlobSizeValidator;
 import org.jboss.lhotse.server.api.validation.JpaEmail;

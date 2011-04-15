@@ -22,9 +22,10 @@
 
 package org.jboss.lhotse.server.jee.tx;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 
 /**
@@ -32,20 +33,20 @@ import javax.transaction.TransactionManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@ApplicationScoped
 public class TransactionManagerProvider
 {
-   private TransactionManager tm;
-
    @Produces
-   public TransactionManager getTransactionManager()
+   @ApplicationScoped
+   public TransactionManager getTransactionManager() throws Exception
    {
-      return tm;
-   }
-
-   @Resource(mappedName = "java:/TransactionManager")
-   public void setTransactionManager(TransactionManager transactionManager)
-   {
-      this.tm = transactionManager;
+      Context context = new InitialContext();
+      try
+      {
+         return (TransactionManager) context.lookup("java:/TransactionManager");
+      }
+      finally
+      {
+         context.close();
+      }
    }
 }
