@@ -22,8 +22,14 @@
 
 package org.jboss.lhotse.server.jee.io;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.lhotse.server.api.io.AbstractBlobService;
@@ -37,26 +43,102 @@ import org.jboss.lhotse.server.api.io.Blob;
 @ApplicationScoped
 public class DefaultBlobService extends AbstractBlobService
 {
-   protected Blob toBlobInternal(byte[] bytes)
+   private volatile File dataDir;
+
+   protected File getDataDir()
    {
-      return null; // TODO
+      if (dataDir == null)
+      {
+         synchronized (this)
+         {
+            if (dataDir == null)
+            {
+               String dataDirProp = System.getProperty("jboss.server.data.dir", System.getProperty("user.home"));
+               File tmp = new File(dataDirProp, "lhotse");
+               //noinspection ResultOfMethodCallIgnored
+               tmp.mkdirs();
+               dataDir = tmp;
+            }
+         }
+      }
+      return dataDir;
    }
 
-   @Override
+   protected Blob toBlobInternal(final byte[] bytes)
+   {
+      return new Blob()
+      {
+         public byte[] getBytes()
+         {
+            return bytes;
+         }
+      };
+   }
+
    protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
    {
-      return new byte[0]; // TODO
+      File file = new File(getDataDir(), key);
+      if (file.exists() == false)
+         return null;
+
+
+      FileInputStream fis = null;
+      try
+      {
+         fis = new FileInputStream(file);
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+         int b;
+         while ((b = fis.read()) != -1)
+         {
+            baos.write(b);
+         }
+         byte[] bytes = baos.toByteArray();
+         int start = (int) startIndex;
+         int end = (endIndex != Long.MAX_VALUE) ? (int) endIndex : bytes.length;
+         byte[] result = new byte[end - start + 1];
+         System.arraycopy(bytes, start, result, 0, result.length);
+         return result;
+      }
+      catch (Exception e)
+      {
+         throw new RuntimeException(e);
+      }
+      finally
+      {
+         if (fis != null)
+         {
+            try
+            {
+               fis.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+      }
    }
 
-   @Override
    protected void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException
    {
-      // TODO
+      ServletOutputStream outputStream = response.getOutputStream();
+      outputStream.write(loadBytesInternal(key, start, end));
+      outputStream.flush();
    }
 
-   @Override
    protected String storeBytesInternal(String mimeType, byte[] bytes) throws IOException
    {
-      return null; // TODO
+      String key = UUID.randomUUID().toString();
+      File file = new File(getDataDir(), key);
+      FileOutputStream fos = new FileOutputStream(file);
+      try
+      {
+         fos.write(bytes);
+         fos.flush();
+      }
+      finally
+      {
+         fos.close();
+      }
+      return key;
    }
 }
