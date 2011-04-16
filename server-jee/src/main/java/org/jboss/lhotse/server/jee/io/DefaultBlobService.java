@@ -95,7 +95,7 @@ public class DefaultBlobService extends AbstractBlobService
          byte[] bytes = baos.toByteArray();
          int start = (int) startIndex;
          int end = (endIndex != Long.MAX_VALUE) ? (int) endIndex : bytes.length;
-         byte[] result = new byte[end - start + 1];
+         byte[] result = new byte[end - start];
          System.arraycopy(bytes, start, result, 0, result.length);
          return result;
       }
