@@ -86,18 +86,19 @@ public class DefaultBlobService extends AbstractBlobService
       try
       {
          fis = new FileInputStream(file);
+         if (startIndex > 0)
+            startIndex = fis.skip(startIndex);
+
+         endIndex = endIndex - startIndex; // actual length
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          int b;
-         while ((b = fis.read()) != -1)
+         while ((endIndex > 0) && ((b = fis.read()) != -1))
          {
-            baos.write(b);
+               baos.write(b);
+
+            endIndex--;
          }
-         byte[] bytes = baos.toByteArray();
-         int start = (int) startIndex;
-         int end = (endIndex != Long.MAX_VALUE) ? (int) endIndex : bytes.length;
-         byte[] result = new byte[end - start];
-         System.arraycopy(bytes, start, result, 0, result.length);
-         return result;
+         return baos.toByteArray();
       }
       catch (Exception e)
       {
