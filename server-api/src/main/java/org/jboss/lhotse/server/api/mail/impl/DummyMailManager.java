@@ -35,11 +35,11 @@ public class DummyMailManager extends AbstractMailManager
 {
    public void sendEmail(String sender, String subject, String textBody, String... tos)
    {
-      log.info(sender + " - " + subject + ": " + textBody + " -->" + Arrays.toString(tos));
+      log.info(sender + " - " + subject + ": " + textBody + " --> " + Arrays.toString(tos));
    }
 
    public void sendEmailToAdmins(String sender, String subject, String textBody)
    {
-      log.info(sender + " - " + subject + ": " + textBody + " --> admins");
+      log.info(sender + " - " + subject + ": " + textBody + " --> [administrators]");
    }
 }
