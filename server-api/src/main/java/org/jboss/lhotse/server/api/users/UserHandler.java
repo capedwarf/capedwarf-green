@@ -36,4 +36,12 @@ public interface UserHandler
     * @return the login url
     */
    String loginURL(String requestURI);
+
+   /**
+    * Provide logout url.
+    *
+    * @param requestURI the request uri
+    * @return the login url
+    */
+   String logoutURL(String requestURI);
 }

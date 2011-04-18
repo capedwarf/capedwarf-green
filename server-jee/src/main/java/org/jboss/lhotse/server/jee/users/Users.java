@@ -41,11 +41,16 @@ public class Users implements UserHandler
    @Current
    public User currentUser()
    {
-      return null;
+      return null; // TODO
    }
 
    public String loginURL(String requestURI)
    {
-      return null;
+      return null; // TODO
+   }
+
+   public String logoutURL(String requestURI)
+   {
+      return null; // TODO
    }
 }

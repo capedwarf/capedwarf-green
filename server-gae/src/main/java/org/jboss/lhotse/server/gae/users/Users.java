@@ -54,6 +54,11 @@ public class Users implements UserHandler
       return userService.createLoginURL(requestURI);
    }
 
+   public String logoutURL(String requestURI)
+   {
+      return userService.createLogoutURL(requestURI);
+   }
+
    private static class UserImpl implements User
    {
       com.google.appengine.api.users.User user;
