@@ -67,5 +67,11 @@ public class Users implements UserHandler
       {
          return user.getEmail();
       }
+
+      @Override
+      public String toString()
+      {
+         return getEmail();
+      }
    }
 }
