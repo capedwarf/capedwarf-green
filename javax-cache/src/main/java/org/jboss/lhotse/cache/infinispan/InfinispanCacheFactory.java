@@ -85,13 +85,15 @@ public class InfinispanCacheFactory implements CacheFactory
             }
          }
       }
-      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name", "java:CacheManager");
+      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name", "java:CacheManager/lhotse");
 
       Context ctx = null;
       try
       {
          ctx = new InitialContext(jndiProperties);
-         return (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
+         EmbeddedCacheManager manager = (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
+         log.info("Using JNDI found CacheManager: " + jndiNamespace);
+         return manager;
       }
       catch (NamingException ne)
       {
