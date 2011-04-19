@@ -60,31 +60,6 @@
            <optional>true</optional>
        </dependency>
 
-     <!-- dependency>
-           <groupId>com.google.gae</groupId>
-           <artifactId>appengine-mapper</artifactId>
-     </dependency>
-
-     <dependency>
-           <groupId>org.apache.hadoop</groupId>
-           <artifactId>hadoop-core</artifactId>
-     </dependency>
-
-     <dependency>
-           <groupId>commons-logging</groupId>
-           <artifactId>commons-logging</artifactId>
-     </dependency>
-
-     <dependency>
-           <groupId>com.googlecode.charts4j</groupId>
-           <artifactId>charts4j</artifactId>
-     </dependency -->
-
-       <dependency>
-         <groupId>org.jboss.seam.security</groupId>
-         <artifactId>seam-security</artifactId>
-       </dependency>
-
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
