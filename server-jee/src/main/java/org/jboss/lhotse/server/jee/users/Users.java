@@ -22,8 +22,10 @@
 
 package org.jboss.lhotse.server.jee.users;
 
+import java.security.Principal;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.lhotse.server.api.quilifiers.Current;
 import org.jboss.lhotse.server.api.users.User;
@@ -39,18 +41,40 @@ public class Users implements UserHandler
 {
    @Produces
    @Current
-   public User currentUser()
+   public User currentUser(HttpServletRequest req)
    {
-      return null; // TODO
+      Principal principal = req.getUserPrincipal();
+      return (principal != null) ? new UserImpl(principal) : null;
    }
 
    public String loginURL(String requestURI)
    {
-      return null; // TODO
+      return "restricted/login.cdi";
    }
 
    public String logoutURL(String requestURI)
    {
-      return null; // TODO
+      return "restricted/logout.cdi";
+   }
+
+   private static class UserImpl implements User
+   {
+      private Principal principal;
+
+      private UserImpl(Principal principal)
+      {
+         this.principal = principal;
+      }
+
+      public String getEmail()
+      {
+         return principal.getName();
+      }
+
+      @Override
+      public String toString()
+      {
+         return getEmail();
+      }
    }
 }
