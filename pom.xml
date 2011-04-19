@@ -253,6 +253,16 @@
           <version>${version.com.google.android}</version>
         </dependency>
 
+        <!-- Seam3 -->
+
+        <dependency>
+          <groupId>org.jboss.seam</groupId>
+          <artifactId>seam-bom</artifactId>
+          <version>${version.org.jboss.seam}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+
         <!-- JPA2 -->
 
         <dependency>
@@ -330,12 +340,6 @@
            <groupId>javax.enterprise</groupId>
            <artifactId>cdi-api</artifactId>
            <version>${version.cdi.api}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder</artifactId>
-            <version>${version.org.jboss.seam}</version>
         </dependency>
 
        <dependency>

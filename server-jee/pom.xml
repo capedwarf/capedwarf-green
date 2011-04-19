@@ -80,6 +80,11 @@
            <artifactId>charts4j</artifactId>
      </dependency -->
 
+       <dependency>
+         <groupId>org.jboss.seam.security</groupId>
+         <artifactId>seam-security</artifactId>
+       </dependency>
+
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>

@@ -23,6 +23,7 @@
 package org.jboss.lhotse.server.api.domain;
 
 import javax.persistence.Basic;
+import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
@@ -31,7 +32,7 @@ import javax.persistence.Transient;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-// @Entity // TODO -- re-check this
+@Entity // TODO -- re-check this
 @MappedSuperclass
 public abstract class TimestampedEntity extends AbstractEntity implements TimestampAware
 {
