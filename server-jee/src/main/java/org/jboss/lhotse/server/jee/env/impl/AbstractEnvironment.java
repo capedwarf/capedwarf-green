@@ -26,7 +26,6 @@ package org.jboss.lhotse.server.jee.env.impl;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.transaction.TransactionManager;
 
 import org.jboss.lhotse.server.jee.env.Environment;
 
@@ -38,12 +37,13 @@ import org.jboss.lhotse.server.jee.env.Environment;
 @ApplicationScoped
 public abstract class AbstractEnvironment implements Environment
 {
-   protected TransactionManager lookupTxManager(String txManagerJndiName) throws Exception
+   protected <T> T doLookup(String jndiName, Class<T> expectedType) throws Exception
    {
       Context context = new InitialContext();
       try
       {
-         return (TransactionManager) context.lookup(txManagerJndiName);
+         Object lookup = context.lookup(jndiName);
+         return expectedType.cast(lookup);
       }
       finally
       {

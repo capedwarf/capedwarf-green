@@ -24,6 +24,7 @@
 package org.jboss.lhotse.server.jee.env.impl;
 
 import java.util.logging.Logger;
+import javax.mail.Session;
 import javax.transaction.TransactionManager;
 
 /**
@@ -52,7 +53,7 @@ public class GenericEnvironment extends AbstractEnvironment
       {
          try
          {
-            TransactionManager tm = lookupTxManager(jndiManagerName[0]);
+            TransactionManager tm = doLookup(jndiManagerName[0], TransactionManager.class);
             log.info("Found Tx manager for " + jndiManagerName[1]);
             return tm;
          }
@@ -61,5 +62,17 @@ public class GenericEnvironment extends AbstractEnvironment
          }
       }
       throw new IllegalArgumentException("No Tx manager found!");
+   }
+
+   public Session lookupMailSession()
+   {
+      try
+      {
+         return doLookup("java:/Mail", Session.class);
+      }
+      catch (Throwable ignored)
+      {
+         return null;
+      }
    }
 }

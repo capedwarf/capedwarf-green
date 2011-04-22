@@ -23,6 +23,7 @@
 
 package org.jboss.lhotse.server.jee.env;
 
+import javax.mail.Session;
 import javax.transaction.TransactionManager;
 
 /**
@@ -39,4 +40,11 @@ public interface Environment
     * @throws Exception for any error
     */
    TransactionManager lookupTxManager() throws Exception;
+
+   /**
+    * Lookup mail session.
+    *
+    * @return the mail session
+    */
+   Session lookupMailSession();
 }

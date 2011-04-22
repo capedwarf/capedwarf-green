@@ -23,8 +23,10 @@
 
 package org.jboss.lhotse.server.jee.env.impl;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
+import javax.mail.Session;
 import javax.transaction.TransactionManager;
 
 /**
@@ -36,8 +38,16 @@ import javax.transaction.TransactionManager;
 @ApplicationScoped
 public class GlassFishEnvironment extends AbstractEnvironment
 {
+   @Resource(mappedName = "mail/Session")
+   private Session session;
+
    public TransactionManager lookupTxManager() throws Exception
    {
-      return lookupTxManager("java:appserver/TransactionManager");
+      return doLookup("java:appserver/TransactionManager", TransactionManager.class);
+   }
+
+   public Session lookupMailSession()
+   {
+      return session;
    }
 }

@@ -22,16 +22,17 @@
 
 package org.jboss.lhotse.server.jee.mail;
 
-import org.jboss.lhotse.server.api.mail.impl.AbstractMailManager;
-
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import org.jboss.lhotse.server.api.mail.impl.AbstractMailManager;
+import org.jboss.lhotse.server.jee.env.Environment;
 
 /**
  * JEE mail manager impl.
@@ -41,11 +42,13 @@ import javax.mail.internet.MimeMessage;
 @ApplicationScoped
 public class BasicMailManager extends AbstractMailManager
 {
-   @Resource(mappedName = "java:/Mail")
    private Session session;
 
    public void sendEmail(String sender, String subject, String textBody, String... tos)
    {
+      if (session == null)
+         return;
+
       try
       {
          Address[] addresses = new Address[tos.length];
@@ -68,5 +71,13 @@ public class BasicMailManager extends AbstractMailManager
    public void sendEmailToAdmins(String sender, String subject, String textBody)
    {
       sendEmail(sender, subject, textBody, adminManager.getAppAdminEmail());
+   }
+
+   @Inject
+   public void setEnv(Environment env)
+   {
+      session = env.lookupMailSession();
+      if (session == null)
+         log.warning("No mail session setup.");
    }
 }
