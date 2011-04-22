@@ -22,11 +22,12 @@
 
 package org.jboss.lhotse.server.jee.tx;
 
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
+
+import org.jboss.lhotse.server.jee.env.Environment;
 
 /**
  * Provide Tx manager.
@@ -35,18 +36,12 @@ import javax.transaction.TransactionManager;
  */
 public class TransactionManagerProvider
 {
+   protected Logger log = Logger.getLogger(TransactionManagerProvider.class.getName());
+
    @Produces
    @ApplicationScoped
-   public TransactionManager getTransactionManager() throws Exception
+   public TransactionManager getTransactionManager(Environment env) throws Exception
    {
-      Context context = new InitialContext();
-      try
-      {
-         return (TransactionManager) context.lookup("java:/TransactionManager");
-      }
-      finally
-      {
-         context.close();
-      }
+      return env.lookupTxManager();
    }
 }
