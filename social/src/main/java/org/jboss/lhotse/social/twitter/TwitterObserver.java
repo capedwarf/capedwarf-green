@@ -22,8 +22,8 @@
 
 package org.jboss.lhotse.social.twitter;
 
+import org.jboss.lhotse.common.io.URLAdapter;
 import org.jboss.lhotse.common.social.SocialEvent;
-import org.jboss.lhotse.social.io.URLAdapter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;

@@ -22,7 +22,7 @@
 
 package org.jboss.lhotse.server.jee.io;
 
-import org.jboss.lhotse.social.io.URLAdapter;
+import org.jboss.lhotse.common.io.URLAdapter;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;

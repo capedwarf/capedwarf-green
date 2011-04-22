@@ -22,9 +22,9 @@
 
 package org.jboss.lhotse.social.facebook;
 
+import org.jboss.lhotse.common.io.URLAdapter;
 import org.jboss.lhotse.common.serialization.JSONSerializator;
 import org.jboss.lhotse.common.social.SocialEvent;
-import org.jboss.lhotse.social.io.URLAdapter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
