@@ -22,13 +22,11 @@
 
 package org.jboss.lhotse.server.jee.tx;
 
-import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
-import org.jboss.lhotse.server.api.tx.Transactional;
-import org.jboss.logging.Logger;
-
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -37,10 +35,11 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
+import org.jboss.lhotse.server.api.tx.Transactional;
+import org.jboss.lhotse.server.api.tx.TxInterceptorDelegate;
+import org.jboss.logging.Logger;
 
 /**
  * Transaction interceptor.
@@ -48,9 +47,7 @@ import java.util.Map;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  * @author Matej Lazar added transaction types based on org.jboss.ejb3.tx2.impl.CMTTxInterceptor
  */
-@Transactional
-@Interceptor
-public class TransactionInterceptor implements Serializable
+public class TransactionInterceptor implements TxInterceptorDelegate, Serializable
 {
    private static final long serialVersionUID = 1L;
    private static final Logger log = Logger.getLogger(TransactionInterceptor.class);
@@ -107,7 +104,6 @@ public class TransactionInterceptor implements Serializable
       }
    }
 
-   @AroundInvoke
    public Object invoke(final InvocationContext invocation) throws Exception
    {
       TransactionPropagationType propType = getPropType(invocation);

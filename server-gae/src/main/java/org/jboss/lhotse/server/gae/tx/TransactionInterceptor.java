@@ -22,31 +22,28 @@
 
 package org.jboss.lhotse.server.gae.tx;
 
-import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
-import org.jboss.lhotse.server.api.tx.Transactional;
-import org.jboss.lhotse.server.api.tx.Work;
-
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.OptimisticLockException;
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.interceptor.InvocationContext;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.OptimisticLockException;
+
+import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
+import org.jboss.lhotse.server.api.tx.Transactional;
+import org.jboss.lhotse.server.api.tx.TxInterceptorDelegate;
+import org.jboss.lhotse.server.api.tx.Work;
 
 /**
  * Transaction interceptor.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@Transactional
-@Interceptor
-public class TransactionInterceptor implements Serializable
+public class TransactionInterceptor implements TxInterceptorDelegate, Serializable
 {
    private static final long serialVersionUID = 1L;
 
@@ -65,8 +62,7 @@ public class TransactionInterceptor implements Serializable
       return tuple != null ? tuple.em : null;
    }
 
-   @AroundInvoke
-   public Object aroundInvoke(final InvocationContext invocation) throws Exception
+   public Object invoke(final InvocationContext invocation) throws Exception
    {
       Tuple tuple = emTL.get();
       if (tuple == null)
