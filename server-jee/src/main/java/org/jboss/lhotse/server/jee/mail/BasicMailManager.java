@@ -74,7 +74,7 @@ public class BasicMailManager extends AbstractMailManager
    }
 
    @Inject
-   public void setEnv(Environment env)
+   public void setEnv(Environment env) throws Exception
    {
       session = env.lookupMailSession();
       if (session == null)

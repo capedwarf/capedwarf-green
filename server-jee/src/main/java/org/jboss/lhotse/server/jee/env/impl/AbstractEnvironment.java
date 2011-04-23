@@ -23,6 +23,7 @@
 
 package org.jboss.lhotse.server.jee.env.impl;
 
+import java.util.Arrays;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -37,13 +38,39 @@ import org.jboss.lhotse.server.jee.env.Environment;
 @ApplicationScoped
 public abstract class AbstractEnvironment implements Environment
 {
-   protected <T> T doLookup(String jndiName, Class<T> expectedType) throws Exception
+   protected static <T> T doLookup(String jndiName, Class<T> expectedType) throws Exception
    {
       Context context = new InitialContext();
       try
       {
          Object lookup = context.lookup(jndiName);
          return expectedType.cast(lookup);
+      }
+      finally
+      {
+         context.close();
+      }
+   }
+
+   protected static <T> T doLookup(boolean allowNull, Class<T> expectedType, String... jndiNames) throws Exception
+   {
+      Context context = new InitialContext();
+      try
+      {
+         for (String jndiName : jndiNames)
+         {
+            try
+            {
+               Object lookup = context.lookup(jndiName);
+               return expectedType.cast(lookup);
+            }
+            catch (Throwable ignored)
+            {
+            }
+         }
+         if (allowNull == false)
+            throw new IllegalArgumentException("No " + expectedType + " resource found: " + Arrays.toString(jndiNames));
+         return null;
       }
       finally
       {

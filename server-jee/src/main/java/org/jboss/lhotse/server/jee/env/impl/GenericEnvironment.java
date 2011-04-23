@@ -64,15 +64,8 @@ public class GenericEnvironment extends AbstractEnvironment
       throw new IllegalArgumentException("No Tx manager found!");
    }
 
-   public Session lookupMailSession()
+   public Session lookupMailSession() throws Exception
    {
-      try
-      {
-         return doLookup("java:/Mail", Session.class);
-      }
-      catch (Throwable ignored)
-      {
-         return null;
-      }
+      return doLookup(true, Session.class, "java:/Mail", "mail/Session");
    }
 }

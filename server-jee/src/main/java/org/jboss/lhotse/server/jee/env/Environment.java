@@ -45,6 +45,7 @@ public interface Environment
     * Lookup mail session.
     *
     * @return the mail session
+    * @throws Exception for any error
     */
-   Session lookupMailSession();
+   Session lookupMailSession() throws Exception;
 }
