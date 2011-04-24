@@ -71,24 +71,24 @@ public abstract class ActionController extends AbstractRequestHandler
       String actionName = req.getParameter("action");
       if (actionName != null)
       {
-         RequestHandler action;
-         // lets first try action classes
-         Class<RequestHandler> ac = classes.get(actionName);
-         if (ac != null)
+         RequestHandler action = actions.get(actionName);
+         if (action == null)
          {
-            if (beanManager == null)
-               throw new IllegalArgumentException("No Weld manager present");
+            Class<RequestHandler> ac = classes.get(actionName);
+            if (ac != null)
+            {
+               if (beanManager == null)
+                  throw new IllegalArgumentException("No Weld manager present");
 
-            InjectionTarget<RequestHandler> it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(ac));
-            CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
-            action = it.produce(cc);
-            it.inject(action, cc);
+               InjectionTarget<RequestHandler> it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(ac));
+               CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
+               action = it.produce(cc);
+               it.inject(action, cc);
 
-            action.initialize(context);
-         }
-         else
-         {
-            action = actions.get(actionName);
+               action.initialize(context);
+
+               actions.put(actionName, action);
+            }
          }
 
          if (action != null)
