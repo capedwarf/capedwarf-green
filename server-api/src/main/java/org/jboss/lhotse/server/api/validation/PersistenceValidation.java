@@ -22,6 +22,7 @@
 
 package org.jboss.lhotse.server.api.validation;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
@@ -37,11 +38,17 @@ import org.jboss.lhotse.validation.api.ValidationListener;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class PersistenceValidation
 {
    private ValidatorFactory factory;
 
    public void initialize(@Observes @After Notification<EntityManagerFactory> status)
+   {
+      applyListener();
+   }
+
+   protected void applyListener()
    {
       ValidationListener.setFactory(factory);
    }
