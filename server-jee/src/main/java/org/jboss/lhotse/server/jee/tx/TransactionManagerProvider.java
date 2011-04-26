@@ -34,6 +34,7 @@ import org.jboss.lhotse.server.jee.env.Environment;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class TransactionManagerProvider
 {
    protected Logger log = Logger.getLogger(TransactionManagerProvider.class.getName());

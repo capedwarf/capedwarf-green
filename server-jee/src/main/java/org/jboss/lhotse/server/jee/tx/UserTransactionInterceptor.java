@@ -26,16 +26,15 @@ import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
 import java.util.Map;
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 
 import org.jboss.lhotse.server.api.tx.TransactionPropagationType;
 import org.jboss.lhotse.server.api.tx.Transactional;
@@ -43,68 +42,19 @@ import org.jboss.lhotse.server.api.tx.TxInterceptorDelegate;
 import org.jboss.logging.Logger;
 
 /**
- * Transaction interceptor.
+ * UserTransaction interceptor.
+ * Note: no nested tx support!
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- * @author Matej Lazar added transaction types based on org.jboss.ejb3.tx2.impl.CMTTxInterceptor
  */
-@Alternative
-public class TransactionInterceptor implements TxInterceptorDelegate, Serializable
+public class UserTransactionInterceptor implements TxInterceptorDelegate, Serializable
 {
    private static final long serialVersionUID = 1L;
-   private static final Logger log = Logger.getLogger(TransactionInterceptor.class);
+   private static final Logger log = Logger.getLogger(UserTransactionInterceptor.class);
 
-   private TransactionManager tm;
+   private transient UserTransaction tx;
 
    private transient Map<AnnotatedElement, TransactionMetadata> transactionMetadata = new HashMap<AnnotatedElement, TransactionMetadata>();
-
-   /**
-    * The <code>endTransaction</code> method ends a transaction and
-    * translates any exceptions into
-    * TransactionRolledBack[Local]Exception or SystemException.
-    *
-    * @param tm a <code>TransactionManager</code> value
-    * @param tx a <code>Transaction</code> value
-    */
-   protected void endTransaction(TransactionManager tm, Transaction tx)
-   {
-      try
-      {
-         if (tx != tm.getTransaction())
-         {
-            throw new IllegalStateException("Wrong tx on thread: expected " + tx + ", actual " + tm.getTransaction());
-         }
-
-         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-         {
-            tm.rollback();
-         }
-         else
-         {
-            // Commit tx
-            // This will happen if
-            // a) everything goes well
-            // b) app. exception was thrown
-            tm.commit();
-         }
-      }
-      catch (RollbackException e)
-      {
-         handleEndTransactionException(e);
-      }
-      catch (HeuristicMixedException e)
-      {
-         handleEndTransactionException(e);
-      }
-      catch (HeuristicRollbackException e)
-      {
-         handleEndTransactionException(e);
-      }
-      catch (SystemException e)
-      {
-         handleEndTransactionException(e);
-      }
-   }
 
    public Object invoke(final InvocationContext invocation) throws Exception
    {
@@ -125,6 +75,46 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
             return supports(invocation);
          default:
             throw new IllegalStateException("Unexpected tx propagation type " + propType + " on " + invocation);
+      }
+   }
+
+   /**
+    * The <code>endTransaction</code> method ends a transaction and
+    * translates any exceptions into
+    * TransactionRolledBack[Local]Exception or SystemException.
+    */
+   protected void endTransaction()
+   {
+      try
+      {
+         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+         {
+            tx.rollback();
+         }
+         else
+         {
+            // Commit tx
+            // This will happen if
+            // a) everything goes well
+            // b) app. exception was thrown
+            tx.commit();
+         }
+      }
+      catch (RollbackException e)
+      {
+         handleEndTransactionException(e);
+      }
+      catch (HeuristicMixedException e)
+      {
+         handleEndTransactionException(e);
+      }
+      catch (HeuristicRollbackException e)
+      {
+         handleEndTransactionException(e);
+      }
+      catch (SystemException e)
+      {
+         handleEndTransactionException(e);
       }
    }
 
@@ -151,7 +141,7 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
       }
    }
 
-   protected Object invokeInCallerTx(InvocationContext invocation, Transaction tx) throws Exception
+   protected Object invokeInCallerTx(InvocationContext invocation) throws Exception
    {
       try
       {
@@ -159,7 +149,7 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
       }
       catch (Throwable t)
       {
-         handleExceptionInCallerTx(invocation, t, tx);
+         handleExceptionInCallerTx(invocation, t);
       }
       throw new RuntimeException("UNREACHABLE");
    }
@@ -169,43 +159,40 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
       return invocation.proceed();
    }
 
-   protected Object invokeInOurTx(InvocationContext invocation, TransactionManager tm) throws Exception
+   protected Object invokeInOurTx(InvocationContext invocation) throws Exception
    {
-      tm.begin();
-      Transaction tx = tm.getTransaction();
+      tx.begin();
       try
       {
          return invocation.proceed();
       }
       catch (Throwable t)
       {
-         handleExceptionInOurTx(invocation, t, tx);
+         handleExceptionInOurTx(invocation, t);
       }
       finally
       {
-         endTransaction(tm, tx);
+         endTransaction();
       }
       throw new RuntimeException("UNREACHABLE");
    }
 
    protected Object mandatory(InvocationContext invocation) throws Exception
    {
-      Transaction tx = tm.getTransaction();
-      if (tx == null)
+      if (tx.getStatus() != Status.STATUS_ACTIVE)
       {
          //TODO throw typed exception
          // throw new EJBTransactionRequiredException("Transaction is required for invocation: " + invocation);
          throw new RuntimeException("Transaction is required for invocation: " + invocation);
       }
-      return invokeInCallerTx(invocation, tx);
+      return invokeInCallerTx(invocation);
    }
 
    protected Object never(InvocationContext invocation) throws Exception
    {
-      if (tm.getTransaction() != null)
+      if (tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
          //TODO throw typed exception
-         //throw new EJBException("Transaction present on server in Never call (EJB3 13.6.2.6)");
          throw new RuntimeException("Transaction present on server in Never call (EJB3 13.6.2.6)");
       }
       return invokeInNoTx(invocation);
@@ -213,70 +200,44 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
 
    protected Object notSupported(InvocationContext invocation) throws Exception
    {
-      Transaction tx = tm.getTransaction();
-      if (tx != null)
-      {
-         tm.suspend();
-         try
-         {
-            return invokeInNoTx(invocation);
-         }
-         finally
-         {
-            tm.resume(tx);
-         }
-      }
-      else
-      {
-         return invokeInNoTx(invocation);
-      }
+      // TODO
+      return invokeInNoTx(invocation);
    }
 
    protected Object required(InvocationContext invocation) throws Exception
    {
-      Transaction tx = tm.getTransaction();
-      if (tx == null)
+      if (tx.getStatus() == Status.STATUS_NO_TRANSACTION)
       {
-         return invokeInOurTx(invocation, tm);
+         return invokeInOurTx(invocation);
       }
       else
       {
-         return invokeInCallerTx(invocation, tx);
+         return invokeInCallerTx(invocation);
       }
    }
 
    protected Object requiresNew(InvocationContext invocation) throws Exception
    {
-      Transaction tx = tm.getTransaction();
-      if (tx != null)
+      if (tx.getStatus() == Status.STATUS_ACTIVE)
       {
-         tm.suspend();
-         try
-         {
-            return invokeInOurTx(invocation, tm);
-         }
-         finally
-         {
-            tm.resume(tx);
-         }
+         throw new NotSupportedException("Requires-New is not supported.");
       }
       else
       {
-         return invokeInOurTx(invocation, tm);
+         return invokeInOurTx(invocation);
       }
    }
 
 
    protected Object supports(InvocationContext invocation) throws Exception
    {
-      Transaction tx = tm.getTransaction();
-      if (tx == null)
+      if (tx.getStatus() == Status.STATUS_NO_TRANSACTION)
       {
          return invokeInNoTx(invocation);
       }
       else
       {
-         return invokeInCallerTx(invocation, tx);
+         return invokeInCallerTx(invocation);
       }
    }
 
@@ -284,10 +245,8 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
     * The <code>setRollbackOnly</code> method calls setRollbackOnly()
     * on the invocation's transaction and logs any exceptions than may
     * occur.
-    *
-    * @param tx the transaction
     */
-   protected void setRollbackOnly(Transaction tx)
+   protected void setRollbackOnly()
    {
       try
       {
@@ -309,16 +268,16 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
       throw new RuntimeException("Transaction rolled back", e);
    }
 
-   protected void handleExceptionInCallerTx(InvocationContext invocation, Throwable t, Transaction tx) throws Exception
+   protected void handleExceptionInCallerTx(InvocationContext invocation, Throwable t) throws Exception
    {
-      setRollbackOnly(tx);
+      setRollbackOnly();
       log.error(t);
       throw (Exception) t;
    }
 
-   public void handleExceptionInOurTx(InvocationContext invocation, Throwable t, Transaction tx) throws Exception
+   public void handleExceptionInOurTx(InvocationContext invocation, Throwable t) throws Exception
    {
-      setRollbackOnly(tx);
+      setRollbackOnly();
       throw (Exception) t;
    }
 
@@ -373,8 +332,8 @@ public class TransactionInterceptor implements TxInterceptorDelegate, Serializab
    }
 
    @Inject
-   public void setTransactionManager(TransactionManager transactionManager)
+   public void setUserTransaction(UserTransaction tx)
    {
-      this.tm = transactionManager;
+      this.tx = tx;
    }
 }
