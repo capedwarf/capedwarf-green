@@ -23,6 +23,7 @@
 package org.jboss.lhotse.server.jee.tx;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -49,15 +50,14 @@ public class JeeEMInjector implements EMInjector, Serializable
    @PersistenceUnit private transient EntityManagerFactory emf;
 
    private transient Event<Notification<EntityManagerFactory>> produceEvent;
-   private static volatile boolean emitted;
+   private static AtomicBoolean emitted = new AtomicBoolean(false);
 
    @PostConstruct
    public void init()
    {
-      // send this only once
-      if (emitted == false)
+      // fire this only once
+      if (emitted.compareAndSet(false, true))
       {
-         emitted = true;
          produceEvent.select(new AfterImpl()).fire(new EMFNotification(emf));
       }
    }
