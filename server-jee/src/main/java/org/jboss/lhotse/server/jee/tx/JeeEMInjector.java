@@ -45,11 +45,11 @@ import org.jboss.lhotse.server.api.persistence.EMInjector;
  */
 public class JeeEMInjector implements EMInjector, Serializable
 {
-   private transient EntityManager em;
+   @PersistenceContext private transient EntityManager em;
+   @PersistenceUnit private transient EntityManagerFactory emf;
 
-   private static volatile boolean emitted;
-   private transient EntityManagerFactory emf;
    private transient Event<Notification<EntityManagerFactory>> produceEvent;
+   private static volatile boolean emitted;
 
    @PostConstruct
    public void init()
@@ -81,18 +81,6 @@ public class JeeEMInjector implements EMInjector, Serializable
             };
          }
       };
-   }
-
-   @PersistenceContext
-   public void setEm(EntityManager em)
-   {
-      this.em = em;
-   }
-
-   @PersistenceUnit
-   public void setEmf(EntityManagerFactory emf)
-   {
-      this.emf = emf;
    }
 
    @Inject
