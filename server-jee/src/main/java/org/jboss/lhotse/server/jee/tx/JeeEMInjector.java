@@ -23,11 +23,19 @@
 package org.jboss.lhotse.server.jee.tx;
 
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import org.jboss.lhotse.jpa.EntityManagerProvider;
 import org.jboss.lhotse.jpa2.NewProxyingEntityManager;
+import org.jboss.lhotse.server.api.lifecycle.AfterImpl;
+import org.jboss.lhotse.server.api.lifecycle.Notification;
+import org.jboss.lhotse.server.api.persistence.EMFNotification;
 import org.jboss.lhotse.server.api.persistence.EMInjector;
 
 /**
@@ -37,8 +45,22 @@ import org.jboss.lhotse.server.api.persistence.EMInjector;
  */
 public class JeeEMInjector implements EMInjector, Serializable
 {
-   @PersistenceContext
    private transient EntityManager em;
+
+   private static volatile boolean emitted;
+   private transient EntityManagerFactory emf;
+   private transient Event<Notification<EntityManagerFactory>> produceEvent;
+
+   @PostConstruct
+   public void init()
+   {
+      // send this only once
+      if (emitted == false)
+      {
+         emitted = true;
+         produceEvent.select(new AfterImpl()).fire(new EMFNotification(emf));
+      }
+   }
 
    public EntityManager getEM()
    {
@@ -59,5 +81,23 @@ public class JeeEMInjector implements EMInjector, Serializable
             };
          }
       };
+   }
+
+   @PersistenceContext
+   public void setEm(EntityManager em)
+   {
+      this.em = em;
+   }
+
+   @PersistenceUnit
+   public void setEmf(EntityManagerFactory emf)
+   {
+      this.emf = emf;
+   }
+
+   @Inject
+   public void setProduceEvent(Event<Notification<EntityManagerFactory>> produceEvent)
+   {
+      this.produceEvent = produceEvent;
    }
 }

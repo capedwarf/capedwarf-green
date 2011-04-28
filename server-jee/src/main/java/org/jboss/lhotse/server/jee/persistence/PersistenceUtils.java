@@ -24,31 +24,21 @@ package org.jboss.lhotse.server.jee.persistence;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.validation.ValidatorFactory;
 
 import org.jboss.lhotse.jpa.ProxyingWrapper;
 import org.jboss.lhotse.jpa2.NewProxyingWrapperImpl;
-import org.jboss.lhotse.server.api.validation.PersistenceValidation;
 
 /**
  * Persistence utils.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class PersistenceUtils extends PersistenceValidation
+public class PersistenceUtils
 {
    @Produces
    @ApplicationScoped
    public ProxyingWrapper wrapper()
    {
       return new NewProxyingWrapperImpl();
-   }
-
-   @Inject
-   public void setFactory(ValidatorFactory factory)
-   {
-      super.setFactory(factory);
-      applyListener();
    }
 }
