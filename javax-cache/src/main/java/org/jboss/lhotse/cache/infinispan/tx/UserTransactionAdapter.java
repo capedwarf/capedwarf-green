@@ -37,16 +37,16 @@ import javax.transaction.UserTransaction;
 class UserTransactionAdapter
 {
    private static ThreadLocal<UserTransaction> uts = new ThreadLocal<UserTransaction>();
-   public static boolean useThreadLocal;
+   public static boolean ignoreThreadLocal;
 
    static
    {
-      useThreadLocal = Boolean.getBoolean("org.jboss.lhotse.cache.infinispan.tx");
+      ignoreThreadLocal = Boolean.getBoolean("org.jboss.lhotse.cache.infinispan.tx.ignoreThreadLocal");
    }
 
    protected UserTransaction getUserTransaction() throws SystemException
    {
-      if (useThreadLocal)
+      if (ignoreThreadLocal == false)
       {
          UserTransaction ut = uts.get();
          if (ut == null)
@@ -63,11 +63,22 @@ class UserTransactionAdapter
    }
 
    /**
+    * Set UserTransaction.
+    *
+    * @param ut the user transaction
+    */
+   public static void setup(UserTransaction ut)
+   {
+      if (ignoreThreadLocal == false)
+         uts.set(ut);
+   }
+
+   /**
     * Cleanup current user transaction.
     */
    public static void cleanup()
    {
-      if (useThreadLocal)
+      if (ignoreThreadLocal == false)
          uts.remove();
    }
 

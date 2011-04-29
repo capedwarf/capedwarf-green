@@ -23,7 +23,6 @@
 
 package org.jboss.lhotse.cache.infinispan.tx;
 
-import java.util.logging.Logger;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
@@ -40,7 +39,6 @@ import javax.transaction.TransactionManager;
  */
 class UTTransactionManager extends UserTransactionAdapter implements TransactionManager
 {
-   private static Logger log = Logger.getLogger(UTTransactionManager.class.getName());
    static TransactionManager INSTANCE = new UTTransactionManager();
 
    public void begin() throws NotSupportedException, SystemException
@@ -50,14 +48,26 @@ class UTTransactionManager extends UserTransactionAdapter implements Transaction
 
    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException
    {
-      getUserTransaction().commit();
-      cleanup();
+      try
+      {
+         getUserTransaction().commit();
+      }
+      finally
+      {
+         cleanup();
+      }
    }
 
    public void rollback() throws IllegalStateException, SecurityException, SystemException
    {
-      getUserTransaction().rollback();
-      cleanup();
+      try
+      {
+         getUserTransaction().rollback();
+      }
+      finally
+      {
+         cleanup();
+      }
    }
 
    public void setRollbackOnly() throws IllegalStateException, SystemException
@@ -82,11 +92,11 @@ class UTTransactionManager extends UserTransactionAdapter implements Transaction
 
    public Transaction suspend() throws SystemException
    {
-      return UTTransaction.INSTANCE;
+      throw new SystemException("Suspend not supported.");
    }
 
    public void resume(Transaction tx) throws InvalidTransactionException, IllegalStateException, SystemException
    {
-      log.fine("resume() not supported");
+      throw new SystemException("Resume not supported.");
    }
 }
