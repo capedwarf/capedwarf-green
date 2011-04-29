@@ -68,7 +68,14 @@ class UTTransaction extends UserTransactionAdapter implements Transaction
          }
          else
          {
-            getUserTransaction().rollback();
+            try
+            {
+               getUserTransaction().rollback();
+            }
+            finally
+            {
+               notifyAfterCompletion(Status.STATUS_ROLLEDBACK);
+            }
          }
       }
       finally
