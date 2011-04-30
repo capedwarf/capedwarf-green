@@ -37,7 +37,7 @@ import javax.transaction.TransactionManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class UTTransactionManager extends UserTransactionAdapter implements TransactionManager
+public class UTTransactionManager extends UserTransactionAdapter implements TransactionManager
 {
    static TransactionManager INSTANCE = new UTTransactionManager();
 
