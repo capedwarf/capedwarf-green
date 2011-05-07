@@ -1,7 +1,5 @@
 package org.jboss.lhotse.validation;
 
-import javax.validation.MessageInterpolator;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Locale;
@@ -14,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.validation.MessageInterpolator;
 
 /**
  * Simple javax.validation message interpolator.
@@ -26,7 +25,7 @@ class SimpleMessageInterpolator implements MessageInterpolator
 {
    private static final Logger log = Logger.getLogger(SimpleMessageInterpolator.class.getName());
 
-   private static final String DEFAULT_VALIDATION_MESSAGES = "org.jboss.lhotse.common.validation.ValidationMessages";
+   private static final String DEFAULT_VALIDATION_MESSAGES = "org.jboss.lhotse.validation.ValidationMessages";
    private static final String USER_VALIDATION_MESSAGES = "ValidationMessages";
 
    /**

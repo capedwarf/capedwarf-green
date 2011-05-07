@@ -22,13 +22,16 @@
 
 package org.jboss.lhotse.cache.infinispan;
 
+import javax.cache.CacheListener;
+
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryCreated;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryEvicted;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryLoaded;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryRemoved;
+import org.infinispan.notifications.cachelistener.event.CacheEntryCreatedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryEvictedEvent;
-
-import javax.cache.CacheListener;
+import org.infinispan.notifications.cachelistener.event.CacheEntryLoadedEvent;
+import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
 
 /**
  * Infinispan javax.cache listener.
@@ -36,7 +39,7 @@ import javax.cache.CacheListener;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @org.infinispan.notifications.Listener
-class InfinispanCacheListener
+public class InfinispanCacheListener
 {
    private CacheListener listener;
 
@@ -52,19 +55,19 @@ class InfinispanCacheListener
    }
 
    @CacheEntryLoaded
-   public void onLoad(CacheEntryEvictedEvent event)
+   public void onLoad(CacheEntryLoadedEvent event)
    {
       listener.onLoad(event.getKey());
    }
 
    @CacheEntryCreated
-   public void onPut(CacheEntryEvictedEvent event)
+   public void onPut(CacheEntryCreatedEvent event)
    {
       listener.onPut(event.getKey());
    }
 
    @CacheEntryRemoved
-   public void onRemove(CacheEntryEvictedEvent event)
+   public void onRemove(CacheEntryRemovedEvent event)
    {
       listener.onRemove(event.getKey());
    }

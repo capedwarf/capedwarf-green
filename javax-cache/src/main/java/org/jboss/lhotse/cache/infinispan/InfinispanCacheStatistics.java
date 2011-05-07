@@ -22,10 +22,10 @@
 
 package org.jboss.lhotse.cache.infinispan;
 
+import javax.cache.CacheStatistics;
+
 import org.infinispan.AdvancedCache;
 import org.infinispan.stats.Stats;
-
-import javax.cache.CacheStatistics;
 
 /**
  * Infinispan javax.cache stats.
@@ -48,6 +48,7 @@ class InfinispanCacheStatistics implements CacheStatistics
 
    public void clearStatistics()
    {
+      // TODO?
    }
 
    public int getCacheHits()

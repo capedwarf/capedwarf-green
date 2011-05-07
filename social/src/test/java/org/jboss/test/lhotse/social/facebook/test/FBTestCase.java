@@ -22,6 +22,11 @@
 
 package org.jboss.test.lhotse.social.facebook.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import org.jboss.lhotse.common.io.URLAdapter;
 import org.jboss.lhotse.social.facebook.FacebookObserver;
 import org.jboss.test.lhotse.social.facebook.support.TestSocialEvent;
 import org.junit.After;
@@ -35,7 +40,7 @@ public class FBTestCase
 {
    protected FacebookObserver getFacebookObserver(final String postId)
    {
-      return new FacebookObserver()
+      FacebookObserver observer = new FacebookObserver()
       {
          protected String readAccessToken(Long userId)
          {
@@ -47,6 +52,14 @@ public class FBTestCase
             return postId;
          }
       };
+      observer.setUrlAdapter(new URLAdapter()
+      {
+         public InputStream fetch(URL url) throws IOException
+         {
+            return url.openStream();
+         }
+      });
+      return observer;
    }
 
    @Before
