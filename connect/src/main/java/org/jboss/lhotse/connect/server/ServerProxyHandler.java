@@ -1,7 +1,5 @@
 package org.jboss.lhotse.connect.server;
 
-import javax.validation.constraints.Size;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,17 +9,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
+import javax.validation.constraints.Size;
 
-import org.jboss.lhotse.common.Constants;
-import org.jboss.lhotse.common.env.Environment;
-import org.jboss.lhotse.common.env.EnvironmentFactory;
-import org.jboss.lhotse.common.env.Secure;
-import org.jboss.lhotse.common.io.ClosedInputStream;
-import org.jboss.lhotse.common.serialization.*;
-import org.jboss.lhotse.validation.ValidationHelper;
-import org.jboss.lhotse.connect.config.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -40,6 +40,23 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.jboss.lhotse.common.Constants;
+import org.jboss.lhotse.common.env.Environment;
+import org.jboss.lhotse.common.env.EnvironmentFactory;
+import org.jboss.lhotse.common.env.Secure;
+import org.jboss.lhotse.common.io.ClosedInputStream;
+import org.jboss.lhotse.common.serialization.BufferedSerializator;
+import org.jboss.lhotse.common.serialization.ConverterUtils;
+import org.jboss.lhotse.common.serialization.ElementTypeProvider;
+import org.jboss.lhotse.common.serialization.GzipOptionalSerializator;
+import org.jboss.lhotse.common.serialization.JSONAware;
+import org.jboss.lhotse.common.serialization.JSONCollectionSerializator;
+import org.jboss.lhotse.common.serialization.JSONSerializator;
+import org.jboss.lhotse.common.serialization.MultiJSONCollectionSerializator;
+import org.jboss.lhotse.common.serialization.ReflectionJSONAwareInstanceProvider;
+import org.jboss.lhotse.common.serialization.Serializator;
+import org.jboss.lhotse.connect.config.Configuration;
+import org.jboss.lhotse.validation.ValidationHelper;
 
 /**
  * ServerProxy handler.
@@ -412,6 +429,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                         ValidationHelper.validate(size, args[i]);
                      }
                   }
+
+                  // re-format iterables
+                  if (notNullChecks[i] && (args[i] instanceof Iterable))
+                     args[i] = new CommaListedFormattable((Iterable) args[i]);
                }
             }
             value = new QueryInfo();
@@ -435,8 +456,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
     * @param method the method
     * @return the element's type
     */
-   @SuppressWarnings({"unchecked"})
-   protected Class<? extends JSONAware> elementType(Method method)
+   protected Class<?> elementType(Method method)
    {
       Type rt = method.getGenericReturnType();
       if (rt instanceof ParameterizedType == false)
@@ -488,12 +508,32 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          Class<?> rt = method.getReturnType(); // return type
          if (Collection.class.isAssignableFrom(rt))
          {
-            Class<? extends JSONAware> elementClass = elementType(method);
-            Serializator serializator = new GzipOptionalSerializator(new BufferedSerializator(new JSONCollectionSerializator(elementClass)));
-            if (Set.class.isAssignableFrom(rt))
-               return serializator.deserialize(content, HashSet.class);
+            Class<?> elementClass = elementType(method);
+            if (JSONAware.class.isAssignableFrom(elementClass))
+            {
+               @SuppressWarnings({"unchecked"})
+               Class<? extends JSONAware> jsonClass = (Class<? extends JSONAware>) elementClass;
+               Serializator serializator = new GzipOptionalSerializator(new BufferedSerializator(new JSONCollectionSerializator(jsonClass)));
+               if (Set.class.isAssignableFrom(rt))
+                  return serializator.deserialize(content, HashSet.class);
+               else
+                  return serializator.deserialize(content, ArrayList.class);
+            }
             else
-               return serializator.deserialize(content, ArrayList.class);
+            {
+               String value = convertStreamToString(content);
+               String[] split = value.split(",");
+               Collection<Object> result;
+               if (Set.class.isAssignableFrom(rt))
+                  result = new HashSet<Object>();
+               else
+                  result = new ArrayList<Object>();
+               for (String s : split)
+               {
+                  result.add(ConverterUtils.toValue(elementClass, s));
+               }
+               return result;
+            }
          }
          else if (JSONAware.class.isAssignableFrom(rt))
          {
@@ -502,24 +542,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          else
          {
             String value = convertStreamToString(content);
-            if (String.class == rt)
-            {
-               return value;
-            }
-            else if (Boolean.class == rt) // Boolean.valueOf("some-gae-crap") == false
-            {
-               if ("true".equalsIgnoreCase(value))
-                  return Boolean.TRUE;
-               else if ("false".equalsIgnoreCase(value))
-                  return Boolean.FALSE;
-               else
-                  throw new IllegalArgumentException("GAE limit? - " + value);
-            }
-            else
-            {
-               Method valueOf = rt.getMethod("valueOf", value.getClass());
-               return valueOf.invoke(null, value);
-            }
+            return ConverterUtils.toValue(rt, value);
          }
       }
       finally

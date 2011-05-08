@@ -28,8 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.jboss.lhotse.common.serialization.ConverterUtils;
 import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
 
 /**
@@ -117,6 +120,40 @@ public abstract class AbstractAction extends AbstractRequestHandler
    }
 
    /**
+    * Parse comma list.
+    *
+    * @param req the request
+    * @param name the parameter name
+    * @param clazz the expected class
+    * @return parsed list
+    * @throws IOException for any error
+    */
+   protected <T> List<T> parseList(HttpServletRequest req, String name, Class<T> clazz) throws IOException
+   {
+      try
+      {
+         List<T> result = new ArrayList<T>();
+         String value = getParameter(req, name, false);
+         if (value != null)
+         {
+            String[] split = value.split(",");
+            for (String s : split)
+            {
+               Object element = ConverterUtils.toValue(clazz, s);
+               result.add(clazz.cast(element));
+            }
+         }
+         return result;
+      }
+      catch (Throwable t)
+      {
+         IOException ioe = new IOException();
+         ioe.initCause(t);
+         throw ioe;
+      }
+   }
+
+   /**
     * Prepare response.
     *
     * @param resp the response
@@ -139,6 +176,29 @@ public abstract class AbstractAction extends AbstractRequestHandler
 
       Writer writer = resp.getWriter();
       writer.write(String.valueOf(result));
+      writer.flush();
+   }
+
+   /**
+    * Write results.
+    *
+    * @param resp the response
+    * @param results the results
+    * @throws IOException for any IO error
+    */
+   protected void writeResults(HttpServletResponse resp, Iterable results) throws IOException
+   {
+      prepareResponse(resp);
+
+      Writer writer = resp.getWriter();
+      StringBuilder builder = new StringBuilder();
+      for (Object arg : results)
+      {
+         if (builder.length() > 0)
+            builder.append(",");
+         builder.append(arg);
+      }
+      writer.write(String.valueOf(builder.toString()));
       writer.flush();
    }
 }
