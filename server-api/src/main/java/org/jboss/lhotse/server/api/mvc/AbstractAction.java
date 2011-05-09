@@ -22,15 +22,14 @@
 
 package org.jboss.lhotse.server.api.mvc;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.lhotse.common.serialization.ConverterUtils;
 import org.jboss.lhotse.server.api.servlet.AbstractRequestHandler;
@@ -172,11 +171,18 @@ public abstract class AbstractAction extends AbstractRequestHandler
     */
    protected void writeResult(HttpServletResponse resp, Object result) throws IOException
    {
-      prepareResponse(resp);
+      if (result instanceof Iterable)
+      {
+         writeResults(resp, (Iterable) result);
+      }
+      else
+      {
+         prepareResponse(resp);
 
-      Writer writer = resp.getWriter();
-      writer.write(String.valueOf(result));
-      writer.flush();
+         Writer writer = resp.getWriter();
+         writer.write(String.valueOf(result));
+         writer.flush();
+      }
    }
 
    /**
@@ -188,9 +194,6 @@ public abstract class AbstractAction extends AbstractRequestHandler
     */
    protected void writeResults(HttpServletResponse resp, Iterable results) throws IOException
    {
-      prepareResponse(resp);
-
-      Writer writer = resp.getWriter();
       StringBuilder builder = new StringBuilder();
       for (Object arg : results)
       {
@@ -198,7 +201,6 @@ public abstract class AbstractAction extends AbstractRequestHandler
             builder.append(",");
          builder.append(arg);
       }
-      writer.write(String.valueOf(builder.toString()));
-      writer.flush();
+      writeResult(resp, builder);
    }
 }
