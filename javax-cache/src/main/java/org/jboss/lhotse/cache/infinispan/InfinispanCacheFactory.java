@@ -25,6 +25,7 @@ package org.jboss.lhotse.cache.infinispan;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -48,6 +49,7 @@ import org.kohsuke.MetaInfServices;
 public class InfinispanCacheFactory implements CacheFactory
 {
    private static Logger log = Logger.getLogger(InfinispanCacheFactory.class.getName());
+   private static String[] defaultJndiNames = {"java:jboss/infinispan/lhotse", "java:CacheManager/lhotse"};
    private EmbeddedCacheManager cacheManager;
 
    public InfinispanCacheFactory() throws IOException
@@ -85,14 +87,20 @@ public class InfinispanCacheFactory implements CacheFactory
             }
          }
       }
-      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name", "java:CacheManager/lhotse");
 
+      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name");
       Context ctx = null;
       try
       {
          ctx = new InitialContext(jndiProperties);
-         EmbeddedCacheManager manager = (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
-         log.info("Using JNDI found CacheManager: " + jndiNamespace);
+
+         EmbeddedCacheManager manager;
+         if (jndiNamespace != null)
+            manager = (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
+         else
+            manager = checkDefaultNames(ctx);
+
+         log.info("Using JNDI found CacheManager: " + manager);
          return manager;
       }
       catch (NamingException ne)
@@ -115,6 +123,23 @@ public class InfinispanCacheFactory implements CacheFactory
             }
          }
       }
+   }
+
+   protected EmbeddedCacheManager checkDefaultNames(Context ctx) throws IOException
+   {
+      for (String jndiName : defaultJndiNames)
+      {
+         try
+         {
+            return (EmbeddedCacheManager) ctx.lookup(jndiName);
+         }
+         catch (NamingException ne)
+         {
+            String msg = "Unable to retrieve CacheManager from JNDI [" + jndiName + "]";
+            log.fine(msg + ": " + ne);
+         }
+      }
+      throw new IOException("Cannot find default JNDI cache manager: " + Arrays.toString(defaultJndiNames));
    }
 
    protected EmbeddedCacheManager doStandalone() throws IOException
