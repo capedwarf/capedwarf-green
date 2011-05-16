@@ -1,6 +1,7 @@
 package org.jboss.lhotse.connect.server;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +33,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -77,7 +79,9 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    private String endpointUrl;
    
    private Configuration config;
-   
+
+   private boolean allowsStreaming;
+
    public ServerProxyHandler(Configuration config)
    {
       if (config == null)
@@ -106,7 +110,17 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       
       this.config = config;
    }
-   
+
+   /**
+    * Is streaming allowed.
+    *
+    * @param allowsStreaming the streaming flag
+    */
+   public void setAllowsStreaming(boolean allowsStreaming)
+   {
+      this.allowsStreaming = allowsStreaming;
+   }
+
    /**
     * Get client.
     *
@@ -291,7 +305,18 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                outputStream.flush();
             }
          };
-         HttpEntity entity = new EntityTemplate(cp);
+
+         HttpEntity entity;
+         if (allowsStreaming)
+         {
+            entity = new EntityTemplate(cp);
+         }
+         else
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            cp.writeTo(baos);
+            entity = new ByteArrayEntity(baos.toByteArray());
+         }
          httppost.setEntity(entity);
       }
 
