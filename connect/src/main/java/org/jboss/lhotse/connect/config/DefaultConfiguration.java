@@ -1,5 +1,7 @@
 package org.jboss.lhotse.connect.config;
 
+import java.util.Formatter;
+
 import org.jboss.lhotse.common.Constants;
 import org.jboss.lhotse.common.env.Environment;
 import org.jboss.lhotse.common.env.EnvironmentFactory;
@@ -13,13 +15,23 @@ import org.jboss.lhotse.common.env.EnvironmentType;
  */
 public class DefaultConfiguration<T> extends Configuration<T>
 {
+   /**
+    * Default debug configuration.
+    */
    public DefaultConfiguration()
    {
-      this(false);
+      this(null);
    }
 
-   public DefaultConfiguration(boolean debug)
+   /**
+    * Default appspot configuration.
+    *
+    * @param appspotName the appspot name
+    */
+   public DefaultConfiguration(String appspotName)
    {
+      boolean debug = (appspotName == null || appspotName.length() == 0);
+
       setDebugMode(debug);
       setDebugLogging(debug);
       
@@ -34,7 +46,10 @@ public class DefaultConfiguration<T> extends Configuration<T>
       Environment env = EnvironmentFactory.getEnvironment();
       if (env.envType() == EnvironmentType.ANDROID)
          localhost = "://10.0.2.2:8080";
-      
-      setHostName(isDebugMode() ? localhost : Constants.HOST); // TODO
+
+      setHostName(isDebugMode() ?
+            localhost :
+            new Formatter().format(Constants.HOST, appspotName).toString()
+      );
    }
 }

@@ -8,7 +8,7 @@ package org.jboss.lhotse.common;
 public class Constants
 {
    public static final String HTTP = "http";
-   public static final String HOST = "://{0}.appspot.com";
+   public static final String HOST = "://%1s.appspot.com";
 
    public static final String IGNORE_GZIP = "Ignore-GZIP";
 
