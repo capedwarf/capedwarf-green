@@ -23,11 +23,19 @@
 
 package org.jboss.test.lhotse.connect.test;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.jboss.lhotse.common.data.Status;
+import org.jboss.lhotse.common.data.StatusInfo;
 import org.jboss.lhotse.common.data.UserInfo;
+import org.jboss.lhotse.common.serialization.JSONSerializator;
+import org.jboss.lhotse.common.serialization.Serializator;
 import org.jboss.lhotse.connect.server.ServerProxyFactory;
+import org.jboss.test.lhotse.connect.support.HttpContext;
+import org.jboss.test.lhotse.connect.support.HttpHandler;
 import org.jboss.test.lhotse.connect.support.TestProxy;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -35,46 +43,51 @@ import org.junit.Test;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class SmokeTestCase
+public class SmokeTestCase extends AbstractConnectTest
 {
-   @BeforeClass
-   public static void startServer()
-   {
-      // TODO -- start some embedded server?
-   }
-
-   @AfterClass
-   public static void stopServer()
-   {
-      // TODO -- stop embedded server?
-   }
-
    @Test
    public void testBasic() throws Throwable
    {
-      TestProxy proxy = ServerProxyFactory.create(TestProxy.class);
+      HttpHandler foobar = new HttpHandler()
+      {
+         public void handle(HttpContext context) throws IOException
+         {
+            OutputStream outputStream = context.getOutputStream();
+            outputStream.write("321".getBytes());
+         }
+      };
+      HttpHandler info = new HttpHandler()
+      {
+         public void handle(HttpContext context) throws IOException
+         {
+            OutputStream outputStream = context.getOutputStream();
+            Serializator gs = JSONSerializator.OPTIONAL_GZIP_BUFFERED;
+            gs.serialize(new StatusInfo(Status.OK), outputStream);
+         }
+      };
+
+      getServer().addContext("/client/foo", foobar);
+      getServer().addContext("/client/info", info);
       try
       {
+         TestProxy proxy = ServerProxyFactory.create(TestProxy.class);
          try
          {
-            proxy.fooBar(123);
+            String s = proxy.fooBar(123);
+            Assert.assertEquals("321", s);
+
+            StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
+            Assert.assertEquals(Status.OK, status.getStatus());
          }
-         catch (Throwable ignored)
+         finally
          {
-            // TODo -- remove
-         }
-         try
-         {
-            proxy.infoPoke(new UserInfo("alesj", "qwert123"));
-         }
-         catch (Throwable ignored)
-         {
-            // TODo -- remove
+            ServerProxyFactory.shutdown(TestProxy.class);
          }
       }
       finally
       {
-         ServerProxyFactory.shutdown(TestProxy.class);
+         getServer().removeContext("/client/foo");
+         getServer().removeContext("/client/info");
       }
    }
 }
