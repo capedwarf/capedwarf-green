@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!-- Parent -->
     <parent>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-build</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>

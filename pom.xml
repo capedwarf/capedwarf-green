@@ -5,7 +5,7 @@
     <artifactId>jboss-parent</artifactId>
     <version>5</version>
   </parent>
-  <groupId>org.jboss.capedwarf</groupId>
+  <groupId>org.jboss.capedwarf.green</groupId>
   <artifactId>capedwarf-build</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -191,47 +191,47 @@
     <!-- The parent pom manages the inter-dependencies of the modules. -->
     <dependencies>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-connect</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-validation-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-validation</artifactId>
         <version>${project.version}</version>
       </dependency>
         <dependency>
-          <groupId>org.jboss.capedwarf</groupId>
+          <groupId>org.jboss.capedwarf.green</groupId>
           <artifactId>capedwarf-common</artifactId>
           <version>${project.version}</version>
         </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-jpa</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-jpa2</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-social</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-server-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.capedwarf</groupId>
+        <groupId>org.jboss.capedwarf.green</groupId>
         <artifactId>capedwarf-javax-cache</artifactId>
         <version>${project.version}</version>
       </dependency>

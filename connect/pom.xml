@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss.capedwarf</groupId>
+    <groupId>org.jboss.capedwarf.green</groupId>
     <artifactId>capedwarf-build</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
@@ -16,7 +16,7 @@
   <dependencies>
 
      <dependency>
-       <groupId>org.jboss.capedwarf</groupId>
+       <groupId>org.jboss.capedwarf.green</groupId>
        <artifactId>capedwarf-validation</artifactId>
        <exclusions>
           <exclusion>
@@ -31,7 +31,7 @@
      </dependency>
 
      <dependency>
-       <groupId>org.jboss.capedwarf</groupId>
+       <groupId>org.jboss.capedwarf.green</groupId>
        <artifactId>capedwarf-common</artifactId>
        <exclusions>
           <exclusion>
