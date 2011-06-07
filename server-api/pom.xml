@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss.lhotse</groupId>
-    <artifactId>lhotse-build</artifactId>
+    <groupId>org.jboss.capedwarf</groupId>
+    <artifactId>capedwarf-build</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>lhotse-server-api</artifactId>
+  <artifactId>capedwarf-server-api</artifactId>
   <packaging>jar</packaging>
-  <name>Lhotse Server Side -- API</name>
-  <url>http://www.jboss.org/lhotse</url>
-  <description>Lhotse Server Side -- API</description>
+  <name>CapeDwarf Server Side -- API</name>
+  <url>http://www.jboss.org/capedwarf</url>
+  <description>CapeDwarf Server Side -- API</description>
 
     <build>
       <plugins>
@@ -20,7 +20,7 @@
             <artifactId>maven-datanucleus-plugin</artifactId>
             <version>2.0.1</version>
             <configuration>
-               <metadataIncludes>org/jboss/lhotse/server/api/domain/*.class</metadataIncludes>
+               <metadataIncludes>org/jboss/capedwarf/server/api/domain/*.class</metadataIncludes>
                <verbose>true</verbose>
                <api>JPA</api>
             </configuration>
@@ -46,8 +46,8 @@
    <dependencies>
 
     <dependency>
-      <groupId>org.jboss.lhotse</groupId>
-      <artifactId>lhotse-common</artifactId>
+      <groupId>org.jboss.capedwarf</groupId>
+      <artifactId>capedwarf-common</artifactId>
       <exclusions>
          <exclusion>
             <groupId>javax.validation</groupId>
@@ -65,13 +65,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.lhotse</groupId>
-      <artifactId>lhotse-jpa</artifactId>
+      <groupId>org.jboss.capedwarf</groupId>
+      <artifactId>capedwarf-jpa</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.lhotse</groupId>
-      <artifactId>lhotse-jpa2</artifactId>
+      <groupId>org.jboss.capedwarf</groupId>
+      <artifactId>capedwarf-jpa2</artifactId>
       <optional>true</optional>
     </dependency>
 

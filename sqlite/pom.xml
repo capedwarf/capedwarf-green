@@ -1,23 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss.lhotse</groupId>
-    <artifactId>lhotse-build</artifactId>
+    <groupId>org.jboss.capedwarf</groupId>
+    <artifactId>capedwarf-build</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>lhotse-sqlite</artifactId>
+  <artifactId>capedwarf-sqlite</artifactId>
   <packaging>jar</packaging>
-  <name>Lhotse SQLite</name>
-  <url>http://www.jboss.org/lhotse</url>
-  <description>Lhotse SQLite</description>
+  <name>CapeDwarf SQLite</name>
+  <url>http://www.jboss.org/capedwarf</url>
+  <description>CapeDwarf SQLite</description>
 
   <dependencies>
 
      <dependency>
-       <groupId>org.jboss.lhotse</groupId>
-       <artifactId>lhotse-common</artifactId>
+       <groupId>org.jboss.capedwarf</groupId>
+       <artifactId>capedwarf-common</artifactId>
        <exclusions>
           <exclusion>
              <groupId>javax.validation</groupId>

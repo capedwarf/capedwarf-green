@@ -3,23 +3,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!-- Parent -->
     <parent>
-        <groupId>org.jboss.lhotse</groupId>
-        <artifactId>lhotse-build</artifactId>
+        <groupId>org.jboss.capedwarf</groupId>
+        <artifactId>capedwarf-build</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>lhotse-jpa2</artifactId>
+    <artifactId>capedwarf-jpa2</artifactId>
     <packaging>jar</packaging>
-    <name>Lhotse JPA2 Utils</name>
-    <url>http://www.jboss.org/lhotse</url>
-    <description>Lhotse JPA2 Utils</description>
+    <name>CapeDwarf JPA2 Utils</name>
+    <url>http://www.jboss.org/capedwarf</url>
+    <description>CapeDwarf JPA2 Utils</description>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.jboss.lhotse</groupId>
-            <artifactId>lhotse-jpa</artifactId>
+            <groupId>org.jboss.capedwarf</groupId>
+            <artifactId>capedwarf-jpa</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.appengine</groupId>

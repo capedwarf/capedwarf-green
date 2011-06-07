@@ -3,17 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!-- Parent -->
     <parent>
-        <groupId>org.jboss.lhotse</groupId>
-        <artifactId>lhotse-build</artifactId>
+        <groupId>org.jboss.capedwarf</groupId>
+        <artifactId>capedwarf-build</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>lhotse-javax-cache</artifactId>
+    <artifactId>capedwarf-javax-cache</artifactId>
     <packaging>jar</packaging>
-    <name>Lhotse javax.cache</name>
-    <url>http://www.jboss.org/lhotse</url>
-    <description>Lhotse javax.cache</description>
+    <name>CapeDwarf javax.cache</name>
+    <url>http://www.jboss.org/capedwarf</url>
+    <description>CapeDwarf javax.cache</description>
 
     <dependencies>
 
