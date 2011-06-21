@@ -29,8 +29,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
+import javax.cache.CacheException;
 
-import org.jboss.capedwarf.server.api.cache.KeyStrategy;
+import org.jboss.capedwarf.server.api.cache.CacheConfig;
+import org.jboss.capedwarf.server.api.cache.EntityListKeyStrategy;
 import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
 
 /**
@@ -38,8 +40,13 @@ import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class TimestampedListKeyStrategy implements KeyStrategy<TimestampedListCachedResult, List<? extends TimestampedEntity>>
+public abstract class TimestampedListKeyStrategy<E extends TimestampedEntity> extends EntityListKeyStrategy<TimestampedListCachedResult, E>
 {
+   protected TimestampedListKeyStrategy(CacheConfig config) throws CacheException
+   {
+      super(config);
+   }
+
    protected int getKeyIndex()
    {
       return 0;
@@ -61,14 +68,15 @@ public class TimestampedListKeyStrategy implements KeyStrategy<TimestampedListCa
       return (prefix != null) ? prefix + arg : (Serializable) arg;
    }
 
-   public TimestampedListCachedResult wrap(List<? extends TimestampedEntity> orginal, Object target, Method method, Object[] args)
+   public TimestampedListCachedResult wrap(List<E> orginal, Object target, Method method, Object[] args)
    {
       return new TimestampedListCachedResult((Long) args[getTimestampIndex()], orginal);
    }
 
-   public List<? extends TimestampedEntity> unwrap(TimestampedListCachedResult cached, Object target, Method method, Object[] args)
+   public List<E> unwrap(TimestampedListCachedResult cached, Object target, Method method, Object[] args)
    {
-      return cached.getSubList((Long) args[getTimestampIndex()]);
+      List<Long> ids = cached.getSubList((Long) args[getTimestampIndex()]);
+      return getEntities(ids);
    }
 
    @Retention(RetentionPolicy.RUNTIME)

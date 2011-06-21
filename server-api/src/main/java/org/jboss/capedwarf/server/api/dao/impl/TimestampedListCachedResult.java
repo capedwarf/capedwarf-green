@@ -22,10 +22,10 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import org.jboss.capedwarf.server.api.cache.EntityListCachedResult;
 import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
 
 /**
@@ -33,47 +33,55 @@ import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class TimestampedListCachedResult implements Serializable
+class TimestampedListCachedResult extends EntityListCachedResult
 {
    private static final long serialVersionUID = 1l;
 
    private long timestamp;
-   private List<? extends TimestampedEntity> results;
+   private long[] timestamps;
 
    public TimestampedListCachedResult(long timestamp, List<? extends TimestampedEntity> results)
    {
-      if (results == null)
-         results = Collections.emptyList();
-
+      super(toIds(results));
       this.timestamp = timestamp;
-      this.results = results;
+      if (results != null && results.isEmpty() == false)
+      {
+         this.timestamps = new long[results.size()];
+         int i = 0;
+         for (TimestampedEntity te : results)
+            timestamps[i++] = te.getTimestamp();
+      }
+      else
+      {
+         timestamps = new long[0];
+      }
    }
 
    /**
-    * Get proper entity sublist based on timestamp.
+    * Get proper entity id sublist based on timestamp.
     *
     * @param ts the timestamp
-    * @return sublist
+    * @return id sublist
     */
-   List<? extends TimestampedEntity> getSubList(long ts)
+   List<Long> getSubList(long ts)
    {
       if (ts < timestamp)
-         return null; // we need to get new results
+         return null; // we need to get new timestamps
 
-      int size = results.size();
+      int size = timestamps.length;
 
       if (size == 0)
          return Collections.emptyList();
 
-      long lastTs = results.get(size - 1).getTimestamp();
+      long lastTs = timestamps[size - 1];
       if (ts > lastTs)
          return Collections.emptyList();
 
       for (int i = 0; i < size; i++)
       {
-         TimestampedEntity te = results.get(i);
-         if (te.getTimestamp() > ts)
-            return results.subList(i, size);
+         Long te = timestamps[i];
+         if (te > ts)
+            return getIds().subList(i, size);
       }
 
       return Collections.emptyList();
