@@ -29,9 +29,11 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Cache interceptor.
@@ -43,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CacheInterceptor implements Serializable
 {
    private static final long serialVersionUID = 1l;
+   private static final Logger log = Logger.getLogger(CacheInterceptor.class.getName());
 
    /** The keys */
    private static Map<Class<? extends KeyStrategy>, KeyStrategy> keys = new ConcurrentHashMap<Class<? extends KeyStrategy>, KeyStrategy>();
@@ -74,7 +77,17 @@ public class CacheInterceptor implements Serializable
       KeyStrategy ks = keys.get(ksClass);
       if (ks == null)
       {
-         ks = ksClass.newInstance();
+         try
+         {
+            ks = ksClass.newInstance();
+         }
+         catch (Exception e)
+         {
+            log.fine("Error creating KeyStrategy: " + e);
+
+            Constructor<? extends KeyStrategy> ctor = ksClass.getConstructor(CacheConfig.class);
+            ks = ctor.newInstance(cacheConfig);
+         }
          keys.put(ksClass, ks);
       }
 

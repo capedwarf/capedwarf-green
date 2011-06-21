@@ -1,17 +1,19 @@
 package org.jboss.capedwarf.server.api.cache.impl;
 
-import org.jboss.capedwarf.server.api.cache.CacheConfig;
-import org.jboss.seam.solder.resourceLoader.Resource;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.jboss.capedwarf.server.api.cache.CacheConfig;
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.seam.solder.resourceLoader.Resource;
 
 /**
  * Cache config impl.
@@ -24,6 +26,7 @@ public abstract class AbstractCacheConfig implements CacheConfig
    private Properties props;
 
    private CacheManager manager;
+   private Map<String, CacheEntryLookup> lookups = new ConcurrentHashMap<String, CacheEntryLookup>();
 
    /**
     * Create config.
@@ -80,6 +83,19 @@ public abstract class AbstractCacheConfig implements CacheConfig
    {
       // do nothing by default
    }
+
+   public CacheEntryLookup getLookup(String cacheName) throws CacheException
+   {
+      CacheEntryLookup cel = lookups.get(cacheName);
+      if (cel != null)
+         return cel;
+
+      cel = createLookup(cacheName);
+      lookups.put(cacheName, cel);
+      return cel;
+   }
+
+   protected abstract CacheEntryLookup createLookup(String cacheEntry) throws CacheException;
 
    @Inject
    public void setManager(CacheManager manager)

@@ -72,4 +72,13 @@ public interface CacheConfig
     * @param cache the cache to dispose
     */
    void disposeCache(Cache cache);
+
+   /**
+    * Get cache entry lookup.
+    *
+    * @param cacheName the cache name
+    * @return new cache entry lookup instance
+    * @throws CacheException for any error
+    */
+   CacheEntryLookup getLookup(String cacheName) throws CacheException;
 }
