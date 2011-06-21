@@ -86,6 +86,14 @@ public abstract class AbstractCacheConfig implements CacheConfig
 
    public CacheEntryLookup getLookup(String cacheName) throws CacheException
    {
+      if (cacheName == null)
+      {
+         cacheName = getProps().getProperty("jpa.cache.name");
+
+         if (cacheName == null)
+            throw new CacheException("Missing JPA entity cache name.");
+      }
+
       CacheEntryLookup cel = lookups.get(cacheName);
       if (cel != null)
          return cel;
