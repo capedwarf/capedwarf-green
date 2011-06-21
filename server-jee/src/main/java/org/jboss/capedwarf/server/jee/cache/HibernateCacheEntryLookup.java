@@ -22,17 +22,17 @@
 
 package org.jboss.capedwarf.server.jee.cache;
 
-import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
 /**
  * Hibernate cache entry lookup.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateCacheEntryLookup implements CacheEntryLookup
+public class HibernateCacheEntryLookup extends AbstractCacheEntryLookup
 {
-   public <T> T getCachedEntry(Class<T> entryType, Object id)
+   protected Object toImplementationId(Class<?> entryType, Object id)
    {
-      return null; // TODO -- real impl
+      return id;
    }
 }

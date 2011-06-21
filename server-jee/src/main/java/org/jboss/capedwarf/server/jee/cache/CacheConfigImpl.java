@@ -24,6 +24,7 @@ package org.jboss.capedwarf.server.jee.cache;
 
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -84,7 +85,7 @@ public class CacheConfigImpl extends AbstractCacheConfig
       }
    }
 
-   protected CacheEntryLookup createLookup(String cacheEntry) throws CacheException
+   protected AbstractCacheEntryLookup createLookup()
    {
       return new HibernateCacheEntryLookup();
    }

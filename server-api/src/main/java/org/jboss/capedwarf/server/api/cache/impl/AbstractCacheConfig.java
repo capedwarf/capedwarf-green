@@ -90,12 +90,13 @@ public abstract class AbstractCacheConfig implements CacheConfig
       if (cel != null)
          return cel;
 
-      cel = createLookup(cacheName);
-      lookups.put(cacheName, cel);
-      return cel;
+      AbstractCacheEntryLookup acel = createLookup();
+      acel.setCache(configureCache(cacheName));
+      lookups.put(cacheName, acel);
+      return acel;
    }
 
-   protected abstract CacheEntryLookup createLookup(String cacheEntry) throws CacheException;
+   protected abstract AbstractCacheEntryLookup createLookup();
 
    @Inject
    public void setManager(CacheManager manager)

@@ -22,16 +22,15 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
-import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
-
-import javax.cache.CacheException;
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
 /**
  * Cache config impl.
@@ -92,10 +91,8 @@ public class CacheConfigImpl extends AbstractCacheConfig
       return config.isEmpty() ? Collections.emptyMap() : config;
    }
 
-   protected CacheEntryLookup createLookup(String cacheEntry) throws CacheException
+   protected AbstractCacheEntryLookup createLookup()
    {
-      DNCacheEntryLookup cel = new DNCacheEntryLookup();
-      cel.setCache(configureCache(cacheEntry));
-      return cel;
+      return new DNCacheEntryLookup();
    }
 }
