@@ -81,4 +81,11 @@ public interface CacheConfig
     * @throws CacheException for any error
     */
    CacheEntryLookup getLookup(String cacheName) throws CacheException;
+
+   /**
+    * Get exception handler.
+    *
+    * @return the exception handler
+    */
+   CacheExceptionHandler getExceptionHandler();
 }

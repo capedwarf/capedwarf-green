@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import org.jboss.capedwarf.server.api.cache.CacheConfig;
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
 import org.jboss.seam.solder.resourceLoader.Resource;
 
 /**
@@ -105,6 +106,24 @@ public abstract class AbstractCacheConfig implements CacheConfig
    }
 
    protected abstract AbstractCacheEntryLookup createLookup();
+
+   public CacheExceptionHandler getExceptionHandler()
+   {
+      String ehClassName = getProps().getProperty("cache.exception.handler");
+      if (ehClassName != null)
+      {
+         try
+         {
+            Class<?> clazz = getClass().getClassLoader().loadClass(ehClassName);
+            return (CacheExceptionHandler) clazz.newInstance();
+         }
+         catch (Exception e)
+         {
+            log.warning("Cannot instantiate cache exception handler: " + e);
+         }
+      }
+      return NoopCacheExceptionHandler.INSTANCE;
+   }
 
    @Inject
    public void setManager(CacheManager manager)

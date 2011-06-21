@@ -53,6 +53,9 @@ public class CacheInterceptor implements Serializable
    /** The cache config */
    private transient CacheConfig cacheConfig;
 
+   /** The cache execption handler */
+   private transient CacheExceptionHandler exceptionHandler;
+
    @AroundInvoke
    @SuppressWarnings("unchecked")
    public Object manageCache(InvocationContext ctx) throws Exception
@@ -97,28 +100,43 @@ public class CacheInterceptor implements Serializable
 
       Object value = null;
 
-      if (mode == CacheMode.READ_ONLY || mode == CacheMode.ALL)
-         value = cache.get(key);
-
-      if (value != null)
+      try
       {
-         Object unwraped = ks.unwrap(value, target, m, args);
-         if (unwraped != null) // could be invalidated
-            return unwraped;
+         if (mode == CacheMode.READ_ONLY || mode == CacheMode.ALL)
+            value = cache.get(key);
+
+         if (value != null)
+         {
+            Object unwraped = ks.unwrap(value, target, m, args);
+            if (unwraped != null) // could be invalidated
+               return unwraped;
+         }
+
+         value = ctx.proceed();
+
+         if (value != null && (mode == CacheMode.WRITE_ONLY || mode == CacheMode.ALL))
+            cache.put(key, ks.wrap(value, target, m, args));
+         else if (mode == CacheMode.REMOVE)
+            cache.remove(key);
+         else if (mode == CacheMode.EVICT)
+            cache.evict();
+         else if (mode == CacheMode.CLEAR)
+            cache.clear();
+
+         return value;
       }
+      catch (Throwable e)
+      {
+         return getExceptionHandler().handleException(cache, ctx, key, value, e);
+      }
+   }
 
-      value = ctx.proceed();
+   protected CacheExceptionHandler getExceptionHandler()
+   {
+      if (exceptionHandler == null)
+         exceptionHandler = cacheConfig.getExceptionHandler();
 
-      if (value != null && (mode == CacheMode.WRITE_ONLY || mode == CacheMode.ALL))
-         cache.put(key, ks.wrap(value, target, m, args));
-      else if (mode == CacheMode.REMOVE)
-         cache.remove(key);
-      else if (mode == CacheMode.EVICT)
-         cache.evict();
-      else if (mode == CacheMode.CLEAR)
-         cache.clear();
-
-      return value;
+      return exceptionHandler;
    }
 
    @Inject
