@@ -75,7 +75,7 @@ public class MultiRequestHandler extends AbstractRequestHandler
          if (handler != null)
             return handler;
       }
-      throw new ServletException("No such mapping: " + req);
+      throw new ServletException("No such mapping: " + req.getRequestURL() + " - " + mappings);
    }
 
    @Inject

@@ -73,4 +73,9 @@ public class SimpleHandlerMapping implements HandlerMapping
          handlers.put(path, p2c);
       }
    }
+
+   public String toString()
+   {
+      return handlers.toString();
+   }
 }
