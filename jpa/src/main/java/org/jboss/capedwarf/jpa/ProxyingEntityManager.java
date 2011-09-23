@@ -66,13 +66,13 @@ public abstract class ProxyingEntityManager extends ProxyingHelper implements En
 
    public <T> T find(Class<T> tClass, Object o)
    {
-      T result = delegate.find(tClass, o);
+      T result = delegate.find(getRealClass(tClass), o);
       return safeWrap(result);
    }
 
    public <T> T getReference(Class<T> tClass, Object o)
    {
-      T result = delegate.getReference(tClass, o);
+      T result = delegate.getReference(getRealClass(tClass), o);
       return safeWrap(result);
    }
 

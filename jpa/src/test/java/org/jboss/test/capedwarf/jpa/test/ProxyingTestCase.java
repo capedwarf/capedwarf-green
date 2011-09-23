@@ -99,7 +99,7 @@ public class ProxyingTestCase
       Food food = factory.createProxy(Food.class);
       food.setDescription("Pizza");
       food.setPerson(person);
-      Assert.assertSame(1l, food.getPersonId());
+      Assert.assertSame(1L, food.getPersonId());
    }
 
    @Test
@@ -116,5 +116,19 @@ public class ProxyingTestCase
       {
          ProxyingUtils.enable();
       }
+   }
+
+   @Test
+   public void testOps() throws Exception
+   {
+      EntityManagerFactory emf = new ProxyingEntityManagerFactory(new MockEMF());
+      EntityManager em = emf.createEntityManager();
+      Food food = new Food();
+      food.setId(1l);
+      food.setDescription("Pizza");
+      em.persist(food);
+      food = em.merge(food); // this should get us proxy class
+      food = em.find(food.getClass(), 1L); // this should unwrap the proxy class
+      Assert.assertSame(1l, food.getId());
    }
 }

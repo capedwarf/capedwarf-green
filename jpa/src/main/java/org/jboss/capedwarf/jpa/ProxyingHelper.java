@@ -94,10 +94,24 @@ abstract class ProxyingHelper implements ProxyingFactory
     * @param entity the real entity
     * @return proxy entity or null ir entity is null
     */
-   @SuppressWarnings({"unchecked"})
    protected <T> T safeWrap(final T entity)
    {
       return (entity != null) ? wrap(entity) : null;
+   }
+
+   /**
+    * Get real class.
+    *
+    * @param clazz the class to check
+    * @return real class
+    */
+   @SuppressWarnings({"unchecked"})
+   protected <X> Class<X> getRealClass(Class<X> clazz)
+   {
+      if (ProxyFactory.isProxyClass(clazz))
+         return (Class<X>) clazz.getSuperclass(); // generic cast should still work
+      else
+         return clazz;
    }
 
    /**
@@ -140,6 +154,19 @@ abstract class ProxyingHelper implements ProxyingFactory
             if ((args == null || args.length == 0) && "getRealEntity".equals(method.getName()))
             {
                return entity;
+            }
+
+            // hash code
+            if ((args == null || args.length == 0) && "hashCode".equals(method.getName()))
+            {
+               return entity.hashCode();
+            }
+
+            // equals
+            if ((args != null && args.length == 1) && "equals".equals(method.getName()))
+            {
+               Object other = args[0];
+               return other != null && entity.equals(getEntity(other));
             }
 
             ManyToOne mto = method.getAnnotation(ManyToOne.class);
