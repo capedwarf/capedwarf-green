@@ -66,6 +66,9 @@ public abstract class EntityListKeyStrategy<T extends EntityListCachedResult, E 
     */
    protected List<E> getEntities(List<Long> ids)
    {
+      if (ids == null)
+         return null; // somebody invalidated ids?
+
       List<E> entities = new ArrayList<E>();
       for (Long id : ids)
       {
