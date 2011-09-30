@@ -23,15 +23,18 @@
 package org.jboss.capedwarf.server.api.mvc;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.capedwarf.common.serialization.ConverterUtils;
+import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
 import org.jboss.capedwarf.server.api.servlet.AbstractRequestHandler;
 
 /**
@@ -150,6 +153,32 @@ public abstract class AbstractAction extends AbstractRequestHandler
          ioe.initCause(t);
          throw ioe;
       }
+   }
+
+   /**
+    * Get request input stream.
+    *
+    * @param req the request
+    * @return request stream
+    * @throws IOException for any I/O error
+    */
+   protected InputStream parseInputStream(HttpServletRequest req) throws IOException
+   {
+      return parseInputStream(req, GzipOptionalSerializator.isGzipDisabled() == false);
+   }
+
+   /**
+    * Get request input stream.
+    *
+    * @param req the request
+    * @param gzip do we un-gzip stream
+    * @return request stream
+    * @throws IOException for any I/O error
+    */
+   protected InputStream parseInputStream(HttpServletRequest req, boolean gzip) throws IOException
+   {
+      InputStream is = req.getInputStream();
+      return (gzip) ? new GZIPInputStream(is) : is;
    }
 
    /**
