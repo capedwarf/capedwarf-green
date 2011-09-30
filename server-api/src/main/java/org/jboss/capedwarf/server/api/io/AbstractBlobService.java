@@ -67,7 +67,7 @@ public abstract class AbstractBlobService implements BlobService
 
    public void serveBytes(String key, long start, HttpServletResponse response) throws IOException
    {
-      serveBytes(key, start, -1, response);
+      serveBytes(key, start, Long.MAX_VALUE, response);
    }
 
    public void serveBytes(String key, long start, long end, HttpServletResponse response) throws IOException

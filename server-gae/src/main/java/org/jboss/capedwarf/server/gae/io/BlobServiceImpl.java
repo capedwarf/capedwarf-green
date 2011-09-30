@@ -63,7 +63,7 @@ public class BlobServiceImpl extends AbstractBlobService
    protected void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException
    {
       BlobKey blobKey = new BlobKey(key);
-      ByteRange range = (end >= 0) ? new ByteRange(start, end) : new ByteRange(start);
+      ByteRange range = (end == Long.MAX_VALUE) ? new ByteRange(start) : new ByteRange(start, end);
       blobstoreService.serve(blobKey, range, response);
    }
 
