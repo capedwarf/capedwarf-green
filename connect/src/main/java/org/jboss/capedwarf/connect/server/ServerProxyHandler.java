@@ -13,7 +13,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -164,7 +163,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       }
    }
 
-   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+   public Object invoke(Object proxy, Method method, final Object[] args) throws Throwable
    {
       Class<?> declaringClass = method.getDeclaringClass();
       if (declaringClass == Object.class)
@@ -177,12 +176,12 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          return null;
       }
 
-      QueryInfo query = createQuery(method, args);
+      final QueryInfo query = createQuery(method, args);
 
-      List<JSONAware> toJSON;
+      ResultProducer rp;
       if (query.jsonAware)
       {
-         toJSON = new ArrayList<JSONAware>();
+         final List<JSONAware> toJSON = new ArrayList<JSONAware>();
          for (Object arg : args)
          {
             if (JSONAware.class.isInstance(arg))
@@ -191,13 +190,53 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                toJSON.add(JSONAware.class.cast(arg));
             }
          }
+         rp = new ResultProducer()
+         {
+            public Result run() throws Throwable
+            {
+               return getContent(query, toJSON);
+            }
+         };
+      }
+      else if (query.directContent)
+      {
+         if (args[0] instanceof ContentProducer)
+         {
+            rp = new ResultProducer()
+            {
+               public Result run() throws Throwable
+               {
+                  return getResultWithContentProducer(query, (ContentProducer) args[0]);
+               }
+            };
+         }
+         else if (args[0] instanceof HttpEntity)
+         {
+            rp = new ResultProducer()
+            {
+               public Result run() throws Throwable
+               {
+                  return getResultWithHttpEntity(query, (HttpEntity) args[0]);
+               }
+            };
+         }
+         else
+         {
+            throw new IllegalArgumentException("Cannot create ResultProducer, illegal argument: " + Arrays.toString(args));
+         }
       }
       else
       {
-         toJSON = Collections.emptyList();
+         rp = new ResultProducer()
+         {
+            public Result run() throws Throwable
+            {
+               return getResultWithHttpEntity(query, null);
+            }
+         };
       }
 
-      Result result = wrapResult(getContent(query, toJSON));
+      Result result = wrapResult(rp.run());
       InputStream content = result.stream;
       try
       {
@@ -213,7 +252,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          if (result.executionTime > 29 * 1000)
          {
             getEnv().log(Constants.TAG_CONNECTION, Level.CONFIG, "Retrying, hit GAE limit: " + (result.executionTime / 1000), null);
-            result = wrapResult(getContent(query, toJSON));
+            result = wrapResult(rp.run());
             if (result.status != 200)
             {
                packResponseError(method, result.stream, result.status);
@@ -263,14 +302,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    @SuppressWarnings({"unchecked"})
    protected Result getContent(QueryInfo qi, final List<JSONAware> args) throws Throwable
    {
-      String link = "http" + (getSecure(qi) ? "s" : "") + endpointUrl + (qi.secure ? "secure/" : "") + qi.query;
-      if (config.isDebugLogging())
-         getEnv().log(Constants.TAG_CONNECTION, Level.INFO, "URL: " + link, null);
-
-      HttpPost httppost = new HttpPost(link);
+      ContentProducer cp = null;
       if (qi.jsonAware && args.isEmpty() == false)
       {
-         ContentProducer cp = new ContentProducer()
+         cp = new ContentProducer()
          {
             public void writeTo(OutputStream outputStream) throws IOException
             {
@@ -305,8 +340,23 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                outputStream.flush();
             }
          };
+      }
+      return getResultWithContentProducer(qi, cp);
+   }
 
-         HttpEntity entity;
+   /**
+    * Get content as a input stream.
+    *
+    * @param qi   the additional client query info
+    * @param cp   the content producer
+    * @return the response input stream
+    * @throws Throwable for any error
+    */
+   protected Result getResultWithContentProducer(QueryInfo qi, ContentProducer cp) throws Throwable
+   {
+      HttpEntity entity = null;
+      if (cp != null)
+      {
          if (allowsStreaming)
          {
             entity = new EntityTemplate(cp);
@@ -317,8 +367,28 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
             cp.writeTo(baos);
             entity = new ByteArrayEntity(baos.toByteArray());
          }
-         httppost.setEntity(entity);
       }
+      return getResultWithHttpEntity(qi, entity);
+   }
+
+   /**
+    * Get content as a input stream.
+    *
+    * @param qi   the additional client query info
+    * @param entity the http entity
+    * @return the response input stream
+    * @throws Throwable for any error
+    */
+   protected Result getResultWithHttpEntity(QueryInfo qi, HttpEntity entity) throws Throwable
+   {
+      String link = "http" + (getSecure(qi) ? "s" : "") + endpointUrl + (qi.secure ? "secure/" : "") + qi.query;
+      if (config.isDebugLogging())
+         getEnv().log(Constants.TAG_CONNECTION, Level.INFO, "URL: " + link, null);
+
+      HttpPost httppost = new HttpPost(link);
+
+      if (entity != null)
+         httppost.setEntity(entity);
 
       if (qi.secure)
       {
@@ -404,6 +474,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          {
             boolean type = false;
             boolean jsonAware = false;
+            boolean directContent = false;
             StringBuilder builder = new StringBuilder();
             char[] chars = methodName.toCharArray();
             for (char ch : chars)
@@ -426,13 +497,25 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                Annotation[] ppa = pa[i];
                if (ppa == null || ppa.length == 0)
                {
-                  if (JSONAware.class.isAssignableFrom(pt[i]) == false)
-                     throw new IllegalArgumentException("Illegal method parameter, missing QueryParameter? - " + method);
-
                   if (notNullChecks[i] == false)
-                     throw new IllegalArgumentException("Null JSON aware parameter: " + i);
+                     throw new IllegalArgumentException("Null non-query (JSON, ...) aware parameter: " + i);
 
-                  jsonAware = true;
+                  if (JSONAware.class.isAssignableFrom(pt[i]) == false)
+                  {
+                     if (ContentProducer.class.isAssignableFrom(pt[i]) || HttpEntity.class.isAssignableFrom(pt[i]))
+                     {
+                        if (pt.length > 1)
+                           throw new IllegalArgumentException("Only 1 non-JSONAware argument allowed: " + Arrays.toString(pt));
+
+                        directContent = true;
+                     }
+                     else
+                     {
+                        throw new IllegalArgumentException("Illegal method parameter, missing QueryParameter? - " + method);
+                     }
+                  }
+
+                  jsonAware = jsonAware || (JSONAware.class.isAssignableFrom(pt[i]));
                }
                else
                {
@@ -463,6 +546,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
             value = new QueryInfo();
             value.query = builder.toString();
             value.jsonAware = jsonAware;
+            value.directContent = directContent;
             value.secure = method.isAnnotationPresent(Secure.class);
             queryCache.put(key, value);
          }
@@ -471,6 +555,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       QueryInfo result = new QueryInfo();
       result.query = new Formatter().format(value.query, args).toString();
       result.jsonAware = value.jsonAware;
+      result.directContent = value.directContent;
       result.secure = value.secure;
       return result;
    }
@@ -619,6 +704,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    {
       private String query;
       private boolean jsonAware;
+      private boolean directContent;
       private boolean secure;
    }
 
@@ -642,5 +728,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       {
          this.status = status;
       }
+   }
+
+   protected interface ResultProducer
+   {
+      Result run() throws Throwable;
    }
 }

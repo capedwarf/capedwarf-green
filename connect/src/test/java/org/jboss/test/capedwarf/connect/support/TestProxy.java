@@ -23,6 +23,7 @@
 
 package org.jboss.test.capedwarf.connect.support;
 
+import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
 import org.jboss.capedwarf.connect.server.QueryParameter;
@@ -35,4 +36,6 @@ public interface TestProxy
    String fooBar(@QueryParameter("foo") int bar);
 
    StatusInfo infoPoke(UserInfo user);
+
+   String contentDirect(ContentProducer cp);
 }

@@ -24,11 +24,16 @@
 package org.jboss.test.capedwarf.connect.test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.Status;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
+import org.jboss.capedwarf.common.serialization.GzipSerializator;
 import org.jboss.capedwarf.common.serialization.JSONSerializator;
 import org.jboss.capedwarf.common.serialization.Serializator;
 import org.jboss.capedwarf.connect.server.ServerProxyFactory;
@@ -65,9 +70,24 @@ public class SmokeTestCase extends AbstractConnectTest
             gs.serialize(new StatusInfo(Status.OK), outputStream);
          }
       };
+      HttpHandler content = new HttpHandler()
+      {
+         public void handle(HttpContext context) throws IOException
+         {
+            InputStream inputStream = context.getInputStream();
+            GZIPInputStream gzip = new GZIPInputStream(inputStream);
+            byte[] buf = new byte[1000];
+            gzip.read(buf);
+            String input = new String(buf);
+            System.out.println("input = " + input);
+            OutputStream outputStream = context.getOutputStream();
+            outputStream.write("OK".getBytes());
+         }
+      };
 
       getServer().addContext("/client/foo", foobar);
       getServer().addContext("/client/info", info);
+      getServer().addContext("/client/content", content);
       try
       {
          TestProxy proxy = ServerProxyFactory.create(TestProxy.class);
@@ -78,6 +98,17 @@ public class SmokeTestCase extends AbstractConnectTest
 
             StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
             Assert.assertEquals(Status.OK, status.getStatus());
+
+            String ok = proxy.contentDirect(new ContentProducer()
+            {
+               public void writeTo(OutputStream outstream) throws IOException
+               {
+                  GZIPOutputStream gzip = new GZIPOutputStream(outstream);
+                  gzip.write("POKE?".getBytes());
+                  gzip.finish();
+               }
+            });
+            Assert.assertEquals("OK", ok);
          }
          finally
          {
@@ -88,6 +119,7 @@ public class SmokeTestCase extends AbstractConnectTest
       {
          getServer().removeContext("/client/foo");
          getServer().removeContext("/client/info");
+         getServer().removeContext("/client/content");
       }
    }
 }

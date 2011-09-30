@@ -27,4 +27,11 @@ public @interface Query
     * @return true if json aware, false otherwise
     */
    boolean jsonAware() default false;
+
+   /**
+    * Does query push content directly into stream.
+    *
+    * @return true if direct content streaming, false otherwise
+    */
+   boolean directContent() default false;
 }
