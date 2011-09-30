@@ -67,13 +67,13 @@ public class BlobServiceImpl extends AbstractBlobService
       blobstoreService.serve(blobKey, range, response);
    }
 
-   protected String storeBytesInternal(String mimeType, byte[] bytes) throws IOException
+   protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException
    {
       AppEngineFile file = fileService.createNewBlobFile(mimeType);
       FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
       try
       {
-         writeChannel.write(ByteBuffer.wrap(bytes));
+         writeChannel.write(buffer);
       }
       finally
       {

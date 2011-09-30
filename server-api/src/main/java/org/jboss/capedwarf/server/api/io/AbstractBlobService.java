@@ -23,6 +23,7 @@
 package org.jboss.capedwarf.server.api.io;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -84,8 +85,16 @@ public abstract class AbstractBlobService implements BlobService
       if (bytes == null)
          return null;
 
-      return storeBytesInternal(mimeType, bytes);
+      return storeBytesInternal(mimeType, ByteBuffer.wrap(bytes));
    }
 
-   protected abstract String storeBytesInternal(String mimeType, byte[] bytes) throws IOException;
+   public String storeBytes(String mimeType, ByteBuffer buffer) throws IOException
+   {
+      if (buffer == null)
+         return null;
+
+      return storeBytesInternal(mimeType, buffer);
+   }
+
+   protected abstract String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException;
 }

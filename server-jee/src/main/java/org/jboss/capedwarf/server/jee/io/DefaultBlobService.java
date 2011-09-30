@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletOutputStream;
@@ -126,14 +127,15 @@ public class DefaultBlobService extends AbstractBlobService
       outputStream.flush();
    }
 
-   protected String storeBytesInternal(String mimeType, byte[] bytes) throws IOException
+   protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException
    {
       String key = UUID.randomUUID().toString();
       File file = new File(getDataDir(), key);
       FileOutputStream fos = new FileOutputStream(file);
       try
       {
-         fos.write(bytes);
+         while(buffer.hasRemaining())
+            fos.write(buffer.get());
          fos.flush();
       }
       finally

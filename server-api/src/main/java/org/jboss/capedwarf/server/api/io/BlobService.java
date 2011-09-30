@@ -23,6 +23,7 @@
 package org.jboss.capedwarf.server.api.io;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -90,4 +91,15 @@ public interface BlobService extends BlobTransformer
     * @throws IOException for any I/O error
     */
    String storeBytes(String mimeType, byte[] bytes) throws IOException;
+
+   /**
+    * Store bytes.
+    * See http://www.w3schools.com/media/media_mimeref.asp.
+    *
+    * @param mimeType the mime type
+    * @param buffer the byte buffer
+    * @return the blob key or null if cannot store
+    * @throws IOException for any I/O error
+    */
+   String storeBytes(String mimeType, ByteBuffer buffer) throws IOException;
 }
