@@ -123,7 +123,9 @@ public class DefaultBlobService extends AbstractBlobService
    protected void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException
    {
       ServletOutputStream outputStream = response.getOutputStream();
-      outputStream.write(loadBytesInternal(key, start, end));
+      byte[] bytes = loadBytesInternal(key, start, end);
+      if (bytes != null)
+         outputStream.write(bytes);
       outputStream.flush();
    }
 
