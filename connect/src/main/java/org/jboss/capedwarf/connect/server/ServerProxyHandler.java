@@ -170,9 +170,13 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       {
          return null; // only handle ServerProxy methods
       }
-      if ("shutdown".equals(method.getName()) && ServerProxyHandle.class.equals(declaringClass))
+      if (ServerProxyHandle.class.equals(declaringClass))
       {
-         shutdown();
+         if ("setAllowsStreaming".equals(method.getName()))
+            setAllowsStreaming((Boolean)args[0]);
+         else if ("shutdown".equals(method.getName()))
+            shutdown();
+
          return null;
       }
 

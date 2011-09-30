@@ -10,6 +10,13 @@ import java.lang.reflect.InvocationHandler;
 public interface ServerProxyInvocationHandler extends InvocationHandler
 {
    /**
+    * Is streaming allowed.
+    *
+    * @param allowsStreaming the streaming flag
+    */
+   void setAllowsStreaming(boolean allowsStreaming);
+
+   /**
     * Shutdown server proxy handler.
     */
    void shutdown();
