@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
-import org.jboss.capedwarf.common.tools.DebugTools;
+import org.jboss.capedwarf.common.tools.IOUtils;
 
 /**
  * Buffered serializator.
@@ -33,7 +33,7 @@ public class BufferedSerializator extends DelegateSerializator
    public <T> T deserialize(InputStream stream, Class<T> clazz) throws IOException
    {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      DebugTools.copyAndClose(stream, baos);
+      IOUtils.copyAndClose(stream, baos);
       byte[] buf = baos.toByteArray();
       try
       {

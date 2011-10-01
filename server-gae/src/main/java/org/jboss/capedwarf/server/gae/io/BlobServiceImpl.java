@@ -25,10 +25,12 @@ package org.jboss.capedwarf.server.gae.io;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import javax.enterprise.context.ApplicationScoped;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.ByteRange;
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
@@ -56,6 +58,16 @@ public class BlobServiceImpl extends AbstractBlobService
    {
       BlobKey blobKey = new BlobKey(key);
       return blobstoreService.fetchData(blobKey, startIndex, endIndex);
+   }
+
+   /**
+    * Note: can gzip be used unless you decorate response?
+    */
+   public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException
+   {
+      BlobKey blobKey = new BlobKey(key);
+      ByteRange range = (end == Long.MAX_VALUE) ? new ByteRange(start) : new ByteRange(start, end);
+      blobstoreService.serve(blobKey, range, respose);
    }
 
    protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException

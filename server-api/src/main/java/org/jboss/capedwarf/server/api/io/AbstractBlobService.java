@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.zip.GZIPOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
 
@@ -89,6 +90,11 @@ public abstract class AbstractBlobService implements BlobService
             gzip.finish();
          }
       }
+   }
+
+   public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException
+   {
+      serveBytes(key, start, end, respose.getOutputStream());
    }
 
    public String storeBytes(String mimeType, byte[] bytes) throws IOException

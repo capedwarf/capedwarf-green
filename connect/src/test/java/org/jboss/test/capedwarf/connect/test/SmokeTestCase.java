@@ -30,13 +30,13 @@ import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.Status;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
 import org.jboss.capedwarf.common.serialization.JSONSerializator;
 import org.jboss.capedwarf.common.serialization.Serializator;
-import org.jboss.capedwarf.common.tools.DebugTools;
+import org.jboss.capedwarf.common.tools.IOUtils;
+import org.jboss.capedwarf.connect.io.GzipContentProducer;
 import org.jboss.capedwarf.connect.server.ServerProxyFactory;
 import org.jboss.test.capedwarf.connect.support.HttpContext;
 import org.jboss.test.capedwarf.connect.support.HttpHandler;
@@ -101,17 +101,15 @@ public class SmokeTestCase extends AbstractConnectTest
             StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
             Assert.assertEquals(Status.OK, status.getStatus());
 
-            InputStream is = proxy.contentDirect(new ContentProducer()
+            InputStream is = proxy.contentDirect(new GzipContentProducer()
             {
-               public void writeTo(OutputStream outstream) throws IOException
+               protected void doWriteTo(OutputStream outstream) throws IOException
                {
-                  GZIPOutputStream gzip = new GZIPOutputStream(outstream);
-                  gzip.write("POKE?".getBytes());
-                  gzip.finish();
+                  outstream.write("POKE?".getBytes());
                }
             });
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DebugTools.copyAndClose(is, baos);
+            IOUtils.copyAndClose(is, baos);
             String ok = new String(baos.toByteArray());
             Assert.assertEquals("OK", ok);
          }

@@ -25,6 +25,7 @@ package org.jboss.capedwarf.server.api.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * byte[] handling service.
@@ -80,6 +81,17 @@ public interface BlobService extends BlobTransformer
     * @throws IOException for any I/O error
     */
    void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException;
+
+   /**
+    * Serve bytes directly into repsonse.
+    *
+    * @param key the blob key
+    * @param start start index of data to fetch.
+    * @param end end index (inclusive) of data to fetch.
+    * @param respose the http response
+    * @throws IOException for any I/O error
+    */
+   void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException;
 
    /**
     * Store raw bytes.
