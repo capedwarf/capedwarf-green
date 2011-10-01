@@ -657,7 +657,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          else if (InputStream.class.isAssignableFrom(rt))
          {
             closeOnReturn = false;
-            return content;
+            return GzipOptionalSerializator.wrap(content);
          }
          else
          {

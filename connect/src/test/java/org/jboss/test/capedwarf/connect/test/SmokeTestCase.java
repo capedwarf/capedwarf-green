@@ -23,6 +23,7 @@
 
 package org.jboss.test.capedwarf.connect.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,9 +34,9 @@ import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.Status;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
-import org.jboss.capedwarf.common.serialization.GzipSerializator;
 import org.jboss.capedwarf.common.serialization.JSONSerializator;
 import org.jboss.capedwarf.common.serialization.Serializator;
+import org.jboss.capedwarf.common.tools.DebugTools;
 import org.jboss.capedwarf.connect.server.ServerProxyFactory;
 import org.jboss.test.capedwarf.connect.support.HttpContext;
 import org.jboss.test.capedwarf.connect.support.HttpHandler;
@@ -80,8 +81,9 @@ public class SmokeTestCase extends AbstractConnectTest
             gzip.read(buf);
             String input = new String(buf);
             System.out.println("input = " + input);
-            OutputStream outputStream = context.getOutputStream();
+            GZIPOutputStream outputStream = new GZIPOutputStream(context.getOutputStream());
             outputStream.write("OK".getBytes());
+            outputStream.finish();
          }
       };
 
@@ -99,7 +101,7 @@ public class SmokeTestCase extends AbstractConnectTest
             StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
             Assert.assertEquals(Status.OK, status.getStatus());
 
-            String ok = proxy.contentDirect(new ContentProducer()
+            InputStream is = proxy.contentDirect(new ContentProducer()
             {
                public void writeTo(OutputStream outstream) throws IOException
                {
@@ -108,6 +110,9 @@ public class SmokeTestCase extends AbstractConnectTest
                   gzip.finish();
                }
             });
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DebugTools.copyAndClose(is, baos);
+            String ok = new String(baos.toByteArray());
             Assert.assertEquals("OK", ok);
          }
          finally

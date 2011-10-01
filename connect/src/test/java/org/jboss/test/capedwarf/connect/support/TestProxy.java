@@ -23,6 +23,8 @@
 
 package org.jboss.test.capedwarf.connect.support;
 
+import java.io.InputStream;
+
 import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
@@ -37,5 +39,5 @@ public interface TestProxy
 
    StatusInfo infoPoke(UserInfo user);
 
-   String contentDirect(ContentProducer cp);
+   InputStream contentDirect(ContentProducer cp);
 }
