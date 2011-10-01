@@ -120,6 +120,10 @@
           <artifactId>jdo2-api</artifactId>
           <scope>provided</scope>
       </dependency>
+      <dependency>
+          <groupId>org.datanucleus</groupId>
+          <artifactId>datanucleus-core</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>junit</groupId>

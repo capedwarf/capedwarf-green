@@ -95,7 +95,7 @@ public class CacheConfigImpl extends AbstractCacheConfig
    {
       String cel = getProps().getProperty("jpa.cache-lookup.class");
       if (cel == null || cel.length() == 0)
-         return new DNCacheEntryLookup();
+         return new LongIDCacheEntryLookup();
 
       try
       {

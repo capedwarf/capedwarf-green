@@ -20,46 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.cache.impl;
+package org.jboss.capedwarf.server.gae.cache;
 
-import javax.cache.Cache;
-
-import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import javax.jdo.identity.LongIdentity;
 
 /**
- * Abstract CEL.
+ * Long ID DataNucleus CEL.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCacheEntryLookup implements CacheEntryLookup
+public class LongIDCacheEntryLookup extends DNCacheEntryLookup
 {
-   protected Cache cache;
-
-   protected abstract Object toImplementationId(Class<?> entryType, Object id);
-
-   protected <T> T toEntity(Class<T> entryType, Object result)
+   protected Object toImplementationId(Class<?> entryType, Object id)
    {
-      return entryType.cast(result);
-   }
-
-   public <T> T getCachedEntry(Class<T> entryType, Object id)
-   {
-      if (entryType == null || id == null)
-         return null;
-
-      Object oid = toImplementationId(entryType, id);
-      if (oid == null)
-         return null;
-
-      Object result = cache.get(oid);
-      if (result == null)
-         return null;
-
-      return toEntity(entryType, result);
-   }
-
-   public void setCache(Cache cache)
-   {
-      this.cache = cache;
+      return new LongIdentity(entryType, (Long) id);
    }
 }

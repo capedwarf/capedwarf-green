@@ -25,14 +25,12 @@ package org.jboss.capedwarf.server.gae.cache;
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
-
 /**
  * DataNucleus OID CEL.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OIDCacheEntryLookup extends AbstractCacheEntryLookup
+public class OIDCacheEntryLookup extends DNCacheEntryLookup
 {
    private static final Logger log = Logger.getLogger(OIDCacheEntryLookup.class.getName());
 

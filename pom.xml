@@ -47,6 +47,7 @@
     <version.javax.cache>1.0-dev-2</version.javax.cache>
     <version.javax.mail>1.4</version.javax.mail>
     <version.javax.jpa2>1.0.0.Final</version.javax.jpa2>
+    <version.org.datanucleus.core>1.1.5</version.org.datanucleus.core>
     <version.org.datanucleus.jdo>2.3-eb</version.org.datanucleus.jdo>
     <version.org.datanucleus.jpa.spec>1.1.1</version.org.datanucleus.jpa.spec>
     <version.org.datanucleus.jta>1.1.1</version.org.datanucleus.jta>
@@ -289,6 +290,12 @@
            <groupId>com.google.appengine</groupId>
            <artifactId>jdo2-api</artifactId>
            <version>${version.org.datanucleus.jdo}</version>
+      </dependency>
+
+      <dependency>
+           <groupId>org.datanucleus</groupId>
+           <artifactId>datanucleus-core</artifactId>
+           <version>${version.org.datanucleus.core}</version>
       </dependency>
 
       <dependency>

@@ -22,8 +22,7 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import javax.jdo.identity.LongIdentity;
-
+import org.datanucleus.cache.CachedPC;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
 /**
@@ -31,10 +30,12 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class DNCacheEntryLookup extends AbstractCacheEntryLookup
+public abstract class DNCacheEntryLookup extends AbstractCacheEntryLookup
 {
-   protected Object toImplementationId(Class<?> entryType, Object id)
+   @Override
+   protected <T> T toEntity(Class<T> entryType, Object result)
    {
-      return new LongIdentity(entryType, (Long) id);
+      CachedPC cpc = (CachedPC) result;
+      return entryType.cast(cpc.getPersistableObject());
    }
 }
