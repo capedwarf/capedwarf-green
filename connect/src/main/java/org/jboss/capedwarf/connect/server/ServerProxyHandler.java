@@ -616,6 +616,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
     */
    protected Object toValue(Method method, InputStream content) throws Throwable
    {
+      boolean closeOnReturn = true;
       content = new ClosedInputStream(content);
       try
       {
@@ -655,6 +656,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          }
          else if (InputStream.class.isAssignableFrom(rt))
          {
+            closeOnReturn = false;
             return content;
          }
          else
@@ -667,7 +669,8 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       {
          try
          {
-            content.close();
+            if (closeOnReturn)
+               content.close();
          }
          catch (IOException ignored)
          {
