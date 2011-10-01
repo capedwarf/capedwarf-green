@@ -1,10 +1,10 @@
 package org.jboss.capedwarf.connect.server;
 
-import org.jboss.capedwarf.connect.config.Configuration;
-
 import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import org.jboss.capedwarf.connect.config.Configuration;
 
 /**
  * Create ServerProxy instance.
@@ -64,6 +64,21 @@ public class ServerProxyFactory
             new Class<?>[]{ServerProxyHandle.class, proxyClass},
             handler);
       return proxyClass.cast(proxy);
+   }
+
+   /**
+    * Set allows streaming flag.
+    *
+    * @param proxy the proxy
+    * @param flag the flag
+    */
+   public static void setAllowsStreaming(Object proxy, boolean flag)
+   {
+      if (proxy instanceof ServerProxyHandle == false)
+         throw new IllegalArgumentException("The argument is not a proper server proxy: " + proxy);
+
+      ServerProxyHandle handle = (ServerProxyHandle) proxy;
+      handle.setAllowsStreaming(flag);
    }
 
    /**

@@ -8,6 +8,13 @@ package org.jboss.capedwarf.connect.server;
 interface ServerProxyHandle
 {
    /**
+    * Is streaming allowed.
+    *
+    * @param allowsStreaming the streaming flag
+    */
+   void setAllowsStreaming(boolean allowsStreaming);
+
+   /**
     * Shutdown server proxy.
     */
    void shutdown();
