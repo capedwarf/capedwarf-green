@@ -653,6 +653,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          {
             return JSONSerializator.OPTIONAL_GZIP_BUFFERED.deserialize(content, rt);
          }
+         else if (InputStream.class.isAssignableFrom(rt))
+         {
+            return content;
+         }
          else
          {
             String value = convertStreamToString(content);
