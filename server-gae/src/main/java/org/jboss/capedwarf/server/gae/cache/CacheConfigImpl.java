@@ -93,6 +93,19 @@ public class CacheConfigImpl extends AbstractCacheConfig
 
    protected AbstractCacheEntryLookup createLookup()
    {
-      return new DNCacheEntryLookup();
+      String cel = getProps().getProperty("jpa.cache-lookup.class");
+      if (cel == null || cel.length() == 0)
+         return new DNCacheEntryLookup();
+
+      try
+      {
+         ClassLoader cl = getClass().getClassLoader();
+         Class<?> clazz = cl.loadClass(cel);
+         return (AbstractCacheEntryLookup) clazz.newInstance();
+      }
+      catch (Exception e)
+      {
+         throw new IllegalArgumentException(e);
+      }
    }
 }

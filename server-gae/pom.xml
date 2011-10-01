@@ -115,6 +115,11 @@
           <groupId>com.google.appengine</groupId>
           <artifactId>geronimo-jta_1.1_spec</artifactId>
       </dependency>
+      <dependency>
+          <groupId>com.google.appengine</groupId>
+          <artifactId>jdo2-api</artifactId>
+          <scope>provided</scope>
+      </dependency>
 
       <dependency>
          <groupId>junit</groupId>

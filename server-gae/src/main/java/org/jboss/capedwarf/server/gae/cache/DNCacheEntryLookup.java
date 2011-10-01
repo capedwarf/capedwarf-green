@@ -22,8 +22,7 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import java.lang.reflect.Constructor;
-import java.util.logging.Logger;
+import javax.jdo.identity.LongIdentity;
 
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
@@ -34,57 +33,8 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
  */
 public class DNCacheEntryLookup extends AbstractCacheEntryLookup
 {
-   private static final Logger log = Logger.getLogger(DNCacheEntryLookup.class.getName());
-
-   private String oidClassName = "org.datanucleus.identity.OIDImpl";
-   private volatile Class<?> oidClass;
-
    protected Object toImplementationId(Class<?> entryType, Object id)
    {
-      if (oidClass == null)
-      {
-         synchronized (this)
-         {
-            if (oidClass == null)
-            {
-               if (cache == null)
-               {
-                  oidClass = Void.class;
-                  log.warning("Cache is null, forgot to set it?");
-                  return null;
-               }
-
-               try
-               {
-                  oidClass = getClass().getClassLoader().loadClass(oidClassName);
-               }
-               catch (ClassNotFoundException e)
-               {
-                  log.warning("Cannot create OID: " + e);
-                  oidClass = Void.class;
-               }
-            }
-         }
-      }
-
-      // it failed
-      if (oidClass == Void.class)
-         return null;
-
-      try
-      {
-         Constructor<?> ctor = oidClass.getConstructor(String.class, Object.class);
-         return ctor.newInstance(entryType.getName(), id);
-      }
-      catch (Exception e)
-      {
-         log.fine("Cannot create OID: " + e);
-         return null;
-      }
-   }
-
-   public void setOidClassName(String oidClassName)
-   {
-      this.oidClassName = oidClassName;
+      return new LongIdentity(entryType, (Long) id);
    }
 }
