@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.capedwarf.server.api.io.AbstractBlobService;
 import org.jboss.capedwarf.server.api.io.Blob;
@@ -118,15 +116,6 @@ public class DefaultBlobService extends AbstractBlobService
             }
          }
       }
-   }
-
-   protected void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException
-   {
-      ServletOutputStream outputStream = response.getOutputStream();
-      byte[] bytes = loadBytesInternal(key, start, end);
-      if (bytes != null)
-         outputStream.write(bytes);
-      outputStream.flush();
    }
 
    protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException

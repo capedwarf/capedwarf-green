@@ -23,8 +23,11 @@
 package org.jboss.capedwarf.server.api.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import javax.servlet.http.HttpServletResponse;
+import java.util.zip.GZIPOutputStream;
+
+import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
 
 /**
  * Abstract byte[] handling service.
@@ -60,25 +63,33 @@ public abstract class AbstractBlobService implements BlobService
 
    protected abstract byte[] loadBytesInternal(String key, long startIndex, long endIndex);
 
-   public void serveBytes(String key, HttpServletResponse response) throws IOException
+   public void serveBytes(String key, OutputStream outstream) throws IOException
    {
-      serveBytes(key, 0, response);
+      serveBytes(key, 0, outstream);
    }
 
-   public void serveBytes(String key, long start, HttpServletResponse response) throws IOException
+   public void serveBytes(String key, long start, OutputStream outstream) throws IOException
    {
-      serveBytes(key, start, Long.MAX_VALUE, response);
+      serveBytes(key, start, Long.MAX_VALUE, outstream);
    }
 
-   public void serveBytes(String key, long start, long end, HttpServletResponse response) throws IOException
+   public void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException
    {
-      if (key == null)
-         return;
-
-      serveBytesInternal(key, start, end, response);
+      byte[] bytes = loadBytes(key, start, end);
+      if (bytes != null)
+      {
+         if (GzipOptionalSerializator.isGzipDisabled())
+         {
+            outstream.write(bytes);
+         }
+         else
+         {
+            GZIPOutputStream gzip = new GZIPOutputStream(outstream);
+            gzip.write(bytes);
+            gzip.finish();
+         }
+      }
    }
-
-   protected abstract void serveBytesInternal(String key, long start, long end, HttpServletResponse response) throws IOException;
 
    public String storeBytes(String mimeType, byte[] bytes) throws IOException
    {

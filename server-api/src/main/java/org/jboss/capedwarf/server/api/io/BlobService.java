@@ -23,8 +23,8 @@
 package org.jboss.capedwarf.server.api.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * byte[] handling service.
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface BlobService extends BlobTransformer
 {
    /**
-    * Load the bytes.
+    * Load the raw bytes.
     *
     * @param key the blob key
     * @return bytes or null if no such blob found
@@ -42,7 +42,7 @@ public interface BlobService extends BlobTransformer
    byte[] loadBytes(String key);
 
    /**
-    * Load the bytes.
+    * Load the raw bytes.
     *
     * @param key the blob key
     * @param startIndex start index of data to fetch.
@@ -55,20 +55,20 @@ public interface BlobService extends BlobTransformer
     * Serve bytes directly into repsonse.
     *
     * @param key the blob key
-    * @param response the http response
+    * @param outstream the output stream
     * @throws IOException for any I/O error
     */
-   void serveBytes(String key, HttpServletResponse response) throws IOException;
+   void serveBytes(String key, OutputStream outstream) throws IOException;
 
    /**
     * Serve bytes directly into repsonse.
     *
     * @param key the blob key
     * @param start start index of data to fetch.
-    * @param response the http response
+    * @param outstream the output stream
     * @throws IOException for any I/O error
     */
-   void serveBytes(String key, long start, HttpServletResponse response) throws IOException;
+   void serveBytes(String key, long start, OutputStream outstream) throws IOException;
 
    /**
     * Serve bytes directly into repsonse.
@@ -76,13 +76,13 @@ public interface BlobService extends BlobTransformer
     * @param key the blob key
     * @param start start index of data to fetch.
     * @param end end index (inclusive) of data to fetch.
-    * @param response the http response
+    * @param outstream the output stream
     * @throws IOException for any I/O error
     */
-   void serveBytes(String key, long start, long end, HttpServletResponse response) throws IOException;
+   void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException;
 
    /**
-    * Store bytes.
+    * Store raw bytes.
     * See http://www.w3schools.com/media/media_mimeref.asp.
     *
     * @param mimeType the mime type
@@ -93,7 +93,7 @@ public interface BlobService extends BlobTransformer
    String storeBytes(String mimeType, byte[] bytes) throws IOException;
 
    /**
-    * Store bytes.
+    * Store raw bytes.
     * See http://www.w3schools.com/media/media_mimeref.asp.
     *
     * @param mimeType the mime type
