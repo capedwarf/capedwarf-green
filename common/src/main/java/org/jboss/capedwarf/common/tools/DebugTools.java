@@ -24,6 +24,19 @@ public class DebugTools
     */
    public static void copyAndClose(InputStream in, OutputStream out) throws IOException
    {
+      copyAndClose(in, out, true);
+   }
+
+   /**
+    * Copy input to output.
+    *
+    * @param in the input
+    * @param out the output
+    * @param flushAndCloseOut do we flush and close out stream
+    * @throws IOException for any I/O error
+    */
+   public static void copyAndClose(InputStream in, OutputStream out, boolean flushAndCloseOut) throws IOException
+   {
       try
       {
          byte[] buf = new byte[20000];
@@ -32,8 +45,11 @@ public class DebugTools
          {
             out.write(buf, 0, rc);
          }
-         out.flush();
-         out.close();
+         if (flushAndCloseOut)
+         {
+            out.flush();
+            out.close();
+         }
       }
       finally
       {
