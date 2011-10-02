@@ -49,7 +49,7 @@ public abstract class AbstractBlobService implements BlobService
 
    public byte[] loadBytes(String key)
    {
-      return loadBytesInternal(key, 0, Long.MAX_VALUE);
+      return loadBytes(key, 0, Long.MAX_VALUE);
    }
 
    public byte[] loadBytes(String key, long startIndex, long endIndex)
