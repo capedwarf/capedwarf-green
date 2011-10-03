@@ -59,4 +59,53 @@ public class IOUtils
          }
       }
    }
+
+   /**
+    * This method reads the contents of the file into a preallocated buffer.
+    * If the content doesn't fit exactly, throw IllegalArgumentException.
+    *
+    * @param is InputStream to read from
+    * @param buffer Buffer to fill with content
+    * @throws IOException for any I/O error
+    */
+   public static void readToBuffer(InputStream is, byte [] buffer) throws IOException
+   {
+      readToBuffer(is, buffer, 0, buffer.length);
+   }
+
+   /**
+    * This method reads the contents of the file into a preallocated buffer.
+    * If the content length doesn't match 'len' size exactly, an IllegalArgumentException is thrown.
+    *
+    * @param is InputStream to read from
+    * @param buffer Buffer to fill with content
+    * @param offs the offset
+    * @param len the length
+    * @throws IOException for any I/O error
+    */
+   public static void readToBuffer(InputStream is, byte [] buffer, int offs, int len) throws IOException
+   {
+      try
+      {
+         int rc = is.read(buffer, offs, len);
+         while (rc != -1)
+         {
+            offs+=rc;
+            len-=rc;
+            rc = is.read(buffer, offs, len);
+         }
+         if (len > 0)
+            throw new IllegalArgumentException("Content is shorter than expected");
+         if (is.read() != -1)
+            throw new IllegalArgumentException("Content is longer than expected");
+      }
+      finally
+      {
+         try
+         {
+            is.close();
+         }
+         catch (Exception ignored) {}
+      }
+   }
 }
