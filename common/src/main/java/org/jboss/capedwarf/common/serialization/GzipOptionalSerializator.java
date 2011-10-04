@@ -37,6 +37,11 @@ public class GzipOptionalSerializator extends DelegateSerializator
       return isGzipDisabled() ? stream : new GZIPInputStream(stream);
    }
 
+   public static OutputStream wrap(OutputStream stream) throws IOException
+   {
+      return isGzipDisabled() ? stream : new GZIPOutputStream(stream);
+   }
+
    public GzipOptionalSerializator(Serializator delegate)
    {
       super(delegate);
