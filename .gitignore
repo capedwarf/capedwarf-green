@@ -2,6 +2,7 @@
 *.iml
 *.ipr
 *.iws
+target/
 common/target/
 connect/target/
 sqlite/target/
