@@ -30,9 +30,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 
-import org.jboss.capedwarf.server.api.io.AbstractBlobService;
-import org.jboss.capedwarf.server.api.io.Blob;
+import org.jboss.capedwarf.server.api.io.AbstractSimpleBlobService;
 
 /**
  * Default blob service.
@@ -40,7 +40,8 @@ import org.jboss.capedwarf.server.api.io.Blob;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class DefaultBlobService extends AbstractBlobService
+@Alternative
+public class DefaultBlobService extends AbstractSimpleBlobService
 {
    private volatile File dataDir;
 
@@ -61,17 +62,6 @@ public class DefaultBlobService extends AbstractBlobService
          }
       }
       return dataDir;
-   }
-
-   protected Blob toBlobInternal(final byte[] bytes)
-   {
-      return new Blob()
-      {
-         public byte[] getBytes()
-         {
-            return bytes;
-         }
-      };
    }
 
    protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
