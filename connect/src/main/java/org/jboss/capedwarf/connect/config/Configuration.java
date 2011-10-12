@@ -15,6 +15,7 @@ public abstract class Configuration<T>
    private int sslPort;   
    private boolean isDebugMode;
    private boolean isDebugLogging;
+   private boolean isStrictSSL;
    private Class<T> proxyClass;
 
    public synchronized static <T> Configuration<T> getInstance()
@@ -90,5 +91,15 @@ public abstract class Configuration<T>
    public void setDebugLogging(boolean isDebugLogging)
    {
       this.isDebugLogging = isDebugLogging;
-   }   
+   }
+
+   public boolean isStrictSSL()
+   {
+      return isStrictSSL;
+   }
+
+   public void setStrictSSL(boolean strictSSL)
+   {
+      isStrictSSL = strictSSL;
+   }
 }

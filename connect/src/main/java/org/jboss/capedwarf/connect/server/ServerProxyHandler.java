@@ -385,7 +385,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
     */
    protected Result getResultWithHttpEntity(QueryInfo qi, HttpEntity entity) throws Throwable
    {
-      String link = "http" + (getSecure(qi) ? "s" : "") + endpointUrl + (qi.secure ? "secure/" : "") + qi.query;
+      String link = "http" + (getSSL(qi) ? "s" : "") + endpointUrl + (qi.secure ? "secure/" : "") + qi.query;
       if (config.isDebugLogging())
          getEnv().log(Constants.TAG_CONNECTION, Level.INFO, "URL: " + link, null);
 
@@ -425,14 +425,14 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    }
 
    /**
-    * Get secure.
+    * Get ssl.
     *
     * @param qi the query info
-    * @return true if secure, false otherwise
+    * @return true if ssl, false otherwise
     */
-   private boolean getSecure(QueryInfo qi)
+   protected boolean getSSL(QueryInfo qi)
    {
-      return config.isDebugMode() == false && qi.secure;
+      return (config.isDebugMode() == false && qi.secure) || config.isStrictSSL();
    }
 
    /**
