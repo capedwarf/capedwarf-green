@@ -1,5 +1,9 @@
 package org.jboss.capedwarf.connect.config;
 
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.SocketFactory;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+
 /**
  * The server config.
  *
@@ -16,6 +20,8 @@ public abstract class Configuration<T>
    private boolean isDebugMode;
    private boolean isDebugLogging;
    private boolean isStrictSSL;
+   private SocketFactory plainFactory;
+   private SocketFactory sslFactory;
    private Class<T> proxyClass;
 
    public synchronized static <T> Configuration<T> getInstance()
@@ -101,5 +107,31 @@ public abstract class Configuration<T>
    public void setStrictSSL(boolean strictSSL)
    {
       isStrictSSL = strictSSL;
+   }
+
+   public SocketFactory getPlainFactory()
+   {
+      if (plainFactory == null)
+         return PlainSocketFactory.getSocketFactory();
+
+      return plainFactory;
+   }
+
+   public void setPlainFactory(SocketFactory plainFactory)
+   {
+      this.plainFactory = plainFactory;
+   }
+
+   public SocketFactory getSslFactory()
+   {
+      if (sslFactory == null)
+         return SSLSocketFactory.getSocketFactory();
+
+      return sslFactory;
+   }
+
+   public void setSslFactory(SocketFactory sslFactory)
+   {
+      this.sslFactory = sslFactory;
    }
 }

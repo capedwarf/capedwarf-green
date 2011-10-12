@@ -28,10 +28,8 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
@@ -136,18 +134,43 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
 
          // Create and initialize scheme registry
          SchemeRegistry schemeRegistry = new SchemeRegistry();
-         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), config.getPort()));
-         schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), config.getSslPort()));
+         schemeRegistry.register(new Scheme("http", config.getPlainFactory(), config.getPort()));
+         schemeRegistry.register(new Scheme("https", config.getSslFactory(), config.getSslPort()));
 
-         // Create an HttpClient with the ThreadSafeClientConnManager.
-         // This connection manager must be used if more than one thread will
-         // be using the HttpClient.
-         ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, schemeRegistry);
+         ClientConnectionManager ccm = createClientConnectionManager(params, schemeRegistry);
 
-         client = new DefaultHttpClient(ccm, params);
+         client = createClient(ccm, params);
       }
 
       return client;
+   }
+
+   /**
+    * Create client connection manager.
+    *
+    * Create an HttpClient with the ThreadSafeClientConnManager.
+    * This connection manager must be used if more than one thread will
+    * be using the HttpClient.
+    *
+    * @param params the http params
+    * @param schemeRegistry the scheme registry
+    * @return new client connection manager
+    */
+   protected ClientConnectionManager createClientConnectionManager(HttpParams params, SchemeRegistry schemeRegistry)
+   {
+      return new ThreadSafeClientConnManager(params, schemeRegistry);
+   }
+
+   /**
+    * Create new http client.
+    *
+    * @param ccm the client connection manager
+    * @param params the http params
+    * @return new http client
+    */
+   protected HttpClient createClient(ClientConnectionManager ccm, HttpParams params)
+   {
+      return new DefaultHttpClient(ccm, params);
    }
 
    public synchronized void shutdown()
