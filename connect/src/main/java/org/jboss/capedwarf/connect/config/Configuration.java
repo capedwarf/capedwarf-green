@@ -1,8 +1,10 @@
 package org.jboss.capedwarf.connect.config;
 
+import org.apache.http.HttpVersion;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.jboss.capedwarf.common.Constants;
 
 /**
  * The server config.
@@ -20,6 +22,9 @@ public abstract class Configuration<T>
    private boolean isDebugMode;
    private boolean isDebugLogging;
    private boolean isStrictSSL;
+   private int connectionTimeout = 30 * (int) Constants.SECOND;
+   private HttpVersion httpVersion = HttpVersion.HTTP_1_1;
+   private String contentCharset = "UTF-8";
    private SocketFactory plainFactory;
    private SocketFactory sslFactory;
    private Class<T> proxyClass;
@@ -107,6 +112,36 @@ public abstract class Configuration<T>
    public void setStrictSSL(boolean strictSSL)
    {
       isStrictSSL = strictSSL;
+   }
+
+   public int getConnectionTimeout()
+   {
+      return connectionTimeout;
+   }
+
+   public void setConnectionTimeout(int connectionTimeout)
+   {
+      this.connectionTimeout = connectionTimeout;
+   }
+
+   public HttpVersion getHttpVersion()
+   {
+      return httpVersion;
+   }
+
+   public void setHttpVersion(HttpVersion httpVersion)
+   {
+      this.httpVersion = httpVersion;
+   }
+
+   public String getContentCharset()
+   {
+      return contentCharset;
+   }
+
+   public void setContentCharset(String contentCharset)
+   {
+      this.contentCharset = contentCharset;
    }
 
    public SocketFactory getPlainFactory()

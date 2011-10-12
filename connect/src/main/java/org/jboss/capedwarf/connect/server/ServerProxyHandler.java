@@ -24,7 +24,6 @@ import javax.validation.constraints.Size;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
@@ -128,9 +127,9 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       if (client == null)
       {
          HttpParams params = new BasicHttpParams();
-         HttpConnectionParams.setConnectionTimeout(params, 30 * (int)Constants.SECOND);
-         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-         HttpProtocolParams.setContentCharset(params, "UTF-8");
+         HttpConnectionParams.setConnectionTimeout(params, config.getConnectionTimeout());
+         HttpProtocolParams.setVersion(params, config.getHttpVersion());
+         HttpProtocolParams.setContentCharset(params, config.getContentCharset());
 
          // Create and initialize scheme registry
          SchemeRegistry schemeRegistry = new SchemeRegistry();
