@@ -46,7 +46,9 @@ import org.jboss.capedwarf.common.io.ClosedInputStream;
 import org.jboss.capedwarf.common.serialization.BufferedSerializator;
 import org.jboss.capedwarf.common.serialization.ConverterUtils;
 import org.jboss.capedwarf.common.serialization.ElementTypeProvider;
+import org.jboss.capedwarf.common.serialization.Gzip;
 import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
+import org.jboss.capedwarf.common.serialization.GzipType;
 import org.jboss.capedwarf.common.serialization.JSONAware;
 import org.jboss.capedwarf.common.serialization.JSONCollectionSerializator;
 import org.jboss.capedwarf.common.serialization.JSONSerializator;
@@ -204,91 +206,101 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
 
       final QueryInfo query = createQuery(method, args);
 
-      ResultProducer rp;
-      if (query.jsonAware)
-      {
-         final List<JSONAware> toJSON = new ArrayList<JSONAware>();
-         for (Object arg : args)
-         {
-            if (JSONAware.class.isInstance(arg))
-            {
-               ValidationHelper.validate(arg);
-               toJSON.add(JSONAware.class.cast(arg));
-            }
-         }
-         rp = new ResultProducer()
-         {
-            public Result run() throws Throwable
-            {
-               return getContent(query, toJSON);
-            }
-         };
-      }
-      else if (query.directContent)
-      {
-         if (args[0] instanceof ContentProducer)
-         {
-            rp = new ResultProducer()
-            {
-               public Result run() throws Throwable
-               {
-                  return getResultWithContentProducer(query, (ContentProducer) args[0]);
-               }
-            };
-         }
-         else if (args[0] instanceof HttpEntity)
-         {
-            rp = new ResultProducer()
-            {
-               public Result run() throws Throwable
-               {
-                  return getResultWithHttpEntity(query, (HttpEntity) args[0]);
-               }
-            };
-         }
-         else
-         {
-            throw new IllegalArgumentException("Cannot create ResultProducer, illegal argument: " + Arrays.toString(args));
-         }
-      }
-      else
-      {
-         rp = new ResultProducer()
-         {
-            public Result run() throws Throwable
-            {
-               return getResultWithHttpEntity(query, null);
-            }
-         };
-      }
-
-      Result result = wrapResult(rp.run());
-      InputStream content = result.stream;
+      if (query.gzip == false)
+         GzipOptionalSerializator.disableGzip();
       try
       {
-         if (result.status != 200)
+         final ResultProducer rp;
+         if (query.jsonAware)
          {
-            packResponseError(method, content, result.status);
-         }
-         return toValue(method, content);
-      }
-      catch (Throwable t)
-      {
-         // Lets retry if we're over GAE limit
-         if (result.executionTime > 29 * 1000)
-         {
-            getEnv().log(Constants.TAG_CONNECTION, Level.CONFIG, "Retrying, hit GAE limit: " + (result.executionTime / 1000), null);
-            result = wrapResult(rp.run());
-            if (result.status != 200)
+            final List<JSONAware> toJSON = new ArrayList<JSONAware>();
+            for (Object arg : args)
             {
-               packResponseError(method, result.stream, result.status);
+               if (JSONAware.class.isInstance(arg))
+               {
+                  ValidationHelper.validate(arg);
+                  toJSON.add(JSONAware.class.cast(arg));
+               }
             }
-            return toValue(method, result.stream);
+            rp = new ResultProducer()
+            {
+               public Result run() throws Throwable
+               {
+                  return getContent(query, toJSON);
+               }
+            };
+         }
+         else if (query.directContent)
+         {
+            if (args[0] instanceof ContentProducer)
+            {
+               rp = new ResultProducer()
+               {
+                  public Result run() throws Throwable
+                  {
+                     return getResultWithContentProducer(query, (ContentProducer) args[0]);
+                  }
+               };
+            }
+            else if (args[0] instanceof HttpEntity)
+            {
+               rp = new ResultProducer()
+               {
+                  public Result run() throws Throwable
+                  {
+                     return getResultWithHttpEntity(query, (HttpEntity) args[0]);
+                  }
+               };
+            }
+            else
+            {
+               throw new IllegalArgumentException("Cannot create ResultProducer, illegal argument: " + Arrays.toString(args));
+            }
          }
          else
          {
-            throw t;
+            rp = new ResultProducer()
+            {
+               public Result run() throws Throwable
+               {
+                  return getResultWithHttpEntity(query, null);
+               }
+            };
          }
+
+         Result result = wrapResult(rp.run());
+         InputStream content = result.stream;
+         try
+         {
+            if (result.status != 200)
+            {
+               packResponseError(method, content, result.status);
+            }
+            return toValue(method, content);
+         }
+         catch (Throwable t)
+         {
+            // Lets retry if we're over GAE limit
+            if (result.executionTime > 29 * 1000)
+            {
+               getEnv().log(Constants.TAG_CONNECTION, Level.CONFIG, "Retrying, hit GAE limit: " + (result.executionTime / 1000), null);
+               result = wrapResult(rp.run());
+               if (result.status != 200)
+               {
+                  packResponseError(method, result.stream, result.status);
+               }
+               return toValue(method, result.stream);
+            }
+            else
+            {
+               throw t;
+            }
+         }
+      }
+      finally
+      {
+         if (query.gzip == false)
+            GzipOptionalSerializator.enableGzip();
       }
    }
 
@@ -474,6 +486,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          value.query = query.value();
          value.jsonAware = query.jsonAware();
          value.secure = method.isAnnotationPresent(Secure.class);
+         value.gzip = isGzip(method);
       }
       else
       {
@@ -574,6 +587,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
             value.jsonAware = jsonAware;
             value.directContent = directContent;
             value.secure = method.isAnnotationPresent(Secure.class);
+            value.gzip = isGzip(method);
             queryCache.put(key, value);
          }
       }
@@ -583,7 +597,20 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       result.jsonAware = value.jsonAware;
       result.directContent = value.directContent;
       result.secure = value.secure;
+      result.gzip = value.gzip;
       return result;
+   }
+
+   /**
+    * Do we use gzip.
+    *
+    * @param method the method
+    * @return true if gzip, false otherwise
+    */
+   protected boolean isGzip(Method method)
+   {
+      Gzip gzip = method.getAnnotation(Gzip.class);
+      return (gzip == null) || (gzip.value() == GzipType.ENABLE);
    }
 
    /**
@@ -739,6 +766,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       private boolean jsonAware;
       private boolean directContent;
       private boolean secure;
+      private boolean gzip;
    }
 
    protected static class Result
