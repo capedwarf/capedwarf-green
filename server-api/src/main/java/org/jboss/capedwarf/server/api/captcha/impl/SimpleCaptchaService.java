@@ -36,10 +36,12 @@ import nl.captcha.backgrounds.GradiatedBackgroundProducer;
 @SessionScoped
 public class SimpleCaptchaService extends AbstractCaptchaService
 {
+   private static final long serialVersionUID = 1L;
+
    private int widht = 200;
    private int height = 40;
 
-   private Captcha captcha;
+   private volatile Captcha captcha;
 
    public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException
    {

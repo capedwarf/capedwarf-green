@@ -43,11 +43,19 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 @Alternative
 public class JCaptchaService extends AbstractCaptchaService
 {
-   private ImageCaptchaService imageCaptchaService = new DefaultManageableImageCaptchaService();
+   private static final long serialVersionUID = 1L;
+   private volatile ImageCaptchaService imageCaptchaService;
+
+   protected ImageCaptchaService getImageCaptchaService()
+   {
+      if (imageCaptchaService == null)
+         imageCaptchaService = new DefaultManageableImageCaptchaService();
+      return imageCaptchaService;
+   }
 
    public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException
    {
-      BufferedImage challenge = imageCaptchaService.getImageChallengeForID(id, locale);
+      BufferedImage challenge = getImageCaptchaService().getImageChallengeForID(id, locale);
       renderCaptcha(challenge, format, out);
    }
 
@@ -56,7 +64,7 @@ public class JCaptchaService extends AbstractCaptchaService
       Boolean isResponseCorrect = Boolean.FALSE;
       try
       {
-         isResponseCorrect = imageCaptchaService.validateResponseForID(id, captcha);
+         isResponseCorrect = getImageCaptchaService().validateResponseForID(id, captcha);
       }
       catch (CaptchaServiceException ignored)
       {

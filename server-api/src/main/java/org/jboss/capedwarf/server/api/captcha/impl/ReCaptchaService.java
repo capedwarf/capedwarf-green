@@ -41,11 +41,13 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 @ApplicationScoped
 public class ReCaptchaService extends AbstractCaptchaService
 {
+   private static final long serialVersionUID = 1L;
+
    private String publicKey;
    private String privateKey;
-   private ReCaptcha captcha;
+   private volatile ReCaptcha captcha;
 
-   private HttpServletRequest request;
+   private volatile HttpServletRequest request;
 
    protected synchronized ReCaptcha getCaptcha()
    {
@@ -63,7 +65,7 @@ public class ReCaptchaService extends AbstractCaptchaService
 
    public boolean verifyCaptcha(String id, String value)
    {
-      ReCaptchaResponse response = captcha.checkAnswer(
+      ReCaptchaResponse response = getCaptcha().checkAnswer(
             request.getRemoteAddr(),
             request.getParameter("recaptcha_challenge_field"),
             request.getParameter("recaptcha_response_field")

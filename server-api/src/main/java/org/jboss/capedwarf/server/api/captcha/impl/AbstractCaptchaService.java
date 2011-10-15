@@ -25,6 +25,7 @@ package org.jboss.capedwarf.server.api.captcha.impl;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import javax.imageio.ImageIO;
 
 import org.jboss.capedwarf.server.api.captcha.CaptchaService;
@@ -34,7 +35,7 @@ import org.jboss.capedwarf.server.api.captcha.CaptchaService;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCaptchaService implements CaptchaService
+public abstract class AbstractCaptchaService implements CaptchaService, Serializable
 {
    protected void renderCaptcha(RenderedImage image, String format, OutputStream out) throws IOException
    {
