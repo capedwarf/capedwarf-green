@@ -293,6 +293,12 @@
             <groupId>org.gatein.captcha</groupId>
             <artifactId>simplecaptcha</artifactId>
             <version>${version.simplecaptcha}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

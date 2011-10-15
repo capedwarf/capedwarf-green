@@ -34,6 +34,9 @@ import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 import com.octo.captcha.service.image.ImageCaptchaService;
 
 /**
+ * JCaptcha service.
+ * Note: it uses com.sun packages internally!
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
