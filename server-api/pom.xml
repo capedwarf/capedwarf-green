@@ -85,7 +85,22 @@
            <artifactId>jcache</artifactId>
        </dependency>
 
-     <!-- dependency>
+       <dependency>
+           <groupId>com.octo.captcha</groupId>
+           <artifactId>jcaptcha</artifactId>
+       </dependency>
+
+        <dependency>
+          <groupId>org.gatein.captcha</groupId>
+          <artifactId>simplecaptcha</artifactId>
+        </dependency>
+
+       <dependency>
+           <groupId>net.tanesha.recaptcha4j</groupId>
+           <artifactId>recaptcha4j</artifactId>
+       </dependency>
+
+       <!-- dependency>
            <groupId>com.google.gae</groupId>
            <artifactId>appengine-mapper</artifactId>
      </dependency>
