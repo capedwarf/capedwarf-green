@@ -18,16 +18,23 @@ public abstract class Configuration<T>
    
    private String hostName;
    private int port;
-   private int sslPort;   
+   private int sslPort;
+   private String appContext = "";
+   private String clientContext = "client";
+   private String secureContext = "secure";
    private boolean isDebugMode;
    private boolean isDebugLogging;
    private boolean isStrictSSL;
+   private boolean isStrictPort = true;
    private int connectionTimeout = 30 * (int) Constants.SECOND;
    private HttpVersion httpVersion = HttpVersion.HTTP_1_1;
    private String contentCharset = "UTF-8";
    private SocketFactory plainFactory;
    private SocketFactory sslFactory;
    private Class<T> proxyClass;
+
+   private String httpEndpoint;
+   private String sslEndpoint;
 
    public synchronized static <T> Configuration<T> getInstance()
    {
@@ -40,6 +47,70 @@ public abstract class Configuration<T>
    public synchronized static <T> void setInstance(Configuration<T> conf)
    {
       instance = conf;
+   }
+
+   protected void validateConfiguration()
+   {
+      if (hostName == null)
+         throw new IllegalArgumentException("Null host name!");
+      if (appContext == null)
+         throw new IllegalArgumentException("Null app context!");
+   }
+
+   public String getEndpoint(boolean secure)
+   {
+      return secure ? getSslEndpoint() : getHttpEndpoint();
+   }
+
+   protected String getHttpEndpoint()
+   {
+      if (httpEndpoint == null)
+         httpEndpoint = createURL(isStrictSSL(), false, port);
+      return httpEndpoint;
+   }
+
+   protected String getSslEndpoint()
+   {
+      if (sslEndpoint == null)
+         sslEndpoint = createURL(isDebugMode() == false, true, sslPort);
+      return sslEndpoint;
+   }
+
+   protected String createURL(boolean ssl, boolean secure, int xport)
+   {
+      validateConfiguration();
+
+      StringBuilder endpointUrl = new StringBuilder("http");
+      if (ssl)
+         endpointUrl.append('s');
+
+      int pos = hostName.indexOf("://");
+      if (pos != -1)
+      {
+         // cut off after protocol spec
+         if (pos > 0)
+            hostName = hostName.substring(pos);
+      }
+      else
+      {
+         // prepend ://
+         endpointUrl.append("://");
+      }
+      endpointUrl.append(hostName);
+      if (hostName.endsWith("/"))
+         endpointUrl.deleteCharAt(endpointUrl.length() - 1);
+
+      if (isStrictPort())
+         endpointUrl.append(':').append(xport);
+
+      endpointUrl.append("/").append(getAppContext());
+      if (getAppContext().length() > 0)
+         endpointUrl.append("/");
+      endpointUrl.append(getClientContext()).append("/");
+      if (secure)
+         endpointUrl.append(getSecureContext()).append("/");
+
+      return endpointUrl.toString();
    }
 
    public Class<T> getProxyClass()
@@ -84,6 +155,36 @@ public abstract class Configuration<T>
       this.sslPort = sslPort;
    }
 
+   public String getAppContext()
+   {
+      return appContext;
+   }
+
+   public void setAppContext(String appContext)
+   {
+      this.appContext = appContext;
+   }
+
+   public String getClientContext()
+   {
+      return clientContext;
+   }
+
+   public void setClientContext(String clientContext)
+   {
+      this.clientContext = clientContext;
+   }
+
+   public String getSecureContext()
+   {
+      return secureContext;
+   }
+
+   public void setSecureContext(String secureContext)
+   {
+      this.secureContext = secureContext;
+   }
+
    public boolean isDebugMode()
    {
       return isDebugMode;
@@ -112,6 +213,16 @@ public abstract class Configuration<T>
    public void setStrictSSL(boolean strictSSL)
    {
       isStrictSSL = strictSSL;
+   }
+
+   public boolean isStrictPort()
+   {
+      return isStrictPort;
+   }
+
+   public void setStrictPort(boolean strictPort)
+   {
+      isStrictPort = strictPort;
    }
 
    public int getConnectionTimeout()

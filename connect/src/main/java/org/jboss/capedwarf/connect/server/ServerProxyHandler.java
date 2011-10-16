@@ -74,8 +74,6 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    /** The environment */
    private volatile Environment env;   
 
-   private String endpointUrl;
-   
    private Configuration config;
 
    private boolean allowsStreaming;
@@ -84,28 +82,6 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    {
       if (config == null)
          throw new IllegalArgumentException("Null configuration");
-
-      endpointUrl = config.getHostName();
-      
-      int pos = endpointUrl.indexOf("://");
-      if (pos != -1)
-      {
-         // cut off after protocol spec
-         if (pos > 0)
-            endpointUrl = endpointUrl.substring(pos);
-      }
-      else if (pos == -1)
-      {
-         // prepend ://
-         endpointUrl = "://" + endpointUrl;
-      }
-      
-      // it must end with /client/
-      if (endpointUrl.endsWith("/") == false)
-         endpointUrl += "/";
-
-      endpointUrl += "client/";
-      
       this.config = config;
    }
 
@@ -419,7 +395,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
     */
    protected Result getResultWithHttpEntity(QueryInfo qi, HttpEntity entity) throws Throwable
    {
-      String link = "http" + (getSSL(qi) ? "s" : "") + endpointUrl + (qi.secure ? "secure/" : "") + qi.query;
+      String link = config.getEndpoint(qi.secure) + qi.query;
       if (config.isDebugLogging())
          getEnv().log(Constants.TAG_CONNECTION, Level.INFO, "URL: " + link, null);
 

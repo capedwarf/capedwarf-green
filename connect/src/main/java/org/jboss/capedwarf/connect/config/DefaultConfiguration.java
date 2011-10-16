@@ -39,13 +39,10 @@ public class DefaultConfiguration<T> extends Configuration<T>
       setPort(isDebugMode() ? 8080 : 80);
 
       String localhost = "localhost";
-      int port = getPort();
-      if (port != 80)
-         localhost += (":" + port);
 
       Environment env = EnvironmentFactory.getEnvironment();
       if (env.envType() == EnvironmentType.ANDROID)
-         localhost = "://10.0.2.2:8080";
+         localhost = "://10.0.2.2";
 
       setHostName(isDebugMode() ?
             localhost :
