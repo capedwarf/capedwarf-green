@@ -118,7 +118,7 @@ class Relationships
          Collection collection = otm.type().newInstance();
          if (ProxyingUtils.isDisabled())
          {
-            collection.addAll(result);   
+            collection.addAll(result);
          }
          else
          {
@@ -159,7 +159,9 @@ class Relationships
             map.put(entityClass, idMethod);
          }
          Object id = idMethod.invoke(entity); // get rel id
-
+         if (id == null) {
+             return null;
+         }
          EntityManager em = provider.getEntityManager();
          try
          {
