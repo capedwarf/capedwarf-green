@@ -20,61 +20,33 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.dao;
+package org.jboss.capedwarf.server.api.persistence;
 
-import java.io.Serializable;
-
-import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+import javax.persistence.EntityManager;
 
 /**
- * Stateless DAO.
+ * Abstract stateless adapter factory.
  *
- * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessDAO<T extends AbstractEntity>
+public abstract class AbstractStatelessAdapterFactory implements StatelessAdapterFactory
 {
-   /**
-    * Insert a row.
-    *
-    * @param entity a new transient instance
-    * @return entity's id
-    */
-   Long insert(T entity);
+   public StatelessAdapter createStatelessAdapter(EntityManager em)
+   {
+      if (em == null)
+         throw new IllegalArgumentException("Null EntityManager!");
 
-   /**
-    * Update a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void update(T entity);
+      TupleHolder.Tuple tuple = TupleHolder.get();
+      if (tuple == null)
+         tuple = TupleHolder.create(doCreateStatelessAdapter(em));
 
-   /**
-    * Delete a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void delete(T entity);
+      return tuple.getAdapter();
+   }
 
-   /**
-    * Retrieve a row.
-    *
-    * @param entityClass the entity class
-    * @param id the id
-    * @return a detached entity instance
-    */
-   T get(Class<T> entityClass, Serializable id);
+   protected abstract StatelessAdapter doCreateStatelessAdapter(EntityManager em);
 
-   /**
-    * Refresh the entity instance state from the database.
-    *
-    * @param entity The entity to be refreshed.
-    */
-   void refresh(T entity);
-
-   /**
-    * Close DAO.
-    * (release underlying adapter)
-    */
-   void close();
+   public static void close()
+   {
+      TupleHolder.close();
+   }
 }

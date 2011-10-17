@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2011, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,61 +20,57 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.dao;
+package org.jboss.capedwarf.server.api.dao.impl;
 
 import java.io.Serializable;
 
+import org.jboss.capedwarf.server.api.dao.StatelessDAO;
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
+import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
 
 /**
- * Stateless DAO.
+ * API bridge between adapter and DAO.
  *
- * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessDAO<T extends AbstractEntity>
+final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements StatelessDAO<T>
 {
-   /**
-    * Insert a row.
-    *
-    * @param entity a new transient instance
-    * @return entity's id
-    */
-   Long insert(T entity);
+   private final StatelessAdapter adapter;
 
-   /**
-    * Update a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void update(T entity);
+   StatelessAdapter2DAOBridge(StatelessAdapter adapter)
+   {
+      this.adapter = adapter;
+   }
 
-   /**
-    * Delete a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void delete(T entity);
+   public Long insert(T entity)
+   {
+      return adapter.insert(entity);
+   }
 
-   /**
-    * Retrieve a row.
-    *
-    * @param entityClass the entity class
-    * @param id the id
-    * @return a detached entity instance
-    */
-   T get(Class<T> entityClass, Serializable id);
+   public void update(T entity)
+   {
+      adapter.update(entity);
+   }
 
-   /**
-    * Refresh the entity instance state from the database.
-    *
-    * @param entity The entity to be refreshed.
-    */
-   void refresh(T entity);
+   public void delete(T entity)
+   {
+      adapter.delete(entity);
+   }
 
-   /**
-    * Close DAO.
-    * (release underlying adapter)
-    */
-   void close();
+   @SuppressWarnings({"unchecked"})
+   public T get(Class entityClass, Serializable id)
+   {
+      return (T) adapter.get(entityClass, id);
+   }
+
+   public void refresh(T entity)
+   {
+      adapter.refresh(entity);
+   }
+
+   public void close()
+   {
+      AbstractStatelessAdapterFactory.close();
+   }
 }

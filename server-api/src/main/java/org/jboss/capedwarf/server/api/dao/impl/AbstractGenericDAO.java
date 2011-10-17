@@ -38,7 +38,6 @@ import org.jboss.capedwarf.server.api.dao.StatelessDAO;
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
 import org.jboss.capedwarf.server.api.persistence.EMInjector;
 import org.jboss.capedwarf.server.api.persistence.Proxying;
-import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
 import org.jboss.capedwarf.server.api.tx.Transactional;
@@ -192,7 +191,7 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
    @Proxying(ProxyingEnum.DISABLE)
    public StatelessDAO<T> statelessView(final boolean autoClose)
    {
-      final StatelessAdapter statelessAdapter = statelessAdapterFactory.createStatelessAdapter(getEM());
+      final StatelessDAO<T> bridge = new StatelessAdapter2DAOBridge<T>(statelessAdapterFactory.createStatelessAdapter(getEM()));
       return (StatelessDAO<T>) Proxy.newProxyInstance(
             getClass().getClassLoader(),
             new Class[]{StatelessDAO.class},
@@ -202,12 +201,12 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
                {
                   try
                   {
-                     return method.invoke(statelessAdapter, args);
+                     return method.invoke(bridge, args);
                   }
                   finally
                   {
                      if (autoClose)
-                        statelessAdapter.close();
+                        bridge.close();
                   }
                }
             }

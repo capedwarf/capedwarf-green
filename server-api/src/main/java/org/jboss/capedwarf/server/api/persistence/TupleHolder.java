@@ -20,61 +20,58 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.dao;
-
-import java.io.Serializable;
-
-import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+package org.jboss.capedwarf.server.api.persistence;
 
 /**
- * Stateless DAO.
+ * Abstract stateless adapter factory.
  *
- * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessDAO<T extends AbstractEntity>
+final class TupleHolder
 {
-   /**
-    * Insert a row.
-    *
-    * @param entity a new transient instance
-    * @return entity's id
-    */
-   Long insert(T entity);
+   private static ThreadLocal<Tuple> tl = new ThreadLocal<Tuple>();
 
-   /**
-    * Update a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void update(T entity);
+   static Tuple get()
+   {
+      Tuple tuple = tl.get();
 
-   /**
-    * Delete a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void delete(T entity);
+      if (tuple != null)
+         tuple.count++;
 
-   /**
-    * Retrieve a row.
-    *
-    * @param entityClass the entity class
-    * @param id the id
-    * @return a detached entity instance
-    */
-   T get(Class<T> entityClass, Serializable id);
+      return tuple;
+   }
 
-   /**
-    * Refresh the entity instance state from the database.
-    *
-    * @param entity The entity to be refreshed.
-    */
-   void refresh(T entity);
+   static Tuple create(StatelessAdapter adapter)
+   {
+      Tuple tuple = new Tuple();
+      tuple.adapter = adapter;
+      tuple.count = 1;
+      tl.set(tuple);
+      return tuple;
+   }
 
-   /**
-    * Close DAO.
-    * (release underlying adapter)
-    */
-   void close();
+   static void close()
+   {
+      Tuple tuple = tl.get();
+      if (tuple == null)
+         throw new IllegalStateException("No tuple!");
+
+      tuple.count--;
+      if (tuple.count == 0)
+      {
+         tl.remove();
+         tuple.adapter.close();
+      }
+   }
+
+   static class Tuple
+   {
+      private StatelessAdapter adapter;
+      private int count;
+
+      StatelessAdapter getAdapter()
+      {
+         return adapter;
+      }
+   }
 }

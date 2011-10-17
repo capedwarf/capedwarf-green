@@ -22,7 +22,6 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
-import java.io.Closeable;
 import java.io.Serializable;
 
 /**
@@ -30,8 +29,13 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessAdapter extends Closeable
+public interface StatelessAdapter
 {
+   /**
+    * Close adapter.
+    */
+   void close();
+
    /**
     * Insert a row.
     *

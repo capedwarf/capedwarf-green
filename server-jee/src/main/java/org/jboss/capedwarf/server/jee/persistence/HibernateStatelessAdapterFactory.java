@@ -22,7 +22,6 @@
 
 package org.jboss.capedwarf.server.jee.persistence;
 
-import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -30,20 +29,17 @@ import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
+import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
-import org.jboss.capedwarf.server.api.persistence.StatelessAdapterFactory;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class HibernateStatelessAdapterFactory implements StatelessAdapterFactory
+public class HibernateStatelessAdapterFactory extends AbstractStatelessAdapterFactory
 {
-   public StatelessAdapter createStatelessAdapter(EntityManager em)
+   protected StatelessAdapter doCreateStatelessAdapter(EntityManager em)
    {
-      if (em == null)
-         throw new IllegalArgumentException("Null EntityManager!");
-
       Object delegate = em.getDelegate();
       if (delegate instanceof Session == false)
          throw new IllegalArgumentException("Can only handle Hibernate Session: " + delegate);
@@ -90,7 +86,7 @@ public class HibernateStatelessAdapterFactory implements StatelessAdapterFactory
          session.refresh(entity);
       }
 
-      public void close() throws IOException
+      public void close()
       {
          session.close();
       }

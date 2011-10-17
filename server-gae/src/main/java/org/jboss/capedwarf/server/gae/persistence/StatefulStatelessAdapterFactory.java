@@ -22,14 +22,13 @@
 
 package org.jboss.capedwarf.server.gae.persistence;
 
-import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 
 import org.jboss.capedwarf.jpa.Entity;
+import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
-import org.jboss.capedwarf.server.api.persistence.StatelessAdapterFactory;
 
 /**
  * Not really stateless - simply delegates to EM.
@@ -37,13 +36,10 @@ import org.jboss.capedwarf.server.api.persistence.StatelessAdapterFactory;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class StatefulStatelessAdapterFactory implements StatelessAdapterFactory
+public class StatefulStatelessAdapterFactory extends AbstractStatelessAdapterFactory
 {
-   public StatelessAdapter createStatelessAdapter(EntityManager em)
+   protected StatelessAdapter doCreateStatelessAdapter(EntityManager em)
    {
-      if (em == null)
-         throw new IllegalArgumentException("Null EntityManager!");
-
       return new EMStatelessAdapter(em);
    }
 
@@ -87,9 +83,9 @@ public class StatefulStatelessAdapterFactory implements StatelessAdapterFactory
          em.refresh(entity);
       }
 
-      public void close() throws IOException
+      public void close()
       {
-         // no-op
+         // nothing to close
       }
    }
 }
