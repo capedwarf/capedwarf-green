@@ -191,14 +191,29 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
    @Proxying(ProxyingEnum.DISABLE)
    public StatelessDAO<T> statelessView(final boolean autoClose)
    {
-      final StatelessDAO<T> bridge = new StatelessAdapter2DAOBridge<T>(statelessAdapterFactory.createStatelessAdapter(getEM()));
       return (StatelessDAO<T>) Proxy.newProxyInstance(
             getClass().getClassLoader(),
             new Class[]{StatelessDAO.class},
             new InvocationHandler()
             {
+               private StatelessDAO<T> delegate;
+
+               /**
+                * Lazy get delegate.
+                *
+                * @return the delegate
+                */
+               private synchronized StatelessDAO<T> getDelegate()
+               {
+                  if (delegate == null)
+                     delegate = new StatelessAdapter2DAOBridge<T>(statelessAdapterFactory.createStatelessAdapter(getEM()));
+
+                  return delegate;
+               }
+
                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
                {
+                  StatelessDAO<T> bridge = getDelegate();
                   try
                   {
                      return method.invoke(bridge, args);
