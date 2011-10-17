@@ -40,6 +40,8 @@ final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements Stat
 
    StatelessAdapter2DAOBridge(StatelessAdapter adapter)
    {
+      if (adapter == null)
+         throw new IllegalArgumentException("Null adapter");
       this.adapter = adapter;
    }
 
@@ -72,5 +74,23 @@ final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements Stat
    public void close()
    {
       AbstractStatelessAdapterFactory.close();
+   }
+
+   @Override
+   public int hashCode()
+   {
+      return adapter.hashCode();
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      return adapter.equals(obj);
+   }
+
+   @Override
+   public String toString()
+   {
+      return adapter.toString();
    }
 }
