@@ -32,7 +32,7 @@ import javax.inject.Inject;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Decorator
-public abstract class CachedBlobService implements BlobService
+public abstract class CachedBlobService extends BaseBlobService
 {
    private BlobService delegate;
    private BlobCache cache;
@@ -53,16 +53,6 @@ public abstract class CachedBlobService implements BlobService
       String key = delegate.storeBytes(mimeType, buffer);
       cache.put(key, buffer.array());
       return key;
-   }
-
-   public byte[] loadBytes(String key)
-   {
-      return loadBytes(key, 0, Long.MAX_VALUE);
-   }
-
-   public String storeBytes(String mimeType, byte[] bytes) throws IOException
-   {
-      return storeBytes(mimeType, ByteBuffer.wrap(bytes));
    }
 
    @Inject
