@@ -22,76 +22,54 @@
 
 package org.jboss.capedwarf.server.api.dao;
 
-import java.util.List;
+import java.io.Closeable;
+import java.io.Serializable;
 
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
 
 /**
- * Generic DAO.
+ * Stateless DAO.
  *
  * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface GenericDAO<T extends AbstractEntity>
+public interface StatelessDAO<T extends AbstractEntity> extends Closeable
 {
    /**
-    * Save entity.
+    * Insert a row.
     *
-    * @param entity the entity
+    * @param entity a new transient instance
+    * @return entity's id
     */
-   void save(T entity);
+   Long insert(Object entity);
 
    /**
-    * Merge entity.
+    * Update a row.
     *
-    * @param entity the entity
+    * @param entity a detached entity instance
     */
-   void merge(T entity);
+   void update(Object entity);
 
    /**
-    * Delete entity.
+    * Delete a row.
     *
-    * @param id the entity id
-    * @return 1 if deletion was performed, 0 otherwise
+    * @param entity a detached entity instance
     */
-   int delete(Long id);
+   void delete(Object entity);
 
    /**
-    * Delete entity.
+    * Retrieve a row.
     *
-    * @param entity the entity
+    * @param entityClass the entity class
+    * @param id the id
+    * @return a detached entity instance
     */
-   void delete(T entity);
+   T get(Class<T> entityClass, Serializable id);
 
    /**
-    * Find entity.
+    * Refresh the entity instance state from the database.
     *
-    * @param id the entity id
-    * @return found entity or null
+    * @param entity The entity to be refreshed.
     */
-   T find(Long id);
-
-   /**
-    * Find entity.
-    *
-    * @param clazz the entity class
-    * @param id the entity id
-    * @return found entity or null
-    */
-   <U> U find(Class<U> clazz, Long id);
-
-   /**
-    * Find all entities.
-    *
-    * @return all entities
-    */
-   List<T> findAll();
-
-   /**
-    * Get stateless view.
-    *
-    * @param autoClose shoould we auto close dao
-    * @return get stateless view
-    */
-   StatelessDAO<T> statelessView(boolean autoClose);
+   void refresh(Object entity);
 }

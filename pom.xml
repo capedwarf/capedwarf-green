@@ -55,6 +55,7 @@
     <version.org.datanucleus.jpa.spec>1.1.1</version.org.datanucleus.jpa.spec>
     <version.org.datanucleus.jta>1.1.1</version.org.datanucleus.jta>
     <version.org.infinispan>5.0.0.FINAL</version.org.infinispan>
+    <version.org.hibernate>4.0.0.CR2</version.org.hibernate>
     <version.org.apache.http>4.0.3</version.org.apache.http>
     <version.junit>4.7</version.junit>
     <version.arquillian>1.0.0.CR1</version.arquillian>
@@ -374,6 +375,27 @@
             <artifactId>infinispan-core</artifactId>
             <version>${version.org.infinispan}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${version.org.hibernate}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml</groupId>
+                    <artifactId>classmate</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

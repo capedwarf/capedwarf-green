@@ -22,20 +22,26 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
-import org.jboss.capedwarf.jpa.ProxyingEnum;
-import org.jboss.capedwarf.server.api.dao.GenericDAO;
-import org.jboss.capedwarf.server.api.domain.AbstractEntity;
-import org.jboss.capedwarf.server.api.persistence.EMInjector;
-import org.jboss.capedwarf.server.api.persistence.Proxying;
-import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
-import org.jboss.capedwarf.server.api.tx.Transactional;
-
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Collection;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Collection;
-import java.util.List;
+
+import org.jboss.capedwarf.jpa.ProxyingEnum;
+import org.jboss.capedwarf.server.api.dao.GenericDAO;
+import org.jboss.capedwarf.server.api.dao.StatelessDAO;
+import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+import org.jboss.capedwarf.server.api.persistence.EMInjector;
+import org.jboss.capedwarf.server.api.persistence.Proxying;
+import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
+import org.jboss.capedwarf.server.api.persistence.StatelessAdapterFactory;
+import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
+import org.jboss.capedwarf.server.api.tx.Transactional;
 
 /**
  * Abstract generic DAO.
@@ -46,11 +52,18 @@ import java.util.List;
 public abstract class AbstractGenericDAO<T extends AbstractEntity> implements GenericDAO<T>
 {
    private EMInjector emInjector;
+   private StatelessAdapterFactory statelessAdapterFactory;
 
    @Inject
    public void setEmInjector(EMInjector emInjector)
    {
       this.emInjector = emInjector;
+   }
+
+   @Inject
+   public void setStatelessAdapterFactory(StatelessAdapterFactory statelessAdapterFactory)
+   {
+      this.statelessAdapterFactory = statelessAdapterFactory;
    }
 
    protected abstract Class<T> entityClass();
@@ -172,5 +185,32 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       EntityManager em = getEM();
       Query query = em.createQuery("select e from " + entityClass().getSimpleName() + " e");
       return query.getResultList();
+   }
+
+   @SuppressWarnings({"unchecked"})
+   @Transactional(TransactionPropagationType.REQUIRED)
+   @Proxying(ProxyingEnum.DISABLE)
+   public StatelessDAO<T> statelessView(final boolean autoClose)
+   {
+      final StatelessAdapter statelessAdapter = statelessAdapterFactory.createStatelessAdapter(getEM());
+      return (StatelessDAO<T>) Proxy.newProxyInstance(
+            getClass().getClassLoader(),
+            new Class[]{StatelessDAO.class},
+            new InvocationHandler()
+            {
+               public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+               {
+                  try
+                  {
+                     return method.invoke(statelessAdapter, args);
+                  }
+                  finally
+                  {
+                     if (autoClose)
+                        statelessAdapter.close();
+                  }
+               }
+            }
+      );
    }
 }
