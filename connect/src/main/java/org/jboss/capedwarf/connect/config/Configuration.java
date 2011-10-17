@@ -49,6 +49,15 @@ public abstract class Configuration<T>
       instance = conf;
    }
 
+   /**
+    * Invalidate cached values.
+    */
+   public void invalidate()
+   {
+      httpEndpoint = null;
+      sslEndpoint = null;
+   }
+
    protected void validateConfiguration()
    {
       if (hostName == null)
