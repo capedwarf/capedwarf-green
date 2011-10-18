@@ -532,6 +532,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                   }
 
                   jsonAware = jsonAware || (JSONAware.class.isAssignableFrom(pt[i]));
+
+                  if (jsonAware && directContent >= 0)
+                     throw new IllegalArgumentException("Cannot have both - JSON and streaming: " + Arrays.toString(pt));
+
                }
                else
                {
