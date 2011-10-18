@@ -44,9 +44,4 @@ public abstract class AbstractStatelessAdapterFactory implements StatelessAdapte
    }
 
    protected abstract StatelessAdapter doCreateStatelessAdapter(EntityManager em);
-
-   public static void close()
-   {
-      TupleHolder.close();
-   }
 }

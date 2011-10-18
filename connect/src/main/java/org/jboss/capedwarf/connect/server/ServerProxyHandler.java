@@ -206,25 +206,26 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                }
             };
          }
-         else if (query.directContent)
+         else if (query.directContent >= 0)
          {
-            if (args[0] instanceof ContentProducer)
+            final int index = query.directContent;
+            if (args[index] instanceof ContentProducer)
             {
                rp = new ResultProducer()
                {
                   public Result run() throws Throwable
                   {
-                     return getResultWithContentProducer(query, (ContentProducer) args[0]);
+                     return getResultWithContentProducer(query, (ContentProducer) args[index]);
                   }
                };
             }
-            else if (args[0] instanceof HttpEntity)
+            else if (args[index] instanceof HttpEntity)
             {
                rp = new ResultProducer()
                {
                   public Result run() throws Throwable
                   {
-                     return getResultWithHttpEntity(query, (HttpEntity) args[0]);
+                     return getResultWithHttpEntity(query, (HttpEntity) args[index]);
                   }
                };
             }
@@ -489,7 +490,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          {
             boolean type = false;
             boolean jsonAware = false;
-            boolean directContent = false;
+            int directContent = -1;
             StringBuilder builder = new StringBuilder();
             char[] chars = methodName.toCharArray();
             for (char ch : chars)
@@ -519,10 +520,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                   {
                      if (ContentProducer.class.isAssignableFrom(pt[i]) || HttpEntity.class.isAssignableFrom(pt[i]))
                      {
-                        if (pt.length > 1)
+                        if (directContent >= 0)
                            throw new IllegalArgumentException("Only 1 non-JSONAware argument allowed: " + Arrays.toString(pt));
 
-                        directContent = true;
+                        directContent = i;
                      }
                      else
                      {
@@ -740,7 +741,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
    {
       private String query;
       private boolean jsonAware;
-      private boolean directContent;
+      private int directContent = -1;
       private boolean secure;
       private boolean gzip;
    }

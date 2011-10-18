@@ -101,13 +101,14 @@ public class SmokeTestCase extends AbstractConnectTest
             StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
             Assert.assertEquals(Status.OK, status.getStatus());
 
-            InputStream is = proxy.contentDirect(new GzipContentProducer()
+            GzipContentProducer cp = new GzipContentProducer()
             {
                protected void doWriteTo(OutputStream outstream) throws IOException
                {
                   outstream.write("POKE?".getBytes());
                }
-            });
+            };
+            InputStream is = proxy.contentDirect(123, cp, 321);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             IOUtils.copyAndClose(is, baos);
             String ok = new String(baos.toByteArray());

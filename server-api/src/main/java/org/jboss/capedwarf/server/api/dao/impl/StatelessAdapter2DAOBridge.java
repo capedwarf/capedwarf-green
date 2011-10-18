@@ -26,7 +26,6 @@ import java.io.Serializable;
 
 import org.jboss.capedwarf.server.api.dao.StatelessDAO;
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
-import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
 
 /**
@@ -73,7 +72,7 @@ final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements Stat
 
    public void close()
    {
-      AbstractStatelessAdapterFactory.close();
+      adapter.close();
    }
 
    @Override

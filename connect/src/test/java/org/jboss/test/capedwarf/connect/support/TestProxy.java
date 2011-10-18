@@ -39,5 +39,5 @@ public interface TestProxy
 
    StatusInfo infoPoke(UserInfo user);
 
-   InputStream contentDirect(ContentProducer cp);
+   InputStream contentDirect(@QueryParameter("x") int x, ContentProducer cp, @QueryParameter("y") int y);
 }

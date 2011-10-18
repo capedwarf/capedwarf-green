@@ -22,8 +22,10 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
+import java.io.Serializable;
+
 /**
- * Abstract stateless adapter factory.
+ * Stateless adapter tuple.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
@@ -44,7 +46,7 @@ final class TupleHolder
    static Tuple create(StatelessAdapter adapter)
    {
       Tuple tuple = new Tuple();
-      tuple.adapter = adapter;
+      tuple.adapter = new StatelessAdapterWrapper(adapter);
       tuple.count = 1;
       tl.set(tuple);
       return tuple;
@@ -60,18 +62,81 @@ final class TupleHolder
       if (tuple.count == 0)
       {
          tl.remove();
-         tuple.adapter.close();
+         tuple.adapter.doClose();
       }
    }
 
    static class Tuple
    {
-      private StatelessAdapter adapter;
+      private StatelessAdapterWrapper adapter;
       private int count;
 
       StatelessAdapter getAdapter()
       {
          return adapter;
+      }
+   }
+
+   private static class StatelessAdapterWrapper implements StatelessAdapter
+   {
+      private final StatelessAdapter delegate;
+
+      private StatelessAdapterWrapper(StatelessAdapter delegate)
+      {
+         this.delegate = delegate;
+      }
+
+      void doClose()
+      {
+         delegate.close();
+      }
+
+      public void close()
+      {
+         TupleHolder.close();
+      }
+
+      public Long insert(Object entity)
+      {
+         return delegate.insert(entity);
+      }
+
+      public void update(Object entity)
+      {
+         delegate.update(entity);
+      }
+
+      public void delete(Object entity)
+      {
+         delegate.delete(entity);
+      }
+
+      public <T> T get(Class<T> entityClass, Serializable id)
+      {
+         return delegate.get(entityClass, id);
+      }
+
+      public void refresh(Object entity)
+      {
+         delegate.refresh(entity);
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return delegate.hashCode();
+      }
+
+      @Override
+      public boolean equals(Object obj)
+      {
+         return delegate.equals(obj);
+      }
+
+      @Override
+      public String toString()
+      {
+         return delegate.toString();
       }
    }
 }
