@@ -182,8 +182,10 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
 
       final QueryInfo query = createQuery(method, args);
 
-      if (query.gzip == false)
+      final boolean isGzipEnabled = GzipOptionalSerializator.isGzipDisabled() == false;
+      if (query.gzip == false && isGzipEnabled)
          GzipOptionalSerializator.disableGzip();
+
       try
       {
          final ResultProducer rp;
@@ -276,7 +278,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       }
       finally
       {
-         if (query.gzip == false)
+         if (query.gzip == false && isGzipEnabled)
             GzipOptionalSerializator.enableGzip();
       }
    }
