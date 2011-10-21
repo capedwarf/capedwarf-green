@@ -22,18 +22,17 @@
 
 package org.jboss.capedwarf.server.api.cache;
 
-import javax.cache.Cache;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
-
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import javax.cache.Cache;
+import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
 
 /**
  * Cache interceptor.
@@ -127,16 +126,14 @@ public class CacheInterceptor implements Serializable
       }
       catch (Throwable e)
       {
-         return getExceptionHandler().handleException(cache, ctx, key, value, e);
+         return exceptionHandler.handleException(cache, ctx, key, value, e);
       }
    }
 
-   protected CacheExceptionHandler getExceptionHandler()
+   @Inject
+   public void setExceptionHandler(CacheExceptionHandler exceptionHandler)
    {
-      if (exceptionHandler == null)
-         exceptionHandler = cacheConfig.getExceptionHandler();
-
-      return exceptionHandler;
+      this.exceptionHandler = exceptionHandler;
    }
 
    @Inject

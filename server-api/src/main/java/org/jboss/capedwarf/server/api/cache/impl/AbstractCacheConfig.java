@@ -28,6 +28,7 @@ public abstract class AbstractCacheConfig implements CacheConfig
 
    private CacheManager manager;
    private CacheEntryLookupFactory factory;
+   private CacheExceptionHandler exceptionHandler;
 
    /**
     * Create config.
@@ -101,20 +102,13 @@ public abstract class AbstractCacheConfig implements CacheConfig
 
    public CacheExceptionHandler getExceptionHandler()
    {
-      String ehClassName = getProps().getProperty("cache.exception.handler");
-      if (ehClassName != null)
-      {
-         try
-         {
-            Class<?> clazz = getClass().getClassLoader().loadClass(ehClassName);
-            return (CacheExceptionHandler) clazz.newInstance();
-         }
-         catch (Exception e)
-         {
-            log.warning("Cannot instantiate cache exception handler: " + e);
-         }
-      }
-      return NoopCacheExceptionHandler.INSTANCE;
+      return exceptionHandler;
+   }
+
+   @Inject
+   public void setExceptionHandler(CacheExceptionHandler exceptionHandler)
+   {
+      this.exceptionHandler = exceptionHandler;
    }
 
    @Inject

@@ -25,6 +25,7 @@ package org.jboss.capedwarf.server.api.cache.impl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.cache.Cache;
+import javax.enterprise.context.ApplicationScoped;
 import javax.interceptor.InvocationContext;
 
 import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
@@ -34,11 +35,10 @@ import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@ApplicationScoped
 public class NoopCacheExceptionHandler implements CacheExceptionHandler
 {
    private static final Logger log = Logger.getLogger(NoopCacheExceptionHandler.class.getName());
-
-   public static final CacheExceptionHandler INSTANCE = new NoopCacheExceptionHandler();
 
    public Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t)
    {
