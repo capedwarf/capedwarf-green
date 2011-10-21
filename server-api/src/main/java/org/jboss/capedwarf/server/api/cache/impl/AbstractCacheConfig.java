@@ -3,7 +3,6 @@ package org.jboss.capedwarf.server.api.cache.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.CacheException;
@@ -13,6 +12,7 @@ import javax.inject.Inject;
 
 import org.jboss.capedwarf.server.api.cache.CacheConfig;
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookupFactory;
 import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
 import org.jboss.seam.solder.resourceLoader.Resource;
 
@@ -27,7 +27,7 @@ public abstract class AbstractCacheConfig implements CacheConfig
    private Properties props;
 
    private CacheManager manager;
-   private Map<String, CacheEntryLookup> lookups = new ConcurrentHashMap<String, CacheEntryLookup>();
+   private CacheEntryLookupFactory factory;
 
    /**
     * Create config.
@@ -95,17 +95,9 @@ public abstract class AbstractCacheConfig implements CacheConfig
             throw new CacheException("Missing JPA entity cache name.");
       }
 
-      CacheEntryLookup cel = lookups.get(cacheName);
-      if (cel != null)
-         return cel;
-
-      AbstractCacheEntryLookup acel = createLookup();
-      acel.setCache(configureCache(cacheName));
-      lookups.put(cacheName, acel);
-      return acel;
+      Cache cache = configureCache(cacheName);
+      return factory.createCacheEntryLookup(cacheName, cache);
    }
-
-   protected abstract AbstractCacheEntryLookup createLookup();
 
    public CacheExceptionHandler getExceptionHandler()
    {
@@ -129,6 +121,12 @@ public abstract class AbstractCacheConfig implements CacheConfig
    public void setManager(CacheManager manager)
    {
       this.manager = manager;
+   }
+
+   @Inject
+   public void setFactory(CacheEntryLookupFactory factory)
+   {
+      this.factory = factory;
    }
 
    protected Properties getProps()

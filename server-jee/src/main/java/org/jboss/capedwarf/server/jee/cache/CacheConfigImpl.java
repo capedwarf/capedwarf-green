@@ -22,16 +22,13 @@
 
 package org.jboss.capedwarf.server.jee.cache;
 
-import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
-
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.enterprise.context.ApplicationScoped;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import javax.cache.Cache;
+import javax.enterprise.context.ApplicationScoped;
+
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
 
 /**
  * JEE cache config impl.
@@ -83,11 +80,6 @@ public class CacheConfigImpl extends AbstractCacheConfig
             log.finest("Error disposing cache: " + t);
          }
       }
-   }
-
-   protected AbstractCacheEntryLookup createLookup()
-   {
-      return new HibernateCacheEntryLookup();
    }
 
    public void setDisposeMethodName(String disposeMethodName)

@@ -20,31 +20,23 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.cache.impl;
+package org.jboss.capedwarf.server.api.cache;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.cache.Cache;
-import javax.interceptor.InvocationContext;
-
-import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
 
 /**
- * Noop.
+ * Cache entry lookup factory.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class NoopCacheExceptionHandler implements CacheExceptionHandler
+public interface CacheEntryLookupFactory
 {
-   private static final Logger log = Logger.getLogger(NoopCacheExceptionHandler.class.getName());
-
-   public static final CacheExceptionHandler INSTANCE = new NoopCacheExceptionHandler();
-
-   public Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t)
-   {
-      if (log.isLoggable(Level.FINEST))
-         log.finest("Cache exception: " + t);
-
-      return null;
-   }
+   /**
+    * Create cache entry lookup.
+    *
+    * @param cacheName the cache name
+    * @param cache the actual cache
+    * @return cache entry lookup instance
+    */
+   CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache);
 }

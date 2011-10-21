@@ -33,6 +33,6 @@ public class HibernateCacheEntryLookup extends AbstractCacheEntryLookup
 {
    protected Object toImplementationId(Class<?> entryType, Object id)
    {
-      return id;
+      return null; // CackeKey is too impl detail for Hibernate atm
    }
 }

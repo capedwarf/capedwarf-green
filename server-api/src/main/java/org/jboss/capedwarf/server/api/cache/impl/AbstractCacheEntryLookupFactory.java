@@ -22,29 +22,30 @@
 
 package org.jboss.capedwarf.server.api.cache.impl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javax.cache.Cache;
-import javax.interceptor.InvocationContext;
 
-import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookupFactory;
 
 /**
- * Noop.
- *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class NoopCacheExceptionHandler implements CacheExceptionHandler
+public abstract class AbstractCacheEntryLookupFactory implements CacheEntryLookupFactory
 {
-   private static final Logger log = Logger.getLogger(NoopCacheExceptionHandler.class.getName());
+   private Map<String, CacheEntryLookup> lookups = new ConcurrentSkipListMap<String, CacheEntryLookup>();
 
-   public static final CacheExceptionHandler INSTANCE = new NoopCacheExceptionHandler();
-
-   public Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t)
+   public CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache)
    {
-      if (log.isLoggable(Level.FINEST))
-         log.finest("Cache exception: " + t);
+      CacheEntryLookup cel = lookups.get(cacheName);
+      if (cel != null)
+         return cel;
 
-      return null;
+      CacheEntryLookup acel = doCreateCacheEntryLookup(cache);
+      lookups.put(cacheName, acel);
+      return acel;
    }
+
+   protected abstract CacheEntryLookup doCreateCacheEntryLookup(Cache cache);
 }

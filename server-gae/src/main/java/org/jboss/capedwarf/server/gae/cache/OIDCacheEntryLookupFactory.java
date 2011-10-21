@@ -20,31 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.cache.impl;
+package org.jboss.capedwarf.server.gae.cache;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.cache.Cache;
-import javax.interceptor.InvocationContext;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 
-import org.jboss.capedwarf.server.api.cache.CacheExceptionHandler;
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory;
 
 /**
- * Noop.
+ * DataNucleus OID CELF.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class NoopCacheExceptionHandler implements CacheExceptionHandler
+@Alternative
+@ApplicationScoped
+public class OIDCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory
 {
-   private static final Logger log = Logger.getLogger(NoopCacheExceptionHandler.class.getName());
-
-   public static final CacheExceptionHandler INSTANCE = new NoopCacheExceptionHandler();
-
-   public Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t)
+   protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache)
    {
-      if (log.isLoggable(Level.FINEST))
-         log.finest("Cache exception: " + t);
-
-      return null;
+      OIDCacheEntryLookup lookup = new OIDCacheEntryLookup();
+      lookup.setCache(cache);
+      return lookup;
    }
 }

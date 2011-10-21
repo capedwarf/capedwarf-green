@@ -30,7 +30,6 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
 
 /**
  * Cache config impl.
@@ -89,23 +88,5 @@ public class CacheConfigImpl extends AbstractCacheConfig
          }
       }
       return config.isEmpty() ? Collections.emptyMap() : config;
-   }
-
-   protected AbstractCacheEntryLookup createLookup()
-   {
-      String cel = getProps().getProperty("jpa.cache-lookup.class");
-      if (cel == null || cel.length() == 0)
-         return new LongIDCacheEntryLookup();
-
-      try
-      {
-         ClassLoader cl = getClass().getClassLoader();
-         Class<?> clazz = cl.loadClass(cel);
-         return (AbstractCacheEntryLookup) clazz.newInstance();
-      }
-      catch (Exception e)
-      {
-         throw new IllegalArgumentException(e);
-      }
    }
 }
