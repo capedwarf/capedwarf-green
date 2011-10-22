@@ -25,6 +25,7 @@ package org.jboss.capedwarf.server.jee.tx;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -44,6 +45,7 @@ import org.jboss.capedwarf.server.api.persistence.EMInjector;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@RequestScoped
 public class JeeEMInjector implements EMInjector, Serializable
 {
    @PersistenceContext private transient EntityManager em;
@@ -51,6 +53,8 @@ public class JeeEMInjector implements EMInjector, Serializable
 
    private transient Event<Notification<EntityManagerFactory>> produceEvent;
    private static AtomicBoolean emitted = new AtomicBoolean(false);
+
+   private transient EntityManager current;
 
    @PostConstruct
    public void init()
@@ -64,23 +68,26 @@ public class JeeEMInjector implements EMInjector, Serializable
 
    public EntityManager getEM()
    {
-      return new NewProxyingEntityManager(em)
-      {
-         protected EntityManagerProvider getProvider()
+      if (current == null)
+         current = new NewProxyingEntityManager(em)
          {
-            return new EntityManagerProvider()
+            protected EntityManagerProvider getProvider()
             {
-               public EntityManager getEntityManager()
+               return new EntityManagerProvider()
                {
-                  return em;
-               }
+                  public EntityManager getEntityManager()
+                  {
+                     return em;
+                  }
 
-               public void close(EntityManager em)
-               {
-               }
-            };
-         }
-      };
+                  public void close(EntityManager em)
+                  {
+                  }
+               };
+            }
+         };
+
+      return current;
    }
 
    @Inject
