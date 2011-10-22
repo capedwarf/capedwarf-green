@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -114,6 +115,41 @@ public abstract class NewProxyingEntityManager extends ProxyingEntityManager imp
    public Map<String, Object> getProperties()
    {
       return delegate.getProperties();
+   }
+
+   @Override
+   public Query createQuery(String string)
+   {
+      Query query = delegate.createQuery(string);
+      return new NewProxyingQuery(getProvider(), query);
+   }
+
+   @Override
+   public Query createNamedQuery(String string)
+   {
+      Query query = delegate.createNamedQuery(string);
+      return new NewProxyingQuery(getProvider(), query);
+   }
+
+   @Override
+   public Query createNativeQuery(String string)
+   {
+      Query query = delegate.createNativeQuery(string);
+      return new NewProxyingQuery(getProvider(), query);
+   }
+
+   @Override
+   public Query createNativeQuery(String string, Class aClass)
+   {
+      Query query = delegate.createNativeQuery(string, aClass);
+      return new NewProxyingQuery(getProvider(), query);
+   }
+
+   @Override
+   public Query createNativeQuery(String string, String s1)
+   {
+      Query query = delegate.createNativeQuery(string, s1);
+      return new NewProxyingQuery(getProvider(), query);
    }
 
    public <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery)

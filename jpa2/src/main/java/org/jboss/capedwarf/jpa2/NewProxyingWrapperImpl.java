@@ -34,6 +34,11 @@ import org.jboss.capedwarf.jpa.ProxyingWrapper;
  */
 public class NewProxyingWrapperImpl implements ProxyingWrapper
 {
+   public EntityManagerFactory lazy(String puName)
+   {
+      return new Lazy2EntityManagerFactory(puName);
+   }
+
    public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider)
    {
       return new NewProxyingEntityManagerFactory(delegate, provider);

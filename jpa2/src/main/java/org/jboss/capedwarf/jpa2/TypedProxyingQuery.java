@@ -25,7 +25,6 @@ package org.jboss.capedwarf.jpa2;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Parameter;
@@ -33,7 +32,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
-import org.jboss.capedwarf.jpa.ProxyingQuery;
 
 /**
  * JPA2 typed query
@@ -42,7 +40,7 @@ import org.jboss.capedwarf.jpa.ProxyingQuery;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SuppressWarnings({"unchecked"})
-public class TypedProxyingQuery<X> extends ProxyingQuery implements TypedQuery<X>
+public class TypedProxyingQuery<X> extends NewProxyingQuery implements TypedQuery<X>
 {
    private TypedQuery<X> delegate;
 
@@ -85,66 +83,6 @@ public class TypedProxyingQuery<X> extends ProxyingQuery implements TypedQuery<X
    public Map<String, Object> getHints()
    {
       return delegate.getHints();
-   }
-
-   public Set<Parameter<?>> getParameters()
-   {
-      return delegate.getParameters();
-   }
-
-   public Parameter<?> getParameter(String name)
-   {
-      return delegate.getParameter(name);
-   }
-
-   public <T> Parameter<T> getParameter(String name, Class<T> type)
-   {
-      return delegate.getParameter(name, type);
-   }
-
-   public Parameter<?> getParameter(int position)
-   {
-      return delegate.getParameter(position);
-   }
-
-   public <T> Parameter<T> getParameter(int position, Class<T> type)
-   {
-      return delegate.getParameter(position, type);
-   }
-
-   public boolean isBound(Parameter<?> param)
-   {
-      return delegate.isBound(param);
-   }
-
-   public <T> T getParameterValue(Parameter<T> param)
-   {
-      return delegate.getParameterValue(param);
-   }
-
-   public Object getParameterValue(String name)
-   {
-      return delegate.getParameterValue(name);
-   }
-
-   public Object getParameterValue(int position)
-   {
-      return delegate.getParameterValue(position);
-   }
-
-   public FlushModeType getFlushMode()
-   {
-      return delegate.getFlushMode();
-   }
-
-   public LockModeType getLockMode()
-   {
-      return delegate.getLockMode();
-   }
-
-   public <T> T unwrap(Class<T> cls)
-   {
-      return delegate.unwrap(cls);
    }
 
    @Override

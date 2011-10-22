@@ -72,9 +72,9 @@ public class EMF
          {
             if (emf == null)
             {
-               EntityManagerFactory delegate = new LazyEntityManagerFactory(info.getUnitName());
-               EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
                ProxyingWrapper wrapper = info.getWrapper();
+               EntityManagerFactory delegate = wrapper.lazy(info.getUnitName());
+               EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
                emf = wrapper.wrap(delegate, provider);
             }
          }

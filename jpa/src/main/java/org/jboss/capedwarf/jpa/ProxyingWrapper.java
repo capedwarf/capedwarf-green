@@ -32,6 +32,14 @@ import javax.persistence.EntityManagerFactory;
 public interface ProxyingWrapper
 {
    /**
+    * Lazy EMF delegate.
+    *
+    * @param puName PU name
+    * @return wrapped delegate
+    */
+   EntityManagerFactory lazy(String puName);
+
+   /**
     * Wrap EMF delegate.
     *
     * @param delegate the EMF delegate

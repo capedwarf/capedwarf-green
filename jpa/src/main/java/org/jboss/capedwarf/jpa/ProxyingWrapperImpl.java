@@ -31,6 +31,11 @@ import javax.persistence.EntityManagerFactory;
  */
 public class ProxyingWrapperImpl implements ProxyingWrapper
 {
+   public EntityManagerFactory lazy(String puName)
+   {
+      return new LazyEntityManagerFactory(puName);
+   }
+
    public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider)
    {
       return new ProxyingEntityManagerFactory(delegate, provider);

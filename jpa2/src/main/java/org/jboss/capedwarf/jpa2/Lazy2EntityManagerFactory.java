@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2011, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,64 +20,57 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.capedwarf.server.api.persistence;
+package org.jboss.capedwarf.jpa2;
 
 import java.util.Map;
-import javax.persistence.EntityManager;
+import javax.persistence.Cache;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.metamodel.Metamodel;
+
+import org.jboss.capedwarf.jpa.LazyEntityManagerFactory;
 
 /**
- * Lazy EMF
+ * JPA2 lazy EMF.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class LazyEntityManagerFactory implements EntityManagerFactory
+public class Lazy2EntityManagerFactory extends LazyEntityManagerFactory implements EntityManagerFactory
 {
-   private String puName;
-   private volatile EntityManagerFactory delegate;
-
-   LazyEntityManagerFactory(String puName)
+   public Lazy2EntityManagerFactory(String puName)
    {
-      if (puName == null)
-         throw new IllegalArgumentException("Null PU name");
-      this.puName = puName;
+      super(puName);
    }
 
-   private EntityManagerFactory getDelegate()
+   @Override
+   protected EntityManagerFactory getDelegate()
    {
-      if (delegate == null)
-      {
-         synchronized (this)
-         {
-            if (delegate == null)
-               delegate = Persistence.createEntityManagerFactory(puName);
-         }
-      }
-      return delegate;
+      return super.getDelegate();
    }
 
-   public EntityManager createEntityManager()
+   public CriteriaBuilder getCriteriaBuilder()
    {
-      return getDelegate().createEntityManager();
+      return getDelegate().getCriteriaBuilder();
    }
 
-   public EntityManager createEntityManager(Map map)
+   public Metamodel getMetamodel()
    {
-      return getDelegate().createEntityManager(map);
+      return getDelegate().getMetamodel();
    }
 
-   public void close()
+   public Map<String, Object> getProperties()
    {
-      EntityManagerFactory temp = delegate;
-      if (temp != null)
-      {
-         temp.close();
-      }
+      return getDelegate().getProperties();
    }
 
-   public boolean isOpen()
+   public Cache getCache()
    {
-      return getDelegate().isOpen();
+      return getDelegate().getCache();
+   }
+
+   public PersistenceUnitUtil getPersistenceUnitUtil()
+   {
+      return getDelegate().getPersistenceUnitUtil();
    }
 }
