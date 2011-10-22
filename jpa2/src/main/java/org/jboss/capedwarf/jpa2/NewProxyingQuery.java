@@ -31,7 +31,6 @@ import javax.persistence.LockModeType;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
 
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
 import org.jboss.capedwarf.jpa.ProxyingQuery;
@@ -43,7 +42,7 @@ import org.jboss.capedwarf.jpa.ProxyingQuery;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SuppressWarnings({"unchecked"})
-public class NewProxyingQuery<X> extends ProxyingQuery implements Query
+public class NewProxyingQuery extends ProxyingQuery implements Query
 {
    private Query delegate;
 

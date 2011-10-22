@@ -24,7 +24,6 @@ package org.jboss.capedwarf.jpa2;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Parameter;
@@ -78,11 +77,6 @@ public class TypedProxyingQuery<X> extends NewProxyingQuery implements TypedQuer
    public int getFirstResult()
    {
       return delegate.getFirstResult();
-   }
-
-   public Map<String, Object> getHints()
-   {
-      return delegate.getHints();
    }
 
    @Override
