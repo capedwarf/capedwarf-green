@@ -73,6 +73,15 @@ public interface StatelessDAO<T extends AbstractEntity>
    void refresh(T entity);
 
    /**
+    * Force initialization of a proxy.
+    * <p/>
+    * Note: This only ensures intialization of a proxy object.
+    *
+    * @param proxy a persistable object, proxy
+    */
+   void initialize(T proxy);
+
+   /**
     * Close DAO.
     * (release underlying adapter)
     */

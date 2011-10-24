@@ -121,6 +121,11 @@ final class TupleHolder
          delegate.refresh(entity);
       }
 
+      public void initialize(Object proxy)
+      {
+         delegate.initialize(proxy);
+      }
+
       @Override
       public int hashCode()
       {

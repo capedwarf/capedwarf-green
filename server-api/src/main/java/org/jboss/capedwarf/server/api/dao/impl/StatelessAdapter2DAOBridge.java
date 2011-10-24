@@ -70,6 +70,11 @@ final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements Stat
       adapter.refresh(entity);
    }
 
+   public void initialize(T proxy)
+   {
+      adapter.initialize(proxy);
+   }
+
    public void close()
    {
       adapter.close();

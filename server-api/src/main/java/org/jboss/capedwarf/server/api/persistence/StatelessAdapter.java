@@ -73,4 +73,14 @@ public interface StatelessAdapter
     * @param entity The entity to be refreshed.
     */
    void refresh(Object entity);
+
+   /**
+    * Force initialization of a proxy or persistent collection.
+    * <p/>
+    * Note: This only ensures intialization of a proxy object or collection;
+    * it is not guaranteed that the elements INSIDE the collection will be initialized/materialized.
+    *
+    * @param proxy a persistable object, proxy, persistent collection or <tt>null</tt>
+    */
+   void initialize(Object proxy);
 }

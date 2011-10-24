@@ -26,6 +26,7 @@ import java.io.Serializable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
@@ -89,6 +90,11 @@ public class HibernateStatelessAdapterFactory extends AbstractStatelessAdapterFa
       public void close()
       {
          session.close();
+      }
+
+      public void initialize(Object proxy)
+      {
+         Hibernate.initialize(proxy);
       }
    }
 }

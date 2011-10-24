@@ -87,5 +87,10 @@ public class StatefulStatelessAdapterFactory extends AbstractStatelessAdapterFac
       {
          // nothing to close
       }
+
+      public void initialize(Object proxy)
+      {
+         // dunno how to initialize
+      }
    }
 }

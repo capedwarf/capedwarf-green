@@ -22,20 +22,22 @@
 
 package org.jboss.capedwarf.server.jee.tx;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 /**
- * JEE EM injector.
+ * Container managed JEE EM injector.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class JeeEMInjector extends ManagedEMInjector
+@RequestScoped
+public abstract class ManagedEMInjector extends BaseEMInjector
 {
-   @PersistenceContext private transient EntityManager em;
+   @PersistenceUnit private transient EntityManagerFactory emf;
 
-   protected EntityManager getInjectedEntityManager()
+   protected EntityManagerFactory getInjectedEntityManagerFactory()
    {
-      return em;
+      return emf;
    }
 }
