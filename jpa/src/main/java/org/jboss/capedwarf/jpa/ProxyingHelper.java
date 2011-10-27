@@ -75,13 +75,8 @@ abstract class ProxyingHelper implements ProxyingFactory
       if (obj == null)
          throw new IllegalArgumentException("Null entity");
 
-      Class<?> ec = obj.getClass();
-
-      if (ProxyFactory.isProxyClass(ec) == false)
-         return obj;
-
       if (obj instanceof ProxyEntity == false)
-         throw new IllegalArgumentException("Object is not a ProxyEntity: " + obj);
+         return obj;
 
       ProxyEntity<T> pe = (ProxyEntity<T>) obj;
       return pe.getRealEntity();
