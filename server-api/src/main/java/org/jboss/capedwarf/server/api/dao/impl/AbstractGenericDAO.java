@@ -146,6 +146,11 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       if (id == null || id <= 0)
          throw new IllegalArgumentException("Illegal id: " + id);
 
+      return internalDelete(id);
+   }
+
+   protected int internalDelete(Long id)
+   {
       Query query = getEM().createQuery("delete from " + entityClass().getSimpleName() + " e where e.id = :eid");
       query.setParameter("eid", id);
       return query.executeUpdate();
@@ -157,7 +162,12 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       if (entity == null)
          throw new IllegalArgumentException("Null entity");
 
-      getEM().remove(entity);      
+      internalDelete(entity);
+   }
+
+   protected void internalDelete(T entity)
+   {
+      getEM().remove(entity);
    }
 
    @Transactional(TransactionPropagationType.SUPPORTS)
