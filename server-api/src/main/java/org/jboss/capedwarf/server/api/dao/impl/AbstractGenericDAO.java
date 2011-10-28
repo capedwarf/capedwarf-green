@@ -156,6 +156,15 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
       return query.executeUpdate();
    }
 
+   protected int cascadeDelete(Long id)
+   {
+      T entity = find(id);
+      if (entity != null)
+         internalDelete(entity);
+
+      return 1; // cannot count cascades
+   }
+
    @Transactional
    public void delete(T entity)
    {
