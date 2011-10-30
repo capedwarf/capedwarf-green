@@ -1,5 +1,8 @@
 package org.jboss.capedwarf.common.env;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
 /**
  * The environment utils.
  *
@@ -37,18 +40,34 @@ public class EnvironmentFactory
     */
    public static Environment getEnvironment()
    {
+      return getEnvironment(Environment.class.getClassLoader());
+   }
+
+   /**
+    * Get environment.
+    *
+    * @param cl the classloader to do the lookup
+    * @return the environment
+    */
+   public static Environment getEnvironment(ClassLoader cl)
+   {
       Environment tmp = env;
       if (tmp == null)
       {
          try
          {
-            ClassLoader cl = Environment.class.getClassLoader();
-            // let's first try the client side env
-            Class clazz = cl.loadClass("org.jboss.capedwarf.client.server.AndroidEnvironment");
-            Environment environment = (Environment) clazz.newInstance();
-            environment.touch(); // test
-            env = environment;
-            return env;
+            if (cl == null)
+               cl = Environment.class.getClassLoader();
+
+            ServiceLoader<Environment> envs = ServiceLoader.load(Environment.class, cl);
+            Iterator<Environment> iter = envs.iterator();
+            if (iter.hasNext())
+            {
+               tmp = iter.next();
+               tmp.touch(); // test
+               env = tmp;
+               return env;
+            }
          }
          catch (Throwable ignored)
          {
