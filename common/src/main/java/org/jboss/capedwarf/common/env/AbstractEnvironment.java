@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.jboss.capedwarf.common.serialization.JSONUtils;
+import org.jboss.capedwarf.common.tools.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,13 @@ import org.json.JSONTokener;
  */
 public abstract class AbstractEnvironment implements Environment
 {
+   private String charsetName = "UTF-8";
+
+   public void setCharsetName(String charsetName)
+   {
+      this.charsetName = charsetName;
+   }
+
    public void touch()
    {
    }
@@ -119,11 +127,9 @@ public abstract class AbstractEnvironment implements Environment
    public JSONTokener createTokener(InputStream is) throws IOException
    {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      int ch;
-      while ((ch = is.read()) >= 0)
-         baos.write(ch);
+      IOUtils.copyAndClose(is, baos, false); // no need for flush'n'close, it's BAOS
 
-      String result = new String(baos.toByteArray(), "UTF-8");
+      String result = new String(baos.toByteArray(), charsetName);
       return new JSONTokener(result);
    }
 
@@ -236,13 +242,11 @@ public abstract class AbstractEnvironment implements Environment
 
    public long getUserId()
    {
-      //return Application.getInstance().getPreferences(null).getUserId();
       return 0;
    }
 
    public String getUserToken()
    {
-      //return Application.getInstance().getPreferences(null).getUserToken();
       return "";
    }
 
