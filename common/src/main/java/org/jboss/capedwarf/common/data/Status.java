@@ -14,5 +14,6 @@ public enum Status
    NO_SUCH_ENTITY,
    RECOVERY,
    INVALID_EMAIL,
-   LOGIN
+   LOGIN,
+   INVALID
 }
