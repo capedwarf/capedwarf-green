@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import javax.validation.constraints.Size;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -163,7 +164,19 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       }
    }
 
-   public Object invoke(Object proxy, Method method, final Object[] args) throws Throwable
+   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+   {
+      try
+      {
+         return doInvoke(proxy, method, args);
+      }
+      finally
+      {
+         HttpHeaders.clear();
+      }
+   }
+
+   protected Object doInvoke(Object proxy, Method method, final Object[] args) throws Throwable
    {
       Class<?> declaringClass = method.getDeclaringClass();
       if (declaringClass == Object.class)
@@ -406,6 +419,11 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
 
       if (entity != null)
          httppost.setEntity(entity);
+
+      for (Header header : HttpHeaders.getHeaders())
+      {
+         httppost.addHeader(header);
+      }
 
       if (qi.secure)
       {
