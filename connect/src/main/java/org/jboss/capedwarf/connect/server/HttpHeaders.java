@@ -24,6 +24,7 @@ package org.jboss.capedwarf.connect.server;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.Header;
@@ -36,7 +37,7 @@ import org.apache.http.message.BasicHeader;
  */
 public class HttpHeaders
 {
-   private static final ThreadLocal<Set<Header>> headers = new ThreadLocal<Set<Header>>();
+   private static final ThreadLocal<Set<Header>> tlh = new ThreadLocal<Set<Header>>();
 
    /**
     * Get headers; read-only.
@@ -45,7 +46,7 @@ public class HttpHeaders
     */
    public static Set<Header> getHeaders()
    {
-      Set<Header> set = headers.get();
+      Set<Header> set = tlh.get();
       if (set == null)
          return Collections.emptySet();
 
@@ -57,10 +58,10 @@ public class HttpHeaders
     */
    public static void clear()
    {
-      Set<Header> set = headers.get();
+      Set<Header> set = tlh.get();
       if (set != null)
       {
-         headers.remove();
+         tlh.remove();
          set.clear();
       }
    }
@@ -91,12 +92,60 @@ public class HttpHeaders
       if (header == null)
          throw new IllegalArgumentException("Null header");
 
-      Set<Header> set = headers.get();
+      Set<Header> set = tlh.get();
       if (set == null)
       {
          set = new HashSet<Header>();
-         headers.set(set);
+         tlh.set(set);
       }
       set.add(header);
+   }
+
+   /**
+    * Add headers.
+    *
+    * @param headers the headers
+    */
+   public static void addHeaders(Map<String, String> headers)
+   {
+      if (headers == null)
+         throw new IllegalArgumentException("Null headers");
+
+      boolean success = false;
+      try
+      {
+         for (Map.Entry<String, String> entry : headers.entrySet())
+            addHeader(entry.getKey(), entry.getValue());
+         success = true;
+      }
+      finally
+      {
+         if (success == false)
+            clear();
+      }
+   }
+
+   /**
+    * Add headers.
+    *
+    * @param headers the headers
+    */
+   public static void addHeaders(Set<Header> headers)
+   {
+      if (headers == null)
+         throw new IllegalArgumentException("Null headers");
+
+      boolean success = false;
+      try
+      {
+         for (Header header : headers)
+            addHeader(header);
+         success = true;
+      }
+      finally
+      {
+         if (success == false)
+            clear();
+      }
    }
 }
