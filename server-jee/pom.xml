@@ -66,7 +66,7 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-          <groupId>com.google.appengine</groupId>
+          <groupId>org.apache.geronimo.specs</groupId>
           <artifactId>geronimo-jta_1.1_spec</artifactId>
       </dependency>
        <dependency>

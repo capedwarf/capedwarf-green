@@ -20,7 +20,7 @@
             <artifactId>capedwarf-jpa</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>com.google.appengine</groupId>
+                    <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-jpa_3.0_spec</artifactId>
                 </exclusion>
             </exclusions>
