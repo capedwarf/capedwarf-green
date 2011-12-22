@@ -44,6 +44,7 @@ import org.jboss.capedwarf.common.env.Environment;
 import org.jboss.capedwarf.common.env.EnvironmentFactory;
 import org.jboss.capedwarf.common.env.Secure;
 import org.jboss.capedwarf.common.io.ClosedInputStream;
+import org.jboss.capedwarf.common.io.FixedLengthInputStream;
 import org.jboss.capedwarf.common.serialization.BufferedSerializator;
 import org.jboss.capedwarf.common.serialization.ConverterUtils;
 import org.jboss.capedwarf.common.serialization.ElementTypeProvider;
@@ -268,7 +269,14 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
             {
                packResponseError(method, content, result.status);
             }
-            return toValue(method, content);
+            FixedLengthInputStream fis = new FixedLengthInputStream(content, result.contentLength);
+            Object retVal;
+            retVal = toValue(method, fis);
+            if (retVal instanceof InputStream)
+            {
+               return new ProgressInputStream((InputStream) retVal, fis);
+            }
+            return retVal;
          }
          catch (Throwable t)
          {
@@ -281,7 +289,15 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
                {
                   packResponseError(method, result.stream, result.status);
                }
-               return toValue(method, result.stream);
+               FixedLengthInputStream fis = new FixedLengthInputStream(result.stream, result.contentLength);
+               Object retVal;
+               retVal = toValue(method, fis);
+               if (retVal instanceof InputStream)
+               {
+                  return new ProgressInputStream((InputStream) retVal, fis);
+               }
+               return retVal;
+
             }
             else
             {
@@ -446,6 +462,9 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
          // invoke the post / request
          HttpResponse response = getClient().execute(httppost);
          result.status = response.getStatusLine().getStatusCode();
+         Header h = response.getFirstHeader("Content-Length");
+         if (h != null)
+            result.contentLength = Long.parseLong(h.getValue());
          result.stream = response.getEntity().getContent();
       }
       finally
@@ -775,7 +794,8 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler
       private int status;
       private InputStream stream;
       private long executionTime;
-
+      private long contentLength = -1;
+      
       private Result()
       {
          executionTime = System.currentTimeMillis();
