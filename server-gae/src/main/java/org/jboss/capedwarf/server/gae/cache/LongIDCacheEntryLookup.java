@@ -22,17 +22,27 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import javax.jdo.identity.LongIdentity;
-
 /**
  * Long ID DataNucleus CEL.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class LongIDCacheEntryLookup extends DNCacheEntryLookup
-{
-   protected Object toImplementationId(Class<?> entryType, Object id)
-   {
-      return new LongIdentity(entryType, (Long) id);
-   }
+public class LongIDCacheEntryLookup extends DNCacheEntryLookup {
+    private static boolean isJDOPresent;
+
+    static {
+        try {
+            LongIDCacheEntryLookup.class.getClassLoader().loadClass("javax.jdo.identity.LongIdentity");
+            isJDOPresent = true;
+        } catch (Throwable ignore) {
+        }
+    }
+
+    protected Object toImplementationId(Class<?> entryType, Object id) {
+        return (isJDOPresent ? toJDOId(entryType, id) : null);
+    }
+
+    protected Object toJDOId(Class<?> entryType, Object id) {
+        return new javax.jdo.identity.LongIdentity(entryType, (Long) id);
+    }
 }
