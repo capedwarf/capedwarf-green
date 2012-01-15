@@ -22,18 +22,17 @@
 
 package org.jboss.capedwarf.server.api.security;
 
+import org.jboss.capedwarf.server.api.admin.AdminManager;
+import org.jboss.capedwarf.server.api.qualifiers.Current;
+import org.jboss.capedwarf.server.api.users.User;
+
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
-import org.jboss.capedwarf.server.api.admin.AdminManager;
-import org.jboss.capedwarf.server.api.quilifiers.Current;
-import org.jboss.capedwarf.server.api.users.User;
 
 /**
  * Security interceptor.

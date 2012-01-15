@@ -22,14 +22,14 @@
 
 package org.jboss.capedwarf.server.jee.users;
 
-import java.security.Principal;
+import org.jboss.capedwarf.server.api.qualifiers.Current;
+import org.jboss.capedwarf.server.api.users.User;
+import org.jboss.capedwarf.server.api.users.UserHandler;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.servlet.http.HttpServletRequest;
-
-import org.jboss.capedwarf.server.api.quilifiers.Current;
-import org.jboss.capedwarf.server.api.users.User;
-import org.jboss.capedwarf.server.api.users.UserHandler;
+import java.security.Principal;
 
 /**
  * User provider.

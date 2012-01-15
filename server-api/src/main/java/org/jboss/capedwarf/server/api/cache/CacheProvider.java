@@ -22,7 +22,7 @@
 
 package org.jboss.capedwarf.server.api.cache;
 
-import org.jboss.capedwarf.server.api.quilifiers.Name;
+import org.jboss.capedwarf.server.api.qualifiers.Name;
 
 import javax.cache.Cache;
 import javax.cache.CacheException;

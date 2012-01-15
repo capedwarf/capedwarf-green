@@ -22,14 +22,14 @@
 
 package org.jboss.capedwarf.server.api.ui;
 
-import java.io.Serializable;
+import org.jboss.capedwarf.server.api.admin.AdminManager;
+import org.jboss.capedwarf.server.api.qualifiers.Current;
+import org.jboss.capedwarf.server.api.users.User;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.capedwarf.server.api.admin.AdminManager;
-import org.jboss.capedwarf.server.api.quilifiers.Current;
-import org.jboss.capedwarf.server.api.users.User;
+import java.io.Serializable;
 
 /**
  * Custom login.

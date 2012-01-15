@@ -22,13 +22,13 @@
 
 package org.jboss.capedwarf.server.api.users;
 
-import java.io.IOException;
+import org.jboss.capedwarf.server.api.qualifiers.Current;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.jboss.capedwarf.server.api.quilifiers.Current;
+import java.io.IOException;
 
 /**
  * Login / logout bean.

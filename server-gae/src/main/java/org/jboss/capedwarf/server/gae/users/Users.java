@@ -22,14 +22,14 @@
 
 package org.jboss.capedwarf.server.gae.users;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import org.jboss.capedwarf.server.api.quilifiers.Current;
+import org.jboss.capedwarf.server.api.qualifiers.Current;
 import org.jboss.capedwarf.server.api.users.User;
 import org.jboss.capedwarf.server.api.users.UserHandler;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
 /**
  * User provider.
