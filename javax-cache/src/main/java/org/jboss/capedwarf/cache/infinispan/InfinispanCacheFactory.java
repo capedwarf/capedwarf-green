@@ -22,6 +22,16 @@
 
 package org.jboss.capedwarf.cache.infinispan;
 
+import org.infinispan.manager.DefaultCacheManager;
+import org.infinispan.manager.EmbeddedCacheManager;
+import org.kohsuke.MetaInfServices;
+
+import javax.cache.Cache;
+import javax.cache.CacheException;
+import javax.cache.CacheFactory;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -29,16 +39,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheFactory;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.manager.EmbeddedCacheManager;
-import org.kohsuke.MetaInfServices;
 
 /**
  * Infinispan javax.cache factory implementation.
@@ -49,7 +49,7 @@ import org.kohsuke.MetaInfServices;
 public class InfinispanCacheFactory implements CacheFactory
 {
    private static Logger log = Logger.getLogger(InfinispanCacheFactory.class.getName());
-   private static String[] defaultJndiNames = {"java:jboss/infinispan/capedwarf", "java:CacheManager/capedwarf"};
+   private static String[] defaultJndiNames = {"java:jboss/infinispan/container/capedwarf", "java:jboss/infinispan/capedwarf", "java:CacheManager/capedwarf"};
    private EmbeddedCacheManager cacheManager;
 
    public InfinispanCacheFactory() throws IOException
