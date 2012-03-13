@@ -65,6 +65,8 @@ public class MultiJSONCollectionSerializator extends AbstractJSONSerializator {
                 collection.add(ja);
             }
             return instance;
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             IOException ioe = new IOException();
             ioe.initCause(e);

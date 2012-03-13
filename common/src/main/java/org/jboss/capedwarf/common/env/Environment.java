@@ -46,6 +46,16 @@ public interface Environment {
     JSONObject createObject();
 
     /**
+     * Create json object.
+     *
+     *
+     * @param tokener the tokener
+     * @return new json object instance
+     * @throws JSONException for any json exception
+     */
+    JSONObject createObject(JSONTokener tokener) throws JSONException;
+
+    /**
      * Create tokener.
      *
      * @param is the input stream

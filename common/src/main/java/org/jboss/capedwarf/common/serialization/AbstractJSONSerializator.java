@@ -18,6 +18,10 @@ public abstract class AbstractJSONSerializator extends AbstractSerializator {
         return EnvironmentFactory.getEnvironment().createObject();
     }
 
+    protected JSONObject createObject(JSONTokener tokener) throws JSONException {
+        return EnvironmentFactory.getEnvironment().createObject(tokener);
+    }
+
     protected JSONTokener createTokener(InputStream is) throws IOException {
         return EnvironmentFactory.getEnvironment().createTokener(is);
     }

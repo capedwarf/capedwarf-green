@@ -19,7 +19,7 @@ public class EnvironmentFactory {
      * @param id the user id
      */
     static void setUserId(long id) {
-        GAEEnvironment.setUserId(id);
+        DefaultEnvironment.setUserId(id);
     }
 
     /**
@@ -28,7 +28,7 @@ public class EnvironmentFactory {
      * @param token the user token
      */
     static void setUserToken(String token) {
-        GAEEnvironment.setUserToken(token);
+        DefaultEnvironment.setUserToken(token);
     }
 
     /**
@@ -61,7 +61,7 @@ public class EnvironmentFactory {
                 }
             }
             // fall back to gae / simple env
-            env = new GAEEnvironment();
+            env = new DefaultEnvironment();
         }
         return env;
     }

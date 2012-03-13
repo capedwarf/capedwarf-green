@@ -49,10 +49,12 @@ public class JSONSerializator extends AbstractJSONSerializator {
 
         try {
             JSONTokener tokener = createTokener(stream);
-            JSONObject value = new JSONObject(tokener);
+            JSONObject value = createObject(tokener);
             T instance = clazz.newInstance();
             ((JSONAware) instance).readJSONObject(value);
             return instance;
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             IOException ioe = new IOException();
             ioe.initCause(e);

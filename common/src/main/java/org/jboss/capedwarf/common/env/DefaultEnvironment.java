@@ -13,11 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The GAE environment utils.
+ * The default environment utils.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class GAEEnvironment implements Environment {
+class DefaultEnvironment implements Environment {
     private static long userId = 0;
     private static String userToken = "dummy-token";
 
@@ -47,6 +47,10 @@ class GAEEnvironment implements Environment {
 
     public JSONObject createObject() {
         return new JSONObject();
+    }
+
+    public JSONObject createObject(JSONTokener tokener) throws JSONException {
+        return new JSONObject(tokener);
     }
 
     public JSONTokener createTokener(InputStream is) {

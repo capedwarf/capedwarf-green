@@ -214,6 +214,6 @@ public class JSONUtils {
      */
     public static <T extends Enum<T>> T readEnum(JSONObject json, String key, T defaultValue, Class<T> enumClass) throws JSONException {
         String name = json.optString(key);
-        return (name != null) ? Enum.valueOf(enumClass, name) : defaultValue;
+        return (name != null && name.length() > 0) ? Enum.valueOf(enumClass, name) : defaultValue;
     }
 }

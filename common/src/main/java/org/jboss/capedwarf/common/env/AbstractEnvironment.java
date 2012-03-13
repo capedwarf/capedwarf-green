@@ -110,6 +110,10 @@ public abstract class AbstractEnvironment implements Environment {
         return new HackJSONObject();
     }
 
+    public JSONObject createObject(JSONTokener tokener) throws JSONException {
+        return new HackJSONObject(tokener);
+    }
+
     public JSONTokener createTokener(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         IOUtils.copyAndClose(is, baos, false); // no need for flush'n'close, it's BAOS
