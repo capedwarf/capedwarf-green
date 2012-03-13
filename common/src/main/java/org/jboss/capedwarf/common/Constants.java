@@ -9,7 +9,9 @@ public class Constants {
     public static final String HTTP = "http";
     public static final String HOST = "://%1s.appspot.com";
 
-    public static final String IGNORE_GZIP = "Ignore-GZIP";
+    public static final String CONTENT_ENCODING = "Content-Encoding";
+    public static final String GZIP_ENABLED = "GZIP_ENABLED";
+    public static final String GZIP = "gzip";
 
     public static final String ADMINISTRATOR = "administrator";
 

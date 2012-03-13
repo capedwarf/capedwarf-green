@@ -21,7 +21,7 @@ public class GzipOptionalSerializator extends DelegateSerializator {
     }
 
     public static void enableGzip() {
-        flag.set(Constants.IGNORE_GZIP);
+        flag.set(Constants.GZIP_ENABLED);
     }
 
     public static boolean isGzipEnabled() {

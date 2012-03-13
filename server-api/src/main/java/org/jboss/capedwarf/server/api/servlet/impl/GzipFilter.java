@@ -44,14 +44,14 @@ public class GzipFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse resp = (HttpServletResponse) response;
 
-            String ignoreGzipHeader = req.getHeader(Constants.IGNORE_GZIP);
-            boolean ignoreGzip = Boolean.parseBoolean(ignoreGzipHeader);
-            if (ignoreGzip) {
-                GzipOptionalSerializator.disableGzip();
+            String gzipEnabled = req.getHeader(Constants.GZIP_ENABLED);
+            boolean isGzipEnabled = Boolean.parseBoolean(gzipEnabled);
+            if (isGzipEnabled) {
+                GzipOptionalSerializator.enableGzip();
                 try {
                     chain.doFilter(req, resp);
                 } finally {
-                    GzipOptionalSerializator.enableGzip();
+                    GzipOptionalSerializator.disableGzip();
                 }
             } else {
                 chain.doFilter(req, resp);

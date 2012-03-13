@@ -363,9 +363,9 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
             httppost.addHeader(Constants.CLIENT_TOKEN, token);
         }
 
-        // disable gzip
+        // enable gzip
         if (GzipOptionalSerializator.isGzipEnabled()) {
-            // TODO -- httppost.addHeader(Constants.IGNORE_GZIP, Boolean.TRUE.toString());
+            httppost.addHeader(Constants.CONTENT_ENCODING, Constants.GZIP);
         }
 
         Result result = new Result();
