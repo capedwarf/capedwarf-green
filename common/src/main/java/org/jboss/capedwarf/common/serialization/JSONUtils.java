@@ -213,7 +213,7 @@ public class JSONUtils {
      * @throws JSONException for any JSON error
      */
     public static <T extends Enum<T>> T readEnum(JSONObject json, String key, T defaultValue, Class<T> enumClass) throws JSONException {
-        String name = json.getString(key);
+        String name = json.optString(key);
         return (name != null) ? Enum.valueOf(enumClass, name) : defaultValue;
     }
 }
