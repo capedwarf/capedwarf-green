@@ -58,6 +58,12 @@ public class SmokeTestCase extends AbstractConnectTest {
                 outputStream.write("321".getBytes());
             }
         };
+        HttpHandler primitive = new HttpHandler() {
+            public void handle(HttpContext context) throws IOException {
+                OutputStream outputStream = context.getOutputStream();
+                outputStream.write("321".getBytes());
+            }
+        };
         HttpHandler info = new HttpHandler() {
             public void handle(HttpContext context) throws IOException {
                 OutputStream outputStream = context.getOutputStream();
@@ -80,6 +86,7 @@ public class SmokeTestCase extends AbstractConnectTest {
         };
 
         getServer().addContext("/client/foo", foobar);
+        getServer().addContext("/client/primitive", primitive);
         getServer().addContext("/client/info", info);
         getServer().addContext("/client/content", content);
         try {
@@ -87,6 +94,9 @@ public class SmokeTestCase extends AbstractConnectTest {
             try {
                 String s = proxy.fooBar(123);
                 Assert.assertEquals("321", s);
+
+                long x = proxy.primitive(123);
+                Assert.assertEquals(321L, x);
 
                 StatusInfo status = proxy.infoPoke(new UserInfo("alesj", "qwert123"));
                 Assert.assertEquals(Status.OK, status.getStatus());

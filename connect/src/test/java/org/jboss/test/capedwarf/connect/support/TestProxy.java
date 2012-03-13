@@ -38,6 +38,8 @@ import java.io.InputStream;
 public interface TestProxy {
     String fooBar(@QueryParameter("foo") int bar);
 
+    long primitive(@QueryParameter("foo") int bar);
+
     StatusInfo infoPoke(UserInfo user);
 
     @Gzip(GzipType.ENABLE)
