@@ -39,4 +39,9 @@ class HackJSONObject extends JSONObject {
         }
         return super.putOpt(key, value);
     }
+
+    public String optString(String key) {
+        String value = super.optString(key);
+        return value != null && value.length() > 0 ? value : null;
+    }
 }
