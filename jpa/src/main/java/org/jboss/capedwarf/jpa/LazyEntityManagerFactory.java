@@ -22,62 +22,52 @@
 
 package org.jboss.capedwarf.jpa;
 
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Map;
 
 /**
  * Lazy EMF
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class LazyEntityManagerFactory implements EntityManagerFactory
-{
-   private String puName;
-   private volatile EntityManagerFactory delegate;
+public class LazyEntityManagerFactory implements EntityManagerFactory {
+    private String puName;
+    private volatile EntityManagerFactory delegate;
 
-   public LazyEntityManagerFactory(String puName)
-   {
-      if (puName == null)
-         throw new IllegalArgumentException("Null PU name");
-      this.puName = puName;
-   }
+    public LazyEntityManagerFactory(String puName) {
+        if (puName == null)
+            throw new IllegalArgumentException("Null PU name");
+        this.puName = puName;
+    }
 
-   protected EntityManagerFactory getDelegate()
-   {
-      if (delegate == null)
-      {
-         synchronized (this)
-         {
-            if (delegate == null)
-               delegate = Persistence.createEntityManagerFactory(puName);
-         }
-      }
-      return delegate;
-   }
+    protected EntityManagerFactory getDelegate() {
+        if (delegate == null) {
+            synchronized (this) {
+                if (delegate == null)
+                    delegate = Persistence.createEntityManagerFactory(puName);
+            }
+        }
+        return delegate;
+    }
 
-   public EntityManager createEntityManager()
-   {
-      return getDelegate().createEntityManager();
-   }
+    public EntityManager createEntityManager() {
+        return getDelegate().createEntityManager();
+    }
 
-   public EntityManager createEntityManager(Map map)
-   {
-      return getDelegate().createEntityManager(map);
-   }
+    public EntityManager createEntityManager(Map map) {
+        return getDelegate().createEntityManager(map);
+    }
 
-   public void close()
-   {
-      EntityManagerFactory temp = delegate;
-      if (temp != null)
-      {
-         temp.close();
-      }
-   }
+    public void close() {
+        EntityManagerFactory temp = delegate;
+        if (temp != null) {
+            temp.close();
+        }
+    }
 
-   public boolean isOpen()
-   {
-      return getDelegate().isOpen();
-   }
+    public boolean isOpen() {
+        return getDelegate().isOpen();
+    }
 }

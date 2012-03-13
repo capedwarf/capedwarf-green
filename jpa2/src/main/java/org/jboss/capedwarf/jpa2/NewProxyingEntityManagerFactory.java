@@ -22,38 +22,32 @@
 
 package org.jboss.capedwarf.jpa2;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
 import org.jboss.capedwarf.jpa.ProxyingEntityManagerFactory;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  * JPA2 proxying entity manager factory.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class NewProxyingEntityManagerFactory extends ProxyingEntityManagerFactory
-{
-   public NewProxyingEntityManagerFactory(EntityManagerFactory delegate)
-   {
-      super(delegate);
-   }
+public class NewProxyingEntityManagerFactory extends ProxyingEntityManagerFactory {
+    public NewProxyingEntityManagerFactory(EntityManagerFactory delegate) {
+        super(delegate);
+    }
 
-   public NewProxyingEntityManagerFactory(EntityManagerFactory delegate, EntityManagerProvider provider)
-   {
-      super(delegate, provider);
-   }
+    public NewProxyingEntityManagerFactory(EntityManagerFactory delegate, EntityManagerProvider provider) {
+        super(delegate, provider);
+    }
 
-   @Override
-   protected EntityManager proxy(final EntityManager delegate)
-   {
-      return new NewProxyingEntityManager(delegate)
-      {
-         protected EntityManagerProvider getProvider()
-         {
-            return getProviderInternal();
-         }
-      };
-   }
+    @Override
+    protected EntityManager proxy(final EntityManager delegate) {
+        return new NewProxyingEntityManager(delegate) {
+            protected EntityManagerProvider getProvider() {
+                return getProviderInternal();
+            }
+        };
+    }
 }

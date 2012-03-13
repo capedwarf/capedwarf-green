@@ -29,19 +29,17 @@ import javax.persistence.EntityManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractStatelessAdapterFactory implements StatelessAdapterFactory
-{
-   public StatelessAdapter createStatelessAdapter(EntityManager em)
-   {
-      if (em == null)
-         throw new IllegalArgumentException("Null EntityManager!");
+public abstract class AbstractStatelessAdapterFactory implements StatelessAdapterFactory {
+    public StatelessAdapter createStatelessAdapter(EntityManager em) {
+        if (em == null)
+            throw new IllegalArgumentException("Null EntityManager!");
 
-      TupleHolder.Tuple tuple = TupleHolder.get();
-      if (tuple == null)
-         tuple = TupleHolder.create(doCreateStatelessAdapter(em));
+        TupleHolder.Tuple tuple = TupleHolder.get();
+        if (tuple == null)
+            tuple = TupleHolder.create(doCreateStatelessAdapter(em));
 
-      return tuple.getAdapter();
-   }
+        return tuple.getAdapter();
+    }
 
-   protected abstract StatelessAdapter doCreateStatelessAdapter(EntityManager em);
+    protected abstract StatelessAdapter doCreateStatelessAdapter(EntityManager em);
 }

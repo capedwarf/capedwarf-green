@@ -22,96 +22,95 @@
 
 package org.jboss.capedwarf.server.api.io;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * byte[] handling service.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BlobService extends BlobTransformer
-{
-   /**
-    * Load the raw bytes.
-    *
-    * @param key the blob key
-    * @return bytes or null if no such blob found
-    */
-   byte[] loadBytes(String key);
+public interface BlobService extends BlobTransformer {
+    /**
+     * Load the raw bytes.
+     *
+     * @param key the blob key
+     * @return bytes or null if no such blob found
+     */
+    byte[] loadBytes(String key);
 
-   /**
-    * Load the raw bytes.
-    *
-    * @param key the blob key
-    * @param startIndex start index of data to fetch.
-    * @param endIndex end index (inclusive) of data to fetch.
-    * @return bytes or null if no such blob found
-    */
-   byte[] loadBytes(String key, long startIndex, long endIndex);
+    /**
+     * Load the raw bytes.
+     *
+     * @param key        the blob key
+     * @param startIndex start index of data to fetch.
+     * @param endIndex   end index (inclusive) of data to fetch.
+     * @return bytes or null if no such blob found
+     */
+    byte[] loadBytes(String key, long startIndex, long endIndex);
 
-   /**
-    * Serve bytes directly into repsonse.
-    *
-    * @param key the blob key
-    * @param outstream the output stream
-    * @throws IOException for any I/O error
-    */
-   void serveBytes(String key, OutputStream outstream) throws IOException;
+    /**
+     * Serve bytes directly into repsonse.
+     *
+     * @param key       the blob key
+     * @param outstream the output stream
+     * @throws IOException for any I/O error
+     */
+    void serveBytes(String key, OutputStream outstream) throws IOException;
 
-   /**
-    * Serve bytes directly into repsonse.
-    *
-    * @param key the blob key
-    * @param start start index of data to fetch.
-    * @param outstream the output stream
-    * @throws IOException for any I/O error
-    */
-   void serveBytes(String key, long start, OutputStream outstream) throws IOException;
+    /**
+     * Serve bytes directly into repsonse.
+     *
+     * @param key       the blob key
+     * @param start     start index of data to fetch.
+     * @param outstream the output stream
+     * @throws IOException for any I/O error
+     */
+    void serveBytes(String key, long start, OutputStream outstream) throws IOException;
 
-   /**
-    * Serve bytes directly into repsonse.
-    *
-    * @param key the blob key
-    * @param start start index of data to fetch.
-    * @param end end index (inclusive) of data to fetch.
-    * @param outstream the output stream
-    * @throws IOException for any I/O error
-    */
-   void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException;
+    /**
+     * Serve bytes directly into repsonse.
+     *
+     * @param key       the blob key
+     * @param start     start index of data to fetch.
+     * @param end       end index (inclusive) of data to fetch.
+     * @param outstream the output stream
+     * @throws IOException for any I/O error
+     */
+    void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException;
 
-   /**
-    * Serve bytes directly into repsonse.
-    *
-    * @param key the blob key
-    * @param start start index of data to fetch.
-    * @param end end index (inclusive) of data to fetch.
-    * @param respose the http response
-    * @throws IOException for any I/O error
-    */
-   void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException;
+    /**
+     * Serve bytes directly into repsonse.
+     *
+     * @param key     the blob key
+     * @param start   start index of data to fetch.
+     * @param end     end index (inclusive) of data to fetch.
+     * @param respose the http response
+     * @throws IOException for any I/O error
+     */
+    void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException;
 
-   /**
-    * Store raw bytes.
-    * See http://www.w3schools.com/media/media_mimeref.asp.
-    *
-    * @param mimeType the mime type
-    * @param bytes the bytes
-    * @return the blob key or null if cannot store
-    * @throws IOException for any I/O error
-    */
-   String storeBytes(String mimeType, byte[] bytes) throws IOException;
+    /**
+     * Store raw bytes.
+     * See http://www.w3schools.com/media/media_mimeref.asp.
+     *
+     * @param mimeType the mime type
+     * @param bytes    the bytes
+     * @return the blob key or null if cannot store
+     * @throws IOException for any I/O error
+     */
+    String storeBytes(String mimeType, byte[] bytes) throws IOException;
 
-   /**
-    * Store raw bytes.
-    * See http://www.w3schools.com/media/media_mimeref.asp.
-    *
-    * @param mimeType the mime type
-    * @param buffer the byte buffer
-    * @return the blob key or null if cannot store
-    * @throws IOException for any I/O error
-    */
-   String storeBytes(String mimeType, ByteBuffer buffer) throws IOException;
+    /**
+     * Store raw bytes.
+     * See http://www.w3schools.com/media/media_mimeref.asp.
+     *
+     * @param mimeType the mime type
+     * @param buffer   the byte buffer
+     * @return the blob key or null if cannot store
+     * @throws IOException for any I/O error
+     */
+    String storeBytes(String mimeType, ByteBuffer buffer) throws IOException;
 }

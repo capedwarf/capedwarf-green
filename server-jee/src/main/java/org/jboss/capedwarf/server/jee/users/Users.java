@@ -37,44 +37,36 @@ import java.security.Principal;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class Users implements UserHandler
-{
-   @Produces
-   @Current
-   public User currentUser(HttpServletRequest req)
-   {
-      Principal principal = req.getUserPrincipal();
-      return (principal != null) ? new UserImpl(principal) : null;
-   }
+public class Users implements UserHandler {
+    @Produces
+    @Current
+    public User currentUser(HttpServletRequest req) {
+        Principal principal = req.getUserPrincipal();
+        return (principal != null) ? new UserImpl(principal) : null;
+    }
 
-   public String loginURL(String requestURI)
-   {
-      return "restricted/login.cdi";
-   }
+    public String loginURL(String requestURI) {
+        return "restricted/login.cdi";
+    }
 
-   public String logoutURL(String requestURI)
-   {
-      return "restricted/logout.cdi";
-   }
+    public String logoutURL(String requestURI) {
+        return "restricted/logout.cdi";
+    }
 
-   private static class UserImpl implements User
-   {
-      private Principal principal;
+    private static class UserImpl implements User {
+        private Principal principal;
 
-      private UserImpl(Principal principal)
-      {
-         this.principal = principal;
-      }
+        private UserImpl(Principal principal) {
+            this.principal = principal;
+        }
 
-      public String getEmail()
-      {
-         return principal.getName();
-      }
+        public String getEmail() {
+            return principal.getName();
+        }
 
-      @Override
-      public String toString()
-      {
-         return getEmail();
-      }
-   }
+        @Override
+        public String toString() {
+            return getEmail();
+        }
+    }
 }

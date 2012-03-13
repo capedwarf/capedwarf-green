@@ -22,23 +22,21 @@
 
 package org.jboss.capedwarf.server.jee.persistence;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-
 import org.jboss.capedwarf.jpa.ProxyingWrapper;
 import org.jboss.capedwarf.jpa2.NewProxyingWrapperImpl;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
 /**
  * Persistence utils.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class PersistenceUtils
-{
-   @Produces
-   @ApplicationScoped
-   public ProxyingWrapper wrapper()
-   {
-      return new NewProxyingWrapperImpl();
-   }
+public class PersistenceUtils {
+    @Produces
+    @ApplicationScoped
+    public ProxyingWrapper wrapper() {
+        return new NewProxyingWrapperImpl();
+    }
 }

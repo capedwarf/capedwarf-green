@@ -5,6 +5,8 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.jboss.capedwarf.common.Constants;
+import org.jboss.capedwarf.connect.server.ServerProxyHandler;
+import org.jboss.capedwarf.connect.server.ServerProxyInvocationHandler;
 
 /**
  * The server config.
@@ -12,281 +14,241 @@ import org.jboss.capedwarf.common.Constants;
  * @author Ales Justin
  * @author Marko Strukelj
  */
-public abstract class Configuration<T>
-{
-   private static Configuration instance;
-   
-   private String hostName;
-   private int port;
-   private int sslPort;
-   private String appContext = "";
-   private String clientContext = "client";
-   private String secureContext = "secure";
-   private boolean isDebugMode;
-   private boolean isDebugLogging;
-   private boolean isStrictSSL;
-   private boolean isStrictPort = true;
-   private int connectionTimeout = 30 * (int) Constants.SECOND;
-   private HttpVersion httpVersion = HttpVersion.HTTP_1_1;
-   private String contentCharset = "UTF-8";
-   private SocketFactory plainFactory;
-   private SocketFactory sslFactory;
-   private Class<T> proxyClass;
+public abstract class Configuration<T> {
+    private static Configuration instance;
 
-   private String httpEndpoint;
-   private String sslEndpoint;
+    private String hostName;
+    private int port;
+    private int sslPort;
+    private String appContext = "";
+    private String clientContext = "client";
+    private String secureContext = "secure";
+    private boolean isDebugMode;
+    private boolean isDebugLogging;
+    private boolean isStrictSSL;
+    private boolean isStrictPort = true;
+    private int connectionTimeout = 30 * (int) Constants.SECOND;
+    private HttpVersion httpVersion = HttpVersion.HTTP_1_1;
+    private String contentCharset = "UTF-8";
+    private SocketFactory plainFactory;
+    private SocketFactory sslFactory;
+    private Class<T> proxyClass;
 
-   public synchronized static <T> Configuration<T> getInstance()
-   {
-      if (instance == null)
-         return new DefaultConfiguration<T>();
-      //noinspection unchecked
-      return instance;
-   }
+    private String httpEndpoint;
+    private String sslEndpoint;
 
-   public synchronized static <T> void setInstance(Configuration<T> conf)
-   {
-      instance = conf;
-   }
+    public synchronized static <T> Configuration<T> getInstance() {
+        if (instance == null)
+            return new DefaultConfiguration<T>();
+        //noinspection unchecked
+        return instance;
+    }
 
-   /**
-    * Invalidate cached values.
-    */
-   public void invalidate()
-   {
-      httpEndpoint = null;
-      sslEndpoint = null;
-   }
+    public synchronized static <T> void setInstance(Configuration<T> conf) {
+        instance = conf;
+    }
 
-   protected void validateConfiguration()
-   {
-      if (hostName == null)
-         throw new IllegalArgumentException("Null host name!");
-      if (appContext == null)
-         throw new IllegalArgumentException("Null app context!");
-   }
+    public ServerProxyInvocationHandler getServerProxyHandler() {
+        return new ServerProxyHandler(this);
+    }
 
-   public String getEndpoint(boolean secure)
-   {
-      return secure ? getSslEndpoint() : getHttpEndpoint();
-   }
+    /**
+     * Invalidate cached values.
+     */
+    public void invalidate() {
+        httpEndpoint = null;
+        sslEndpoint = null;
+    }
 
-   protected String getHttpEndpoint()
-   {
-      if (httpEndpoint == null)
-         httpEndpoint = createURL(isStrictSSL(), false, port);
-      return httpEndpoint;
-   }
+    protected void validateConfiguration() {
+        if (hostName == null)
+            throw new IllegalArgumentException("Null host name!");
+        if (appContext == null)
+            throw new IllegalArgumentException("Null app context!");
+    }
 
-   protected String getSslEndpoint()
-   {
-      if (sslEndpoint == null)
-         sslEndpoint = createURL(isDebugMode() == false, true, sslPort);
-      return sslEndpoint;
-   }
+    public String getEndpoint(boolean secure) {
+        return secure ? getSslEndpoint() : getHttpEndpoint();
+    }
 
-   protected String createURL(boolean ssl, boolean secure, int xport)
-   {
-      validateConfiguration();
+    protected String getHttpEndpoint() {
+        if (httpEndpoint == null)
+            httpEndpoint = createURL(isStrictSSL(), false, port);
+        return httpEndpoint;
+    }
 
-      StringBuilder endpointUrl = new StringBuilder("http");
-      if (ssl)
-         endpointUrl.append('s');
+    protected String getSslEndpoint() {
+        if (sslEndpoint == null)
+            sslEndpoint = createURL(isDebugMode() == false, true, sslPort);
+        return sslEndpoint;
+    }
 
-      int pos = hostName.indexOf("://");
-      if (pos != -1)
-      {
-         // cut off after protocol spec
-         if (pos > 0)
-            hostName = hostName.substring(pos);
-      }
-      else
-      {
-         // prepend ://
-         endpointUrl.append("://");
-      }
-      endpointUrl.append(hostName);
-      if (hostName.endsWith("/"))
-         endpointUrl.deleteCharAt(endpointUrl.length() - 1);
+    protected String createURL(boolean ssl, boolean secure, int xport) {
+        validateConfiguration();
 
-      if (isStrictPort())
-         endpointUrl.append(':').append(xport);
+        StringBuilder endpointUrl = new StringBuilder("http");
+        if (ssl)
+            endpointUrl.append('s');
 
-      endpointUrl.append("/").append(getAppContext());
-      if (getAppContext().length() > 0)
-         endpointUrl.append("/");
-      endpointUrl.append(getClientContext()).append("/");
-      if (secure)
-         endpointUrl.append(getSecureContext()).append("/");
+        int pos = hostName.indexOf("://");
+        if (pos != -1) {
+            // cut off after protocol spec
+            if (pos > 0)
+                hostName = hostName.substring(pos);
+        } else {
+            // prepend ://
+            endpointUrl.append("://");
+        }
+        endpointUrl.append(hostName);
+        if (hostName.endsWith("/"))
+            endpointUrl.deleteCharAt(endpointUrl.length() - 1);
 
-      return endpointUrl.toString();
-   }
+        if (isStrictPort())
+            endpointUrl.append(':').append(xport);
 
-   public Class<T> getProxyClass()
-   {
-      if (proxyClass == null)
-         throw new IllegalArgumentException("Null proxy class");
-      return proxyClass;
-   }
+        endpointUrl.append("/").append(getAppContext());
+        if (getAppContext().length() > 0)
+            endpointUrl.append("/");
+        endpointUrl.append(getClientContext()).append("/");
+        if (secure)
+            endpointUrl.append(getSecureContext()).append("/");
 
-   public void setProxyClass(Class<T> proxyClass)
-   {
-      this.proxyClass = proxyClass;
-   }
+        return endpointUrl.toString();
+    }
 
-   public String getHostName()
-   {
-      return hostName;
-   }
-   
-   public void setHostName(String hostName)
-   {
-      this.hostName = hostName;
-   }
-   
-   public int getPort()
-   {
-      return port;
-   }
-   
-   public void setPort(int port)
-   {
-      this.port = port;
-   }
-   
-   public int getSslPort()
-   {
-      return sslPort;
-   }
-   
-   public void setSslPort(int sslPort)
-   {
-      this.sslPort = sslPort;
-   }
+    public Class<T> getProxyClass() {
+        if (proxyClass == null)
+            throw new IllegalArgumentException("Null proxy class");
+        return proxyClass;
+    }
 
-   public String getAppContext()
-   {
-      return appContext;
-   }
+    public void setProxyClass(Class<T> proxyClass) {
+        this.proxyClass = proxyClass;
+    }
 
-   public void setAppContext(String appContext)
-   {
-      this.appContext = appContext;
-   }
+    public String getHostName() {
+        return hostName;
+    }
 
-   public String getClientContext()
-   {
-      return clientContext;
-   }
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
-   public void setClientContext(String clientContext)
-   {
-      this.clientContext = clientContext;
-   }
+    public int getPort() {
+        return port;
+    }
 
-   public String getSecureContext()
-   {
-      return secureContext;
-   }
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-   public void setSecureContext(String secureContext)
-   {
-      this.secureContext = secureContext;
-   }
+    public int getSslPort() {
+        return sslPort;
+    }
 
-   public boolean isDebugMode()
-   {
-      return isDebugMode;
-   }
+    public void setSslPort(int sslPort) {
+        this.sslPort = sslPort;
+    }
 
-   public void setDebugMode(boolean isDebugMode)
-   {
-      this.isDebugMode = isDebugMode;
-   }
+    public String getAppContext() {
+        return appContext;
+    }
 
-   public boolean isDebugLogging()
-   {
-      return isDebugLogging;
-   }
+    public void setAppContext(String appContext) {
+        this.appContext = appContext;
+    }
 
-   public void setDebugLogging(boolean isDebugLogging)
-   {
-      this.isDebugLogging = isDebugLogging;
-   }
+    public String getClientContext() {
+        return clientContext;
+    }
 
-   public boolean isStrictSSL()
-   {
-      return isStrictSSL;
-   }
+    public void setClientContext(String clientContext) {
+        this.clientContext = clientContext;
+    }
 
-   public void setStrictSSL(boolean strictSSL)
-   {
-      isStrictSSL = strictSSL;
-   }
+    public String getSecureContext() {
+        return secureContext;
+    }
 
-   public boolean isStrictPort()
-   {
-      return isStrictPort;
-   }
+    public void setSecureContext(String secureContext) {
+        this.secureContext = secureContext;
+    }
 
-   public void setStrictPort(boolean strictPort)
-   {
-      isStrictPort = strictPort;
-   }
+    public boolean isDebugMode() {
+        return isDebugMode;
+    }
 
-   public int getConnectionTimeout()
-   {
-      return connectionTimeout;
-   }
+    public void setDebugMode(boolean isDebugMode) {
+        this.isDebugMode = isDebugMode;
+    }
 
-   public void setConnectionTimeout(int connectionTimeout)
-   {
-      this.connectionTimeout = connectionTimeout;
-   }
+    public boolean isDebugLogging() {
+        return isDebugLogging;
+    }
 
-   public HttpVersion getHttpVersion()
-   {
-      return httpVersion;
-   }
+    public void setDebugLogging(boolean isDebugLogging) {
+        this.isDebugLogging = isDebugLogging;
+    }
 
-   public void setHttpVersion(HttpVersion httpVersion)
-   {
-      this.httpVersion = httpVersion;
-   }
+    public boolean isStrictSSL() {
+        return isStrictSSL;
+    }
 
-   public String getContentCharset()
-   {
-      return contentCharset;
-   }
+    public void setStrictSSL(boolean strictSSL) {
+        isStrictSSL = strictSSL;
+    }
 
-   public void setContentCharset(String contentCharset)
-   {
-      this.contentCharset = contentCharset;
-   }
+    public boolean isStrictPort() {
+        return isStrictPort;
+    }
 
-   public SocketFactory getPlainFactory()
-   {
-      if (plainFactory == null)
-         return PlainSocketFactory.getSocketFactory();
+    public void setStrictPort(boolean strictPort) {
+        isStrictPort = strictPort;
+    }
 
-      return plainFactory;
-   }
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
 
-   public void setPlainFactory(SocketFactory plainFactory)
-   {
-      this.plainFactory = plainFactory;
-   }
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
 
-   public SocketFactory getSslFactory()
-   {
-      if (sslFactory == null)
-         return SSLSocketFactory.getSocketFactory();
+    public HttpVersion getHttpVersion() {
+        return httpVersion;
+    }
 
-      return sslFactory;
-   }
+    public void setHttpVersion(HttpVersion httpVersion) {
+        this.httpVersion = httpVersion;
+    }
 
-   public void setSslFactory(SocketFactory sslFactory)
-   {
-      this.sslFactory = sslFactory;
-   }
+    public String getContentCharset() {
+        return contentCharset;
+    }
+
+    public void setContentCharset(String contentCharset) {
+        this.contentCharset = contentCharset;
+    }
+
+    public SocketFactory getPlainFactory() {
+        if (plainFactory == null)
+            return PlainSocketFactory.getSocketFactory();
+
+        return plainFactory;
+    }
+
+    public void setPlainFactory(SocketFactory plainFactory) {
+        this.plainFactory = plainFactory;
+    }
+
+    public SocketFactory getSslFactory() {
+        if (sslFactory == null)
+            return SSLSocketFactory.getSocketFactory();
+
+        return sslFactory;
+    }
+
+    public void setSslFactory(SocketFactory sslFactory) {
+        this.sslFactory = sslFactory;
+    }
 }

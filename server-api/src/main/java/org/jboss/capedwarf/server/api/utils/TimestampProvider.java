@@ -27,12 +27,11 @@ package org.jboss.capedwarf.server.api.utils;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface TimestampProvider
-{
-   /**
-    * Get the current server timestamp millis.
-    *
-    * @return the current server timestamp
-    */
-   long currentTimeMillis();
+public interface TimestampProvider {
+    /**
+     * Get the current server timestamp millis.
+     *
+     * @return the current server timestamp
+     */
+    long currentTimeMillis();
 }

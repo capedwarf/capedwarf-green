@@ -22,10 +22,10 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
+import org.jboss.capedwarf.jpa.ProxyingWrapper;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
-import org.jboss.capedwarf.jpa.ProxyingWrapper;
 
 /**
  * EMF info.
@@ -33,42 +33,35 @@ import org.jboss.capedwarf.jpa.ProxyingWrapper;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class EMFInfo
-{
-   private String unitName;
-   private EMInjector emInjector;
-   private ProxyingWrapper wrapper;
+public class EMFInfo {
+    private String unitName;
+    private EMInjector emInjector;
+    private ProxyingWrapper wrapper;
 
-   public String getUnitName()
-   {
-      return unitName;
-   }
+    public String getUnitName() {
+        return unitName;
+    }
 
-   public EMInjector getEmInjector()
-   {
-      return emInjector;
-   }
+    public EMInjector getEmInjector() {
+        return emInjector;
+    }
 
-   public ProxyingWrapper getWrapper()
-   {
-      return wrapper;
-   }
+    public ProxyingWrapper getWrapper() {
+        return wrapper;
+    }
 
-   @Inject
-   public void setUnitName(@PersistenceUnitName String unitName)
-   {
-      this.unitName = unitName;
-   }
+    @Inject
+    public void setUnitName(@PersistenceUnitName String unitName) {
+        this.unitName = unitName;
+    }
 
-   @Inject
-   public void setEmInjector(EMInjector emInjector)
-   {
-      this.emInjector = emInjector;
-   }
+    @Inject
+    public void setEmInjector(EMInjector emInjector) {
+        this.emInjector = emInjector;
+    }
 
-   @Inject
-   public void setWrapper(ProxyingWrapper wrapper)
-   {
-      this.wrapper = wrapper;
-   }
+    @Inject
+    public void setWrapper(ProxyingWrapper wrapper) {
+        this.wrapper = wrapper;
+    }
 }

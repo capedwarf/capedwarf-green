@@ -12,26 +12,25 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Query
-{
-   /**
-    * Get the query value.
-    *
-    * @return the query
-    */
-   String value();
+public @interface Query {
+    /**
+     * Get the query value.
+     *
+     * @return the query
+     */
+    String value();
 
-   /**
-    * Is the query JSON aware.
-    *
-    * @return true if json aware, false otherwise
-    */
-   boolean jsonAware() default false;
+    /**
+     * Is the query JSON aware.
+     *
+     * @return true if json aware, false otherwise
+     */
+    boolean jsonAware() default false;
 
-   /**
-    * Does query push content directly into stream.
-    *
-    * @return true if direct content streaming, false otherwise
-    */
-   boolean directContent() default false;
+    /**
+     * Does query push content directly into stream.
+     *
+     * @return true if direct content streaming, false otherwise
+     */
+    boolean directContent() default false;
 }

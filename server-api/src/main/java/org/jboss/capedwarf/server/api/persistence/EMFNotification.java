@@ -31,17 +31,14 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class EMFNotification implements Notification<EntityManagerFactory>
-{
-   private EntityManagerFactory emf;
+public class EMFNotification implements Notification<EntityManagerFactory> {
+    private EntityManagerFactory emf;
 
-   public EMFNotification(EntityManagerFactory emf)
-   {
-      this.emf = emf;
-   }
+    public EMFNotification(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
 
-   public EntityManagerFactory value()
-   {
-      return emf;
-   }
+    public EntityManagerFactory value() {
+        return emf;
+    }
 }

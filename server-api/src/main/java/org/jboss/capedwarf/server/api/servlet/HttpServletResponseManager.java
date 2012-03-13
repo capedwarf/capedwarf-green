@@ -33,19 +33,16 @@ import javax.servlet.http.HttpServletResponse;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RequestScoped
-class HttpServletResponseManager
-{
-   private HttpServletResponse response;
+class HttpServletResponseManager {
+    private HttpServletResponse response;
 
-   @Produces
-   @RequestScoped
-   public HttpServletResponse getResponse()
-   {
-      return response;
-   }
+    @Produces
+    @RequestScoped
+    public HttpServletResponse getResponse() {
+        return response;
+    }
 
-   public void setResponse(HttpServletResponse response)
-   {
-      this.response = response;
-   }
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 }

@@ -22,15 +22,15 @@
 
 package org.jboss.capedwarf.server.jee.servlet;
 
-import java.util.logging.Logger;
+import org.jboss.capedwarf.server.api.servlet.BeanManagerLookup;
+import org.kohsuke.MetaInfServices;
+
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
-
-import org.jboss.capedwarf.server.api.servlet.BeanManagerLookup;
-import org.kohsuke.MetaInfServices;
+import java.util.logging.Logger;
 
 /**
  * JEE BM lookup.
@@ -38,42 +38,30 @@ import org.kohsuke.MetaInfServices;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @MetaInfServices
-public class JeeBeanManagerLookup implements BeanManagerLookup
-{
-   private static Logger log = Logger.getLogger(JeeBeanManagerLookup.class.getName());
-   private static final String STANDARD_BEAN_MANAGER_JNDI_NAME = "java:comp/BeanManager";
+public class JeeBeanManagerLookup implements BeanManagerLookup {
+    private static Logger log = Logger.getLogger(JeeBeanManagerLookup.class.getName());
+    private static final String STANDARD_BEAN_MANAGER_JNDI_NAME = "java:comp/BeanManager";
 
-   private BeanManager beanManager;
+    private BeanManager beanManager;
 
-   public BeanManager lookup(ServletContext context)
-   {
-      if (beanManager == null)
-      {
-         Context nc = null;
-         try
-         {
-            nc = new InitialContext();
-            beanManager = (BeanManager) nc.lookup(STANDARD_BEAN_MANAGER_JNDI_NAME);
-         }
-         catch (Exception e)
-         {
-            log.warning("Cannot find BeanManager: " + e);
-            return null;
-         }
-         finally
-         {
-            if (nc != null)
-            {
-               try
-               {
-                  nc.close();
-               }
-               catch (NamingException ignored)
-               {
-               }
+    public BeanManager lookup(ServletContext context) {
+        if (beanManager == null) {
+            Context nc = null;
+            try {
+                nc = new InitialContext();
+                beanManager = (BeanManager) nc.lookup(STANDARD_BEAN_MANAGER_JNDI_NAME);
+            } catch (Exception e) {
+                log.warning("Cannot find BeanManager: " + e);
+                return null;
+            } finally {
+                if (nc != null) {
+                    try {
+                        nc.close();
+                    } catch (NamingException ignored) {
+                    }
+                }
             }
-         }
-      }
-      return beanManager;
-   }
+        }
+        return beanManager;
+    }
 }

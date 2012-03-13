@@ -35,15 +35,12 @@ import javax.transaction.TransactionManager;
  */
 @Alternative
 @ApplicationScoped
-public class GlassFishEnvironment extends AbstractEnvironment
-{
-   public TransactionManager lookupTxManager() throws Exception
-   {
-      return doLookup("java:appserver/TransactionManager", TransactionManager.class);
-   }
+public class GlassFishEnvironment extends AbstractEnvironment {
+    public TransactionManager lookupTxManager() throws Exception {
+        return doLookup("java:appserver/TransactionManager", TransactionManager.class);
+    }
 
-   public Session lookupMailSession() throws Exception
-   {
-      return doLookup("mail/Session", Session.class);
-   }
+    public Session lookupMailSession() throws Exception {
+        return doLookup("mail/Session", Session.class);
+    }
 }

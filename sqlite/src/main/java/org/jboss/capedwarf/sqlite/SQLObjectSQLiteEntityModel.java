@@ -32,34 +32,28 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class SQLObjectSQLiteEntityModel<T extends SQLObject> extends ReflectionSQLiteEntityModel<T>
-{
-   public SQLObjectSQLiteEntityModel(Class<T> entityClass) throws Exception
-   {
-      super(entityClass);
-   }
+public class SQLObjectSQLiteEntityModel<T extends SQLObject> extends ReflectionSQLiteEntityModel<T> {
+    public SQLObjectSQLiteEntityModel(Class<T> entityClass) throws Exception {
+        super(entityClass);
+    }
 
-   @Override
-   protected void readKey(Method m) throws NoSuchMethodException
-   {
-   }
+    @Override
+    protected void readKey(Method m) throws NoSuchMethodException {
+    }
 
-   public String getKey()
-   {
-      return "pk";
-   }
+    public String getKey() {
+        return "pk";
+    }
 
-   public Long getKeyValue(SQLObject entity)
-   {
-      if (entity == null)
-         return null;
+    public Long getKeyValue(SQLObject entity) {
+        if (entity == null)
+            return null;
 
-      return entity.getPk();
-   }
+        return entity.getPk();
+    }
 
-   public void setKeyValue(SQLObject entity, Long id)
-   {
-      if (entity != null)
-         entity.setPk(id);
-   }
+    public void setKeyValue(SQLObject entity, Long id) {
+        if (entity != null)
+            entity.setPk(id);
+    }
 }

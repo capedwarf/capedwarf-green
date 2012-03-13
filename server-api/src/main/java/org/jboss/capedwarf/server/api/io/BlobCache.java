@@ -25,21 +25,20 @@ package org.jboss.capedwarf.server.api.io;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BlobCache
-{
-   /**
-    * Get bytes.
-    *
-    * @param key the key
-    * @return bytes or null if not found
-    */
-   byte[] get(String key);
+public interface BlobCache {
+    /**
+     * Get bytes.
+     *
+     * @param key the key
+     * @return bytes or null if not found
+     */
+    byte[] get(String key);
 
-   /**
-    * Put bytes.
-    *
-    * @param key the key
-    * @param bytes the byes
-    */
-   void put(String key, byte[] bytes);
+    /**
+     * Put bytes.
+     *
+     * @param key   the key
+     * @param bytes the byes
+     */
+    void put(String key, byte[] bytes);
 }

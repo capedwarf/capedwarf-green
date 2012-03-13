@@ -22,11 +22,11 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import javax.cache.Cache;
-import javax.enterprise.context.ApplicationScoped;
-
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory;
+
+import javax.cache.Cache;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * DataNucleus CELF.
@@ -34,12 +34,10 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class DatanucleusCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory
-{
-   protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache)
-   {
-      LongIDCacheEntryLookup lookup = new LongIDCacheEntryLookup();
-      lookup.setCache(cache);
-      return lookup;
-   }
+public class DatanucleusCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory {
+    protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache) {
+        LongIDCacheEntryLookup lookup = new LongIDCacheEntryLookup();
+        lookup.setCache(cache);
+        return lookup;
+    }
 }

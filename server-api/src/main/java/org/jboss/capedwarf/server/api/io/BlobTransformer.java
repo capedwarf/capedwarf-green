@@ -27,13 +27,12 @@ package org.jboss.capedwarf.server.api.io;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BlobTransformer
-{
-   /**
-    * Get blob from bytes.
-    *
-    * @param bytes the bytes
-    * @return the blob
-    */
-   Blob toBlob(byte[] bytes);
+public interface BlobTransformer {
+    /**
+     * Get blob from bytes.
+     *
+     * @param bytes the bytes
+     * @return the blob
+     */
+    Blob toBlob(byte[] bytes);
 }

@@ -22,176 +22,146 @@
 
 package org.jboss.capedwarf.server.gae.tx;
 
-import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
+import org.jboss.capedwarf.server.api.tx.Transactional;
+import org.jboss.capedwarf.server.api.tx.TxInterceptorDelegate;
+import org.jboss.capedwarf.server.api.tx.Work;
+
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.OptimisticLockException;
-
-import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
-import org.jboss.capedwarf.server.api.tx.Transactional;
-import org.jboss.capedwarf.server.api.tx.TxInterceptorDelegate;
-import org.jboss.capedwarf.server.api.tx.Work;
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Transaction interceptor.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class TransactionInterceptor implements TxInterceptorDelegate, Serializable
-{
-   private static final long serialVersionUID = 1L;
+public class TransactionInterceptor implements TxInterceptorDelegate, Serializable {
+    private static final long serialVersionUID = 1L;
 
-   private transient static ThreadLocal<Tuple> emTL = new ThreadLocal<Tuple>();
-   private transient Map<AnnotatedElement, TransactionMetadata> transactionMetadata = new HashMap<AnnotatedElement, TransactionMetadata>();
-   private EntityManagerFactory factory;
+    private transient static ThreadLocal<Tuple> emTL = new ThreadLocal<Tuple>();
+    private transient Map<AnnotatedElement, TransactionMetadata> transactionMetadata = new HashMap<AnnotatedElement, TransactionMetadata>();
+    private EntityManagerFactory factory;
 
-   /**
-    * Get thread bound entity manager.
-    *
-    * @return entity manager
-    */
-   public static EntityManager getEntityManager()
-   {
-      Tuple tuple = emTL.get();
-      return tuple != null ? tuple.em : null;
-   }
+    /**
+     * Get thread bound entity manager.
+     *
+     * @return entity manager
+     */
+    public static EntityManager getEntityManager() {
+        Tuple tuple = emTL.get();
+        return tuple != null ? tuple.em : null;
+    }
 
-   public Object invoke(final InvocationContext invocation) throws Exception
-   {
-      Tuple tuple = emTL.get();
-      if (tuple == null)
-      {
-         tuple = new Tuple(factory.createEntityManager());
-         emTL.set(tuple);
-      }
-      tuple.count++;
+    public Object invoke(final InvocationContext invocation) throws Exception {
+        Tuple tuple = emTL.get();
+        if (tuple == null) {
+            tuple = new Tuple(factory.createEntityManager());
+            emTL.set(tuple);
+        }
+        tuple.count++;
 
-      try
-      {
-         return new Work()
-         {
-            @Override
-            protected Object work() throws Exception
-            {
-               return invocation.proceed();
+        try {
+            return new Work() {
+                @Override
+                protected Object work() throws Exception {
+                    return invocation.proceed();
+                }
+
+                @Override
+                protected boolean isNewTransactionRequired(boolean transactionActive) {
+                    return isNewTransactionRequired(invocation.getMethod(), invocation.getTarget().getClass(), transactionActive);
+                }
+
+                private boolean isNewTransactionRequired(Method method, Class beanClass, boolean transactionActive) {
+                    TransactionMetadata metadata = lookupTransactionMetadata(method);
+                    if (metadata.isNewTransactionRequired(transactionActive)) {
+                        return true;
+                    } else {
+                        return lookupTransactionMetadata(beanClass).isNewTransactionRequired(transactionActive);
+                    }
+                }
+
+                protected Object handleException(Exception e) {
+                    if (e.getCause() instanceof OptimisticLockException) {
+                        Object target = invocation.getTarget();
+                        if (target instanceof OptimisticLockExceptionHandler) {
+                            OptimisticLockExceptionHandler oleh = (OptimisticLockExceptionHandler) target;
+                            return oleh.handleVersionConflict(invocation.getParameters());
+                        }
+                    }
+                    return null;
+                }
+
+            }.workInTransaction(tuple.em.getTransaction());
+        } finally {
+            tuple.count--;
+            if (tuple.count == 0) {
+                emTL.remove();
+                tuple.em.close();
             }
+        }
+    }
 
-            @Override
-            protected boolean isNewTransactionRequired(boolean transactionActive)
-            {
-               return isNewTransactionRequired(invocation.getMethod(), invocation.getTarget().getClass(), transactionActive);
+    private TransactionMetadata lookupTransactionMetadata(AnnotatedElement element) {
+        TransactionMetadata metadata = transactionMetadata.get(element);
+
+        if (metadata == null) {
+            metadata = loadMetadata(element);
+        }
+
+        return metadata;
+    }
+
+    private synchronized TransactionMetadata loadMetadata(AnnotatedElement element) {
+        if (transactionMetadata.containsKey(element) == false) {
+            TransactionMetadata metadata = new TransactionMetadata(element);
+            transactionMetadata.put(element, metadata);
+            return metadata;
+        }
+
+        return transactionMetadata.get(element);
+    }
+
+    private class TransactionMetadata {
+        private boolean annotationPresent;
+        private TransactionPropagationType propType;
+
+        public TransactionMetadata(AnnotatedElement element) {
+            annotationPresent = element.isAnnotationPresent(Transactional.class);
+
+            if (annotationPresent) {
+                propType = element.getAnnotation(Transactional.class).value();
             }
+        }
 
-            private boolean isNewTransactionRequired(Method method, Class beanClass, boolean transactionActive)
-            {
-               TransactionMetadata metadata = lookupTransactionMetadata(method);
-               if (metadata.isNewTransactionRequired(transactionActive))
-               {
-                  return true;
-               }
-               else
-               {
-                  return lookupTransactionMetadata(beanClass).isNewTransactionRequired(transactionActive);
-               }
-            }
+        public boolean isAnnotationPresent() {
+            return annotationPresent;
+        }
 
-            protected Object handleException(Exception e)
-            {
-               if (e.getCause() instanceof OptimisticLockException)
-               {
-                  Object target = invocation.getTarget();
-                  if (target instanceof OptimisticLockExceptionHandler)
-                  {
-                     OptimisticLockExceptionHandler oleh = (OptimisticLockExceptionHandler) target;
-                     return oleh.handleVersionConflict(invocation.getParameters());
-                  }
-               }
-               return null;
-            }
+        public boolean isNewTransactionRequired(boolean transactionActive) {
+            return propType != null && propType.isNewTransactionRequired(transactionActive);
+        }
+    }
 
-         }.workInTransaction(tuple.em.getTransaction());
-      }
-      finally
-      {
-         tuple.count--;
-         if (tuple.count == 0)
-         {
-            emTL.remove();
-            tuple.em.close();
-         }
-      }
-   }
+    private static class Tuple {
+        private EntityManager em;
+        private int count;
 
-   private TransactionMetadata lookupTransactionMetadata(AnnotatedElement element)
-   {
-      TransactionMetadata metadata = transactionMetadata.get(element);
+        private Tuple(EntityManager em) {
+            this.em = em;
+        }
+    }
 
-      if (metadata == null)
-      {
-         metadata = loadMetadata(element);
-      }
-
-      return metadata;
-   }
-
-   private synchronized TransactionMetadata loadMetadata(AnnotatedElement element)
-   {
-      if (transactionMetadata.containsKey(element) == false)
-      {
-         TransactionMetadata metadata = new TransactionMetadata(element);
-         transactionMetadata.put(element, metadata);
-         return metadata;
-      }
-
-      return transactionMetadata.get(element);
-   }
-
-   private class TransactionMetadata
-   {
-      private boolean annotationPresent;
-      private TransactionPropagationType propType;
-
-      public TransactionMetadata(AnnotatedElement element)
-      {
-         annotationPresent = element.isAnnotationPresent(Transactional.class);
-
-         if (annotationPresent)
-         {
-            propType = element.getAnnotation(Transactional.class).value();
-         }
-      }
-
-      public boolean isAnnotationPresent()
-      {
-         return annotationPresent;
-      }
-
-      public boolean isNewTransactionRequired(boolean transactionActive)
-      {
-         return propType != null && propType.isNewTransactionRequired(transactionActive);
-      }
-   }
-
-   private static class Tuple
-   {
-      private EntityManager em;
-      private int count;
-
-      private Tuple(EntityManager em)
-      {
-         this.em = em;
-      }
-   }
-
-   @Inject
-   public void setFactory(EntityManagerFactory factory)
-   {
-      this.factory = factory;
-   }
+    @Inject
+    public void setFactory(EntityManagerFactory factory) {
+        this.factory = factory;
+    }
 }

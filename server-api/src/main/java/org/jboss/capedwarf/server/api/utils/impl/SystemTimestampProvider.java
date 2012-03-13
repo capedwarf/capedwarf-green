@@ -22,9 +22,9 @@
 
 package org.jboss.capedwarf.server.api.utils.impl;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.jboss.capedwarf.server.api.utils.TimestampProvider;
+
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * System TP.
@@ -32,10 +32,8 @@ import org.jboss.capedwarf.server.api.utils.TimestampProvider;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class SystemTimestampProvider implements TimestampProvider
-{
-   public long currentTimeMillis()
-   {
-      return System.currentTimeMillis();
-   }
+public class SystemTimestampProvider implements TimestampProvider {
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
+    }
 }

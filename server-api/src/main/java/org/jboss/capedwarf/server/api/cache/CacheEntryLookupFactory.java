@@ -29,14 +29,13 @@ import javax.cache.Cache;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CacheEntryLookupFactory
-{
-   /**
-    * Create cache entry lookup.
-    *
-    * @param cacheName the cache name
-    * @param cache the actual cache
-    * @return cache entry lookup instance
-    */
-   CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache);
+public interface CacheEntryLookupFactory {
+    /**
+     * Create cache entry lookup.
+     *
+     * @param cacheName the cache name
+     * @param cache     the actual cache
+     * @return cache entry lookup instance
+     */
+    CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache);
 }

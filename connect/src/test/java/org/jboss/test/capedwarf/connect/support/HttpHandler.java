@@ -28,7 +28,6 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface HttpHandler
-{
-   void handle(HttpContext context) throws IOException;
+public interface HttpHandler {
+    void handle(HttpContext context) throws IOException;
 }

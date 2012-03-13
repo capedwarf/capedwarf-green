@@ -30,35 +30,31 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ConverterUtils
-{
-   /**
-    * Convert to value from string.
-    *
-    * @param rt return class
-    * @param value the string value
-    * @return converted value
-    * @throws Throwable for any error
-    */
-   public static Object toValue(Class<?> rt, String value) throws Throwable
-   {
-      if (String.class == rt)
-      {
-         return value;
-      }
-      else if (Boolean.class == rt) // Boolean.valueOf("some-gae-crap") == false
-      {
-         if ("true".equalsIgnoreCase(value))
-            return Boolean.TRUE;
-         else if ("false".equalsIgnoreCase(value))
-            return Boolean.FALSE;
-         else
-            throw new IllegalArgumentException("Server side exception? - " + value);
-      }
-      else
-      {
-         Method valueOf = rt.getMethod("valueOf", value.getClass());
-         return valueOf.invoke(null, value);
-      }
-   }
+public class ConverterUtils {
+    /**
+     * Convert to value from string.
+     *
+     * @param rt    return class
+     * @param value the string value
+     * @return converted value
+     * @throws Throwable for any error
+     */
+    public static Object toValue(Class<?> rt, String value) throws Throwable {
+        if (String.class == rt) {
+            return value;
+        } else if (Boolean.class == rt) { // Boolean.valueOf("some-gae-crap") == false
+            if ("true".equalsIgnoreCase(value))
+                return Boolean.TRUE;
+            else if ("false".equalsIgnoreCase(value))
+                return Boolean.FALSE;
+            else
+                throw new IllegalArgumentException("Server side exception? - " + value);
+        } else if (Enum.class.isAssignableFrom(rt)) {
+            //noinspection unchecked
+            return Enum.valueOf((Class<Enum>) rt, value);
+        } else {
+            Method valueOf = rt.getMethod("valueOf", value.getClass());
+            return valueOf.invoke(null, value);
+        }
+    }
 }

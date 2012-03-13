@@ -22,30 +22,28 @@
 
 package org.jboss.capedwarf.server.api.cache.impl;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
-import javax.cache.Cache;
-
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookupFactory;
+
+import javax.cache.Cache;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCacheEntryLookupFactory implements CacheEntryLookupFactory
-{
-   private Map<String, CacheEntryLookup> lookups = new ConcurrentSkipListMap<String, CacheEntryLookup>();
+public abstract class AbstractCacheEntryLookupFactory implements CacheEntryLookupFactory {
+    private Map<String, CacheEntryLookup> lookups = new ConcurrentSkipListMap<String, CacheEntryLookup>();
 
-   public CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache)
-   {
-      CacheEntryLookup cel = lookups.get(cacheName);
-      if (cel != null)
-         return cel;
+    public CacheEntryLookup createCacheEntryLookup(String cacheName, Cache cache) {
+        CacheEntryLookup cel = lookups.get(cacheName);
+        if (cel != null)
+            return cel;
 
-      CacheEntryLookup acel = doCreateCacheEntryLookup(cache);
-      lookups.put(cacheName, acel);
-      return acel;
-   }
+        CacheEntryLookup acel = doCreateCacheEntryLookup(cache);
+        lookups.put(cacheName, acel);
+        return acel;
+    }
 
-   protected abstract CacheEntryLookup doCreateCacheEntryLookup(Cache cache);
+    protected abstract CacheEntryLookup doCreateCacheEntryLookup(Cache cache);
 }

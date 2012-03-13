@@ -29,22 +29,21 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ProxyingWrapper
-{
-   /**
-    * Lazy EMF delegate.
-    *
-    * @param puName PU name
-    * @return wrapped delegate
-    */
-   EntityManagerFactory lazy(String puName);
+public interface ProxyingWrapper {
+    /**
+     * Lazy EMF delegate.
+     *
+     * @param puName PU name
+     * @return wrapped delegate
+     */
+    EntityManagerFactory lazy(String puName);
 
-   /**
-    * Wrap EMF delegate.
-    *
-    * @param delegate the EMF delegate
-    * @param provider the EM provider
-    * @return wrapped delegate
-    */
-   EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider);
+    /**
+     * Wrap EMF delegate.
+     *
+     * @param delegate the EMF delegate
+     * @param provider the EM provider
+     * @return wrapped delegate
+     */
+    EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider);
 }

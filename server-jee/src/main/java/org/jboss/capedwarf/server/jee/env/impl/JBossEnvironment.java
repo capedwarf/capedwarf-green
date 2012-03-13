@@ -35,15 +35,12 @@ import javax.transaction.TransactionManager;
  */
 @Alternative
 @ApplicationScoped
-public class JBossEnvironment extends AbstractEnvironment
-{
-   public TransactionManager lookupTxManager() throws Exception
-   {
-      return doLookup("java:/TransactionManager", TransactionManager.class);
-   }
+public class JBossEnvironment extends AbstractEnvironment {
+    public TransactionManager lookupTxManager() throws Exception {
+        return doLookup("java:/TransactionManager", TransactionManager.class);
+    }
 
-   public Session lookupMailSession() throws Exception
-   {
-      return doLookup("java:/Mail", Session.class);
-   }
+    public Session lookupMailSession() throws Exception {
+        return doLookup("java:/Mail", Session.class);
+    }
 }

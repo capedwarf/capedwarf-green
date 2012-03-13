@@ -30,13 +30,12 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface BeanManagerLookup
-{
-   /**
-    * Get bean manager.
-    *
-    * @param context the servlet context
-    * @return bean manager
-    */
-   BeanManager lookup(ServletContext context);
+public interface BeanManagerLookup {
+    /**
+     * Get bean manager.
+     *
+     * @param context the servlet context
+     * @return bean manager
+     */
+    BeanManager lookup(ServletContext context);
 }

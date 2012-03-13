@@ -8,19 +8,14 @@ import javax.validation.ConstraintValidatorFactory;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class SimpleConstraintValidatorFactory implements ConstraintValidatorFactory
-{
-   static ConstraintValidatorFactory INSTANCE = new SimpleConstraintValidatorFactory();
+class SimpleConstraintValidatorFactory implements ConstraintValidatorFactory {
+    static ConstraintValidatorFactory INSTANCE = new SimpleConstraintValidatorFactory();
 
-   public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key)
-   {
-      try
-      {
-         return key.newInstance();
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e);
-      }
-   }
+    public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+        try {
+            return key.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

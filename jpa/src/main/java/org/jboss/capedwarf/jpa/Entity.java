@@ -27,19 +27,18 @@ package org.jboss.capedwarf.jpa;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Entity
-{
-   /**
-    * Get the entity id.
-    *
-    * @return the id
-    */
-   Long getId();
+public interface Entity {
+    /**
+     * Get the entity id.
+     *
+     * @return the id
+     */
+    Long getId();
 
-   /**
-    * Set identifier.
-    *
-    * @param identifier the id
-    */
-   void setId(Long identifier);
+    /**
+     * Set identifier.
+     *
+     * @param identifier the id
+     */
+    void setId(Long identifier);
 }

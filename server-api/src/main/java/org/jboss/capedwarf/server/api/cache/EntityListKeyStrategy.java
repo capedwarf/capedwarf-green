@@ -22,62 +22,57 @@
 
 package org.jboss.capedwarf.server.api.cache;
 
+import org.jboss.capedwarf.jpa.Entity;
+
+import javax.cache.CacheException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import javax.cache.CacheException;
-
-import org.jboss.capedwarf.jpa.Entity;
 
 /**
  * Cache only entity ids.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class EntityListKeyStrategy<T extends EntityListCachedResult, E extends Entity> implements KeyStrategy<T, List<E>>
-{
-   private CacheEntryLookup lookup;
+public abstract class EntityListKeyStrategy<T extends EntityListCachedResult, E extends Entity> implements KeyStrategy<T, List<E>> {
+    private CacheEntryLookup lookup;
 
-   protected EntityListKeyStrategy(CacheConfig config) throws CacheException
-   {
-      if (config == null)
-         throw new IllegalArgumentException("Null cache config");
-      lookup = config.getLookup(null);
-   }
+    protected EntityListKeyStrategy(CacheConfig config) throws CacheException {
+        if (config == null)
+            throw new IllegalArgumentException("Null cache config");
+        lookup = config.getLookup(null);
+    }
 
-   /**
-    * Get exact entity class.
-    *
-    * @return the exact entity class
-    */
-   protected abstract Class<E> getEntityClass();
+    /**
+     * Get exact entity class.
+     *
+     * @return the exact entity class
+     */
+    protected abstract Class<E> getEntityClass();
 
-   public List<E> unwrap(T cached, Object target, Method method, Object[] args)
-   {
-      List<Long> ids = cached.getIds();
-      return getEntities(ids);
-   }
+    public List<E> unwrap(T cached, Object target, Method method, Object[] args) {
+        List<Long> ids = cached.getIds();
+        return getEntities(ids);
+    }
 
-   /**
-    * Get entities.
-    *
-    * @param ids the entity ids
-    * @return actual entities
-    */
-   protected List<E> getEntities(List<Long> ids)
-   {
-      if (ids == null)
-         return null; // somebody invalidated ids?
+    /**
+     * Get entities.
+     *
+     * @param ids the entity ids
+     * @return actual entities
+     */
+    protected List<E> getEntities(List<Long> ids) {
+        if (ids == null)
+            return null; // somebody invalidated ids?
 
-      List<E> entities = new ArrayList<E>();
-      for (Long id : ids)
-      {
-         E entity = lookup.getCachedEntry(getEntityClass(), id);
-         if (entity == null) // we cannot re-create the whole cached list
-            return null;
+        List<E> entities = new ArrayList<E>();
+        for (Long id : ids) {
+            E entity = lookup.getCachedEntry(getEntityClass(), id);
+            if (entity == null) // we cannot re-create the whole cached list
+                return null;
 
-         entities.add(entity);
-      }
-      return entities;
-   }
+            entities.add(entity);
+        }
+        return entities;
+    }
 }

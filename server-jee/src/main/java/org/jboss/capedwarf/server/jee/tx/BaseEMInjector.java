@@ -22,14 +22,6 @@
 
 package org.jboss.capedwarf.server.jee.tx;
 
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
 import org.jboss.capedwarf.jpa2.NewProxyingEntityManager;
 import org.jboss.capedwarf.server.api.lifecycle.AfterImpl;
@@ -37,59 +29,57 @@ import org.jboss.capedwarf.server.api.lifecycle.Notification;
 import org.jboss.capedwarf.server.api.persistence.EMFNotification;
 import org.jboss.capedwarf.server.api.persistence.EMInjector;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Base JEE EM injector.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class BaseEMInjector implements EMInjector, Serializable
-{
-   private transient Event<Notification<EntityManagerFactory>> produceEvent;
-   private static AtomicBoolean emitted = new AtomicBoolean(false);
+public abstract class BaseEMInjector implements EMInjector, Serializable {
+    private transient Event<Notification<EntityManagerFactory>> produceEvent;
+    private static AtomicBoolean emitted = new AtomicBoolean(false);
 
-   private transient EntityManager current;
+    private transient EntityManager current;
 
-   protected abstract EntityManager getInjectedEntityManager();
+    protected abstract EntityManager getInjectedEntityManager();
 
-   protected abstract EntityManagerFactory getInjectedEntityManagerFactory();
+    protected abstract EntityManagerFactory getInjectedEntityManagerFactory();
 
-   @PostConstruct
-   public void init()
-   {
-      // fire this only once
-      if (emitted.compareAndSet(false, true))
-      {
-         produceEvent.select(new AfterImpl()).fire(new EMFNotification(getInjectedEntityManagerFactory()));
-      }
-   }
+    @PostConstruct
+    public void init() {
+        // fire this only once
+        if (emitted.compareAndSet(false, true)) {
+            produceEvent.select(new AfterImpl()).fire(new EMFNotification(getInjectedEntityManagerFactory()));
+        }
+    }
 
-   public EntityManager getEM()
-   {
-      if (current == null)
-         current = new NewProxyingEntityManager(getInjectedEntityManager())
-         {
-            protected EntityManagerProvider getProvider()
-            {
-               return new EntityManagerProvider()
-               {
-                  public EntityManager getEntityManager()
-                  {
-                     return getInjectedEntityManager();
-                  }
+    public EntityManager getEM() {
+        if (current == null)
+            current = new NewProxyingEntityManager(getInjectedEntityManager()) {
+                protected EntityManagerProvider getProvider() {
+                    return new EntityManagerProvider() {
+                        public EntityManager getEntityManager() {
+                            return getInjectedEntityManager();
+                        }
 
-                  public void close(EntityManager em)
-                  {
-                  }
-               };
-            }
-         };
+                        public void close(EntityManager em) {
+                        }
+                    };
+                }
+            };
 
-      return current;
-   }
+        return current;
+    }
 
-   @Inject
-   public void setProduceEvent(Event<Notification<EntityManagerFactory>> produceEvent)
-   {
-      this.produceEvent = produceEvent;
-   }
+    @Inject
+    public void setProduceEvent(Event<Notification<EntityManagerFactory>> produceEvent) {
+        this.produceEvent = produceEvent;
+    }
 }

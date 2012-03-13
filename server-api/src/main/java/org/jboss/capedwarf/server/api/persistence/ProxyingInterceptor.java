@@ -22,14 +22,13 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
+import org.jboss.capedwarf.jpa.ProxyingEnum;
+
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
-
-import org.jboss.capedwarf.jpa.ProxyingEnum;
 
 /**
  * Proxying interceptor.
@@ -38,37 +37,28 @@ import org.jboss.capedwarf.jpa.ProxyingEnum;
  */
 @Proxying(ProxyingEnum.ENABLE)
 @Interceptor
-public class ProxyingInterceptor implements Serializable
-{
-   private static final long serialVersionUID = 1L;
+public class ProxyingInterceptor implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-   @AroundInvoke
-   public Object aroundInvoke(final InvocationContext invocation) throws Exception
-   {
-      Method method = invocation.getMethod();
-      Proxying proxying = method.getAnnotation(Proxying.class);
-      if (proxying == null)
-      {
-         Class<?> clazz = invocation.getTarget().getClass();
-         proxying = clazz.getAnnotation(Proxying.class);
-      }
+    @AroundInvoke
+    public Object aroundInvoke(final InvocationContext invocation) throws Exception {
+        Method method = invocation.getMethod();
+        Proxying proxying = method.getAnnotation(Proxying.class);
+        if (proxying == null) {
+            Class<?> clazz = invocation.getTarget().getClass();
+            proxying = clazz.getAnnotation(Proxying.class);
+        }
 
-      if (proxying != null)
-      {
-         ProxyingEnum pe = proxying.value();
-         pe.begin();
-         try
-         {
-            return invocation.proceed();           
-         }
-         finally
-         {
-            pe.end();
-         }
-      }
-      else
-      {
-         return invocation.proceed();
-      }
-   }
+        if (proxying != null) {
+            ProxyingEnum pe = proxying.value();
+            pe.begin();
+            try {
+                return invocation.proceed();
+            } finally {
+                pe.end();
+            }
+        } else {
+            return invocation.proceed();
+        }
+    }
 }

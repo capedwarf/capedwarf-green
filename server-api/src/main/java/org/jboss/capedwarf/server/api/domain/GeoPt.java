@@ -22,8 +22,8 @@
 
 package org.jboss.capedwarf.server.api.domain;
 
-import java.io.Serializable;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Geo point.
@@ -31,72 +31,63 @@ import javax.persistence.Embeddable;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Embeddable
-public class GeoPt implements Serializable, Comparable<GeoPt>
-{
-   /** The serialVersionUID */
-   private static final long serialVersionUID = 1L;
+public class GeoPt implements Serializable, Comparable<GeoPt> {
+    /**
+     * The serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
-   private float latitude;
-   private float longitude;
+    private float latitude;
+    private float longitude;
 
-   /**
-    * Not to be used -- per jpa only.
-    */
-   @Deprecated
-   public GeoPt()
-   {
-   }
+    /**
+     * Not to be used -- per jpa only.
+     */
+    @Deprecated
+    public GeoPt() {
+    }
 
-   public GeoPt(float latitude, float longitude)
-   {
-      this.latitude = latitude;
-      this.longitude = longitude;
-   }
+    public GeoPt(float latitude, float longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-   public float getLatitude()
-   {
-      return latitude;
-   }
+    public float getLatitude() {
+        return latitude;
+    }
 
-   @Deprecated
-   public void setLatitude(float latitude)
-   {
-      this.latitude = latitude;
-   }
+    @Deprecated
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
 
-   public float getLongitude()
-   {
-      return longitude;
-   }
+    public float getLongitude() {
+        return longitude;
+    }
 
-   @Deprecated
-   public void setLongitude(float longitude)
-   {
-      this.longitude = longitude;
-   }
+    @Deprecated
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (obj instanceof GeoPt == false)
-         return false;
+    public boolean equals(Object obj) {
+        if (obj instanceof GeoPt == false)
+            return false;
 
-      GeoPt gp = (GeoPt) obj;
-      return getLatitude() == gp.getLatitude() && getLongitude() == gp.getLongitude();
-   }
+        GeoPt gp = (GeoPt) obj;
+        return getLatitude() == gp.getLatitude() && getLongitude() == gp.getLongitude();
+    }
 
-   public int hashCode()
-   {
-      return (int)(getLatitude() + 7 * getLongitude());
-   }
+    public int hashCode() {
+        return (int) (getLatitude() + 7 * getLongitude());
+    }
 
-   public java.lang.String toString()
-   {
-      return "GeoPt: latitude=" + getLatitude() + ", longitude=" + getLongitude();
-   }
+    public java.lang.String toString() {
+        return "GeoPt: latitude=" + getLatitude() + ", longitude=" + getLongitude();
+    }
 
-   public int compareTo(GeoPt gp)
-   {
-      float diff = getLatitude() - gp.getLatitude();
-      return (int)((diff == 0) ? (getLongitude() - gp.getLongitude()) : diff);
-   }
+    public int compareTo(GeoPt gp) {
+        float diff = getLatitude() - gp.getLatitude();
+        return (int) ((diff == 0) ? (getLongitude() - gp.getLongitude()) : diff);
+    }
 }

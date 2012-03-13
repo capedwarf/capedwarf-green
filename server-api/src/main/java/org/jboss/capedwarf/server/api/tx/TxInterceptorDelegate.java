@@ -30,14 +30,13 @@ import javax.interceptor.InvocationContext;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface TxInterceptorDelegate
-{
-   /**
-    * Handle around invoke.
-    *
-    * @param context the invocation context
-    * @return the return value
-    * @throws Exception for any exception
-    */
-   Object invoke(InvocationContext context) throws Exception;
+public interface TxInterceptorDelegate {
+    /**
+     * Handle around invoke.
+     *
+     * @param context the invocation context
+     * @return the return value
+     * @throws Exception for any exception
+     */
+    Object invoke(InvocationContext context) throws Exception;
 }

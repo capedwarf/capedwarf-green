@@ -12,20 +12,19 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface QueryParameter
-{
-   /**
-    * Get the query parameter name.
-    *
-    * @return the query
-    */
-   String value();
+public @interface QueryParameter {
+    /**
+     * Get the query parameter name.
+     *
+     * @return the query
+     */
+    String value();
 
-   /**
-    * Is this parameter required.
-    * By default it is true.
-    *
-    * @return true if required, false otherwise
-    */
-   boolean required() default true;
+    /**
+     * Is this parameter required.
+     * By default it is true.
+     *
+     * @return true if required, false otherwise
+     */
+    boolean required() default true;
 }

@@ -29,10 +29,8 @@ import java.lang.annotation.Annotation;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class BeforeImpl implements Before
-{
-   public Class<? extends Annotation> annotationType()
-   {
-      return Before.class;
-   }
+public class BeforeImpl implements Before {
+    public Class<? extends Annotation> annotationType() {
+        return Before.class;
+    }
 }

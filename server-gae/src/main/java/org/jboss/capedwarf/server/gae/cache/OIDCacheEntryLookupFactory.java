@@ -22,12 +22,12 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
+import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory;
+
 import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-
-import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
-import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory;
 
 /**
  * DataNucleus OID CELF.
@@ -36,12 +36,10 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory
  */
 @Alternative
 @ApplicationScoped
-public class OIDCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory
-{
-   protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache)
-   {
-      OIDCacheEntryLookup lookup = new OIDCacheEntryLookup();
-      lookup.setCache(cache);
-      return lookup;
-   }
+public class OIDCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory {
+    protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache) {
+        OIDCacheEntryLookup lookup = new OIDCacheEntryLookup();
+        lookup.setCache(cache);
+        return lookup;
+    }
 }

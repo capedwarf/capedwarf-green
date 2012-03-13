@@ -32,19 +32,17 @@ import javax.inject.Inject;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CacheFactoryProvider
-{
-   private CacheManager manager;
+public class CacheFactoryProvider {
+    private CacheManager manager;
 
-   @Produces @ApplicationScoped
-   public CacheFactory createFactory() throws CacheException
-   {
-      return manager.getCacheFactory();
-   }
+    @Produces
+    @ApplicationScoped
+    public CacheFactory createFactory() throws CacheException {
+        return manager.getCacheFactory();
+    }
 
-   @Inject
-   public void setManager(CacheManager manager)
-   {
-      this.manager = manager;
-   }
+    @Inject
+    public void setManager(CacheManager manager) {
+        this.manager = manager;
+    }
 }

@@ -22,15 +22,10 @@
 
 package org.jboss.capedwarf.server.api.domain;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-
-import java.io.Serializable;
-
 import org.jboss.capedwarf.jpa.Entity;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Generic entity.
@@ -38,58 +33,49 @@ import org.jboss.capedwarf.jpa.Entity;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @MappedSuperclass
-public abstract class AbstractEntity implements Serializable, Entity
-{
-   private static long serialVersionUID = 3l;
-   private Long id;
+public abstract class AbstractEntity implements Serializable, Entity {
+    private static long serialVersionUID = 3l;
+    private Long id;
 
-   public AbstractEntity()
-   {
-   }
+    public AbstractEntity() {
+    }
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   public Long getId()
-   {
-      return id;
-   }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
+        return id;
+    }
 
-   public void setId(Long id)
-   {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   @Transient
-   public String getInfo()
-   {
-      return getClass().getSimpleName() + "#" + getId();
-   }
+    @Transient
+    public String getInfo() {
+        return getClass().getSimpleName() + "#" + getId();
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj == null)
-         return false;
-      if (getClass().equals(obj.getClass()) == false)
-         return false;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (getClass().equals(obj.getClass()) == false)
+            return false;
 
-      AbstractEntity other = (AbstractEntity) obj;
-      return safeGet(id) == safeGet(other.getId());
-   }
+        AbstractEntity other = (AbstractEntity) obj;
+        return safeGet(id) == safeGet(other.getId());
+    }
 
-   public String toString()
-   {
-      return getInfo();
-   }
+    public String toString() {
+        return getInfo();
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return new Long(safeGet(id)).intValue();
-   }
+    @Override
+    public int hashCode() {
+        return new Long(safeGet(id)).intValue();
+    }
 
-   protected static long safeGet(Long x)
-   {
-      return x == null ? 0 : x;
-   }
+    protected static long safeGet(Long x) {
+        return x == null ? 0 : x;
+    }
 }

@@ -22,70 +22,63 @@
 
 package org.jboss.capedwarf.server.api.captcha.impl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Locale;
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-
-import net.tanesha.recaptcha.ReCaptcha;
-import net.tanesha.recaptcha.ReCaptchaFactory;
-import net.tanesha.recaptcha.ReCaptchaResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Locale;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Alternative
 @ApplicationScoped
-public class ReCaptchaService extends AbstractCaptchaService
-{
-   private static final long serialVersionUID = 1L;
+public class ReCaptchaService extends AbstractCaptchaService {
+    private static final long serialVersionUID = 1L;
 
-   private String publicKey;
-   private String privateKey;
-   private volatile ReCaptcha captcha;
+    private String publicKey;
+    private String privateKey;
+    private volatile ReCaptcha captcha;
 
-   private volatile HttpServletRequest request;
+    private volatile HttpServletRequest request;
 
-   protected synchronized ReCaptcha getCaptcha()
-   {
-      if (captcha == null)
-         captcha = ReCaptchaFactory.newReCaptcha(publicKey, privateKey, false);
-      return captcha;
-   }
+    protected synchronized ReCaptcha getCaptcha() {
+        if (captcha == null)
+            captcha = ReCaptchaFactory.newReCaptcha(publicKey, privateKey, false);
+        return captcha;
+    }
 
-   public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException
-   {
-      String error = request.getParameter("error");
-      String captchaScript = getCaptcha().createRecaptchaHtml(error, null);
-      out.write(captchaScript.getBytes());
-   }
+    public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException {
+        String error = request.getParameter("error");
+        String captchaScript = getCaptcha().createRecaptchaHtml(error, null);
+        out.write(captchaScript.getBytes());
+    }
 
-   public boolean verifyCaptcha(String id, String value)
-   {
-      ReCaptchaResponse response = getCaptcha().checkAnswer(
-            request.getRemoteAddr(),
-            request.getParameter("recaptcha_challenge_field"),
-            request.getParameter("recaptcha_response_field")
-      );
-      return response.isValid();
-   }
+    public boolean verifyCaptcha(String id, String value) {
+        ReCaptchaResponse response = getCaptcha().checkAnswer(
+                request.getRemoteAddr(),
+                request.getParameter("recaptcha_challenge_field"),
+                request.getParameter("recaptcha_response_field")
+        );
+        return response.isValid();
+    }
 
-   public void setPublicKey(String publicKey)
-   {
-      this.publicKey = publicKey;
-   }
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
-   public void setPrivateKey(String privateKey)
-   {
-      this.privateKey = privateKey;
-   }
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
 
-   @Inject
-   public void setRequest(HttpServletRequest request)
-   {
-      this.request = request;
-   }
+    @Inject
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
 }

@@ -7,17 +7,16 @@ import java.lang.reflect.InvocationHandler;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ServerProxyInvocationHandler extends InvocationHandler
-{
-   /**
-    * Is streaming allowed.
-    *
-    * @param allowsStreaming the streaming flag
-    */
-   void setAllowsStreaming(boolean allowsStreaming);
+public interface ServerProxyInvocationHandler extends InvocationHandler {
+    /**
+     * Is streaming allowed.
+     *
+     * @param allowsStreaming the streaming flag
+     */
+    void setAllowsStreaming(boolean allowsStreaming);
 
-   /**
-    * Shutdown server proxy handler.
-    */
-   void shutdown();
+    /**
+     * Shutdown server proxy handler.
+     */
+    void shutdown();
 }

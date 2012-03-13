@@ -27,26 +27,25 @@ package org.jboss.capedwarf.server.api.domain;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface TimestampAware
-{
-   /**
-    * Get timestamp.
-    *
-    * @return the timestamp
-    */
-   long getTimestamp();
+public interface TimestampAware {
+    /**
+     * Get timestamp.
+     *
+     * @return the timestamp
+     */
+    long getTimestamp();
 
-   /**
-    * Set timestamp.
-    *
-    * @param timestamp the timestamp
-    */
-   void setTimestamp(long timestamp);
+    /**
+     * Set timestamp.
+     *
+     * @param timestamp the timestamp
+     */
+    void setTimestamp(long timestamp);
 
-   /**
-    * The expiration time.
-    *
-    * @return the expiration time
-    */
-   long getExpirationTime();
+    /**
+     * The expiration time.
+     *
+     * @return the expiration time
+     */
+    long getExpirationTime();
 }

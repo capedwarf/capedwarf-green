@@ -28,7 +28,6 @@ import org.jboss.capedwarf.common.serialization.Serializator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,45 +40,38 @@ import java.util.logging.Level;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCollectionsAction<T extends Serializable> extends AbstractAction
-{
-   private Serializator serializator;
+public abstract class AbstractCollectionsAction<T extends Serializable> extends AbstractAction {
+    private Serializator serializator;
 
-   protected void doInitialize(ServletContext context)
-   {
-      super.doInitialize(context);
-      serializator = new GzipOptionalSerializator(getSerializator());
-   }
+    protected void doInitialize(ServletContext context) {
+        super.doInitialize(context);
+        serializator = new GzipOptionalSerializator(getSerializator());
+    }
 
-   protected abstract Serializator getSerializator();
+    protected abstract Serializator getSerializator();
 
-   protected abstract DTOModel<T> getDtoModel();
+    protected abstract DTOModel<T> getDtoModel();
 
-   /**
-    * Push topics to response.
-    *
-    * @param elements the elements
-    * @param resp the response
-    * @throws java.io.IOException for any I/O error
-    */
-   @SuppressWarnings({"unchecked"})
-   protected void toDTO(Iterable<T> elements, HttpServletResponse resp) throws IOException
-   {
-      try
-      {
-         List dtos = new ArrayList();
-         for (T t : elements)
-         {
-            Object dto = getDtoModel().toDTO(t);
-            dtos.add(dto);
-         }
-         prepareResponse(resp);
-         serializator.serialize(dtos, resp.getOutputStream());
-      }
-      catch (Exception e)
-      {
-         log.log(Level.WARNING, "Error handling collections.", e);
-         resp.sendError(HttpServletResponse.SC_SEE_OTHER);
-      }
-   }
+    /**
+     * Push topics to response.
+     *
+     * @param elements the elements
+     * @param resp     the response
+     * @throws java.io.IOException for any I/O error
+     */
+    @SuppressWarnings({"unchecked"})
+    protected void toDTO(Iterable<T> elements, HttpServletResponse resp) throws IOException {
+        try {
+            List dtos = new ArrayList();
+            for (T t : elements) {
+                Object dto = getDtoModel().toDTO(t);
+                dtos.add(dto);
+            }
+            prepareResponse(resp);
+            serializator.serialize(dtos, resp.getOutputStream());
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Error handling collections.", e);
+            resp.sendError(HttpServletResponse.SC_SEE_OTHER);
+        }
+    }
 }

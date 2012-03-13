@@ -23,38 +23,34 @@
 
 package org.jboss.test.capedwarf.connect.test;
 
-import java.io.IOException;
-
 import org.jboss.test.capedwarf.connect.support.HttpServerEmbedded;
 import org.jboss.test.capedwarf.connect.support.SunHttpServerEmbedded;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+
+import java.io.IOException;
 
 /**
  * Simple connect tests.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class AbstractConnectTest
-{
-   private static HttpServerEmbedded server;
+public class AbstractConnectTest {
+    private static HttpServerEmbedded server;
 
-   @BeforeClass
-   public static void startServer() throws IOException
-   {
-      server = new SunHttpServerEmbedded();
-      server.start();
-   }
+    @BeforeClass
+    public static void startServer() throws IOException {
+        server = new SunHttpServerEmbedded();
+        server.start();
+    }
 
-   protected HttpServerEmbedded getServer()
-   {
-      return server;
-   }
+    protected HttpServerEmbedded getServer() {
+        return server;
+    }
 
-   @AfterClass
-   public static void stopServer()
-   {
-      if (server != null)
-         server.stop();
-   }
+    @AfterClass
+    public static void stopServer() {
+        if (server != null)
+            server.stop();
+    }
 }

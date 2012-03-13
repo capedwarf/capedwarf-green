@@ -29,12 +29,11 @@ import javax.persistence.EntityManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EMInjector
-{
-   /**
-    * Get EM.
-    *
-    * @return the EM
-    */
-   EntityManager getEM();
+public interface EMInjector {
+    /**
+     * Get EM.
+     *
+     * @return the EM
+     */
+    EntityManager getEM();
 }

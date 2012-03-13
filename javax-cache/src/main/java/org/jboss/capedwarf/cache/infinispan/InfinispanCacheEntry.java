@@ -31,67 +31,54 @@ import javax.cache.CacheEntry;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class InfinispanCacheEntry implements CacheEntry
-{
-   private InternalCacheEntry entry;
+class InfinispanCacheEntry implements CacheEntry {
+    private InternalCacheEntry entry;
 
-   InfinispanCacheEntry(InternalCacheEntry entry)
-   {
-      this.entry = entry;
-   }
+    InfinispanCacheEntry(InternalCacheEntry entry) {
+        this.entry = entry;
+    }
 
-   public long getCost()
-   {
-      return -1L;
-   }
+    public long getCost() {
+        return -1L;
+    }
 
-   public long getCreationTime()
-   {
-      return entry.getCreated();
-   }
+    public long getCreationTime() {
+        return entry.getCreated();
+    }
 
-   public long getExpirationTime()
-   {
-      return entry.getExpiryTime();
-   }
+    public long getExpirationTime() {
+        return entry.getExpiryTime();
+    }
 
-   public int getHits()
-   {
-      return -1;
-   }
+    public int getHits() {
+        return -1;
+    }
 
-   public long getLastAccessTime()
-   {
-      return entry.getLastUsed();
-   }
+    public long getLastAccessTime() {
+        return entry.getLastUsed();
+    }
 
-   public long getLastUpdateTime()
-   {
-      return -1L;
-   }
+    public long getLastUpdateTime() {
+        return -1L;
+    }
 
-   public long getVersion()
-   {
-      return -1L;
-   }
+    public long getVersion() {
+        return -1L;
+    }
 
-   public boolean isValid()
-   {
-      return entry.isValid();
-   }
+    public boolean isValid() {
+        return entry.isValid();
+    }
 
-   public Object getKey()
-   {
-      return entry.getKey();
-   }
+    public Object getKey() {
+        return entry.getKey();
+    }
 
-   public Object getValue()
-   {
-      return entry.getValue();
-   }
+    public Object getValue() {
+        return entry.getValue();
+    }
 
-   public Object setValue(Object value)
-   {
-      return entry.setValue(value);
-   }
+    public Object setValue(Object value) {
+        return entry.setValue(value);
+    }
 }

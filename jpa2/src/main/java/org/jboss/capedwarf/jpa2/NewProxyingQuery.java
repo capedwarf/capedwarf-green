@@ -22,18 +22,14 @@
 
 package org.jboss.capedwarf.jpa2;
 
+import org.jboss.capedwarf.jpa.EntityManagerProvider;
+import org.jboss.capedwarf.jpa.ProxyingQuery;
+
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.FlushModeType;
-import javax.persistence.LockModeType;
-import javax.persistence.Parameter;
-import javax.persistence.Query;
-import javax.persistence.TemporalType;
-
-import org.jboss.capedwarf.jpa.EntityManagerProvider;
-import org.jboss.capedwarf.jpa.ProxyingQuery;
 
 /**
  * JPA2 typed query
@@ -42,108 +38,87 @@ import org.jboss.capedwarf.jpa.ProxyingQuery;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SuppressWarnings({"unchecked"})
-public class NewProxyingQuery extends ProxyingQuery implements Query
-{
-   private Query delegate;
+public class NewProxyingQuery extends ProxyingQuery implements Query {
+    private Query delegate;
 
-   protected NewProxyingQuery(EntityManagerProvider provider, Query delegate)
-   {
-      super(provider, delegate);
-      this.delegate = delegate;
-   }
+    protected NewProxyingQuery(EntityManagerProvider provider, Query delegate) {
+        super(provider, delegate);
+        this.delegate = delegate;
+    }
 
-   public Query setLockMode(LockModeType lockMode)
-   {
-      return delegate.setLockMode(lockMode);
-   }
+    public Query setLockMode(LockModeType lockMode) {
+        return delegate.setLockMode(lockMode);
+    }
 
-   public int getMaxResults()
-   {
-      return delegate.getMaxResults();
-   }
+    public int getMaxResults() {
+        return delegate.getMaxResults();
+    }
 
-   public int getFirstResult()
-   {
-      return delegate.getFirstResult();
-   }
+    public int getFirstResult() {
+        return delegate.getFirstResult();
+    }
 
-   public Map<String, Object> getHints()
-   {
-      return delegate.getHints();
-   }
+    public Map<String, Object> getHints() {
+        return delegate.getHints();
+    }
 
-   public Set<Parameter<?>> getParameters()
-   {
-      return delegate.getParameters();
-   }
+    public Set<Parameter<?>> getParameters() {
+        return delegate.getParameters();
+    }
 
-   public Parameter<?> getParameter(String name)
-   {
-      return delegate.getParameter(name);
-   }
+    public Parameter<?> getParameter(String name) {
+        return delegate.getParameter(name);
+    }
 
-   public <T> Query setParameter(Parameter<T> param, T value)
-   {
-      return delegate.setParameter(param, value);
-   }
+    public <T> Query setParameter(Parameter<T> param, T value) {
+        return delegate.setParameter(param, value);
+    }
 
-   public Query setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType)
-   {
-      return delegate.setParameter(param, value, temporalType);
-   }
+    public Query setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
+        return delegate.setParameter(param, value, temporalType);
+    }
 
-   public Query setParameter(Parameter<Date> param, Date value, TemporalType temporalType)
-   {
-      return delegate.setParameter(param, value, temporalType);
-   }
+    public Query setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
+        return delegate.setParameter(param, value, temporalType);
+    }
 
-   public <T> Parameter<T> getParameter(String name, Class<T> type)
-   {
-      return delegate.getParameter(name, type);
-   }
+    public <T> Parameter<T> getParameter(String name, Class<T> type) {
+        return delegate.getParameter(name, type);
+    }
 
-   public Parameter<?> getParameter(int position)
-   {
-      return delegate.getParameter(position);
-   }
+    public Parameter<?> getParameter(int position) {
+        return delegate.getParameter(position);
+    }
 
-   public <T> Parameter<T> getParameter(int position, Class<T> type)
-   {
-      return delegate.getParameter(position, type);
-   }
+    public <T> Parameter<T> getParameter(int position, Class<T> type) {
+        return delegate.getParameter(position, type);
+    }
 
-   public boolean isBound(Parameter<?> param)
-   {
-      return delegate.isBound(param);
-   }
+    public boolean isBound(Parameter<?> param) {
+        return delegate.isBound(param);
+    }
 
-   public <T> T getParameterValue(Parameter<T> param)
-   {
-      return delegate.getParameterValue(param);
-   }
+    public <T> T getParameterValue(Parameter<T> param) {
+        return delegate.getParameterValue(param);
+    }
 
-   public Object getParameterValue(String name)
-   {
-      return delegate.getParameter(name);
-   }
+    public Object getParameterValue(String name) {
+        return delegate.getParameter(name);
+    }
 
-   public Object getParameterValue(int position)
-   {
-      return delegate.getParameter(position);
-   }
+    public Object getParameterValue(int position) {
+        return delegate.getParameter(position);
+    }
 
-   public FlushModeType getFlushMode()
-   {
-      return delegate.getFlushMode();
-   }
+    public FlushModeType getFlushMode() {
+        return delegate.getFlushMode();
+    }
 
-   public LockModeType getLockMode()
-   {
-      return delegate.getLockMode();
-   }
+    public LockModeType getLockMode() {
+        return delegate.getLockMode();
+    }
 
-   public <T> T unwrap(Class<T> cls)
-   {
-      return delegate.unwrap(cls);
-   }
+    public <T> T unwrap(Class<T> cls) {
+        return delegate.unwrap(cls);
+    }
 }

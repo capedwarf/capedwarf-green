@@ -31,19 +31,16 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class BlobImpl implements org.jboss.capedwarf.server.api.io.Blob, Serializable
-{
-   private Blob blob;
+public class BlobImpl implements org.jboss.capedwarf.server.api.io.Blob, Serializable {
+    private Blob blob;
 
-   public BlobImpl(Blob blob)
-   {
-      if (blob == null)
-         throw new IllegalArgumentException("Null blob");
-      this.blob = blob;
-   }
+    public BlobImpl(Blob blob) {
+        if (blob == null)
+            throw new IllegalArgumentException("Null blob");
+        this.blob = blob;
+    }
 
-   public byte[] getBytes()
-   {
-      return blob.getBytes();
-   }
+    public byte[] getBytes() {
+        return blob.getBytes();
+    }
 }

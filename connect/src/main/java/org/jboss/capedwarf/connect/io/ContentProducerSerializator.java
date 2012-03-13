@@ -22,33 +22,29 @@
 
 package org.jboss.capedwarf.connect.io;
 
+import org.apache.http.entity.ContentProducer;
+import org.jboss.capedwarf.common.serialization.AbstractSerializator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.http.entity.ContentProducer;
-import org.jboss.capedwarf.common.serialization.AbstractSerializator;
 
 /**
  * Content producer serializator.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ContentProducerSerializator extends AbstractSerializator
-{
-   public boolean isValid(Class<?> clazz)
-   {
-      return ContentProducer.class.isAssignableFrom(clazz);
-   }
+public class ContentProducerSerializator extends AbstractSerializator {
+    public boolean isValid(Class<?> clazz) {
+        return ContentProducer.class.isAssignableFrom(clazz);
+    }
 
-   public void serialize(Object instance, OutputStream out) throws IOException
-   {
-      ContentProducer cp = (ContentProducer) instance;
-      cp.writeTo(out);
-   }
+    public void serialize(Object instance, OutputStream out) throws IOException {
+        ContentProducer cp = (ContentProducer) instance;
+        cp.writeTo(out);
+    }
 
-   public <T> T deserialize(InputStream stream, Class<T> clazz) throws IOException
-   {
-      throw new UnsupportedOperationException("Cannot deserialize ContentProducer instance.");
-   }
+    public <T> T deserialize(InputStream stream, Class<T> clazz) throws IOException {
+        throw new UnsupportedOperationException("Cannot deserialize ContentProducer instance.");
+    }
 }

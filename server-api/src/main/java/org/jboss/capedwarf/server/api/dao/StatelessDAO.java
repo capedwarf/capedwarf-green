@@ -22,9 +22,9 @@
 
 package org.jboss.capedwarf.server.api.dao;
 
-import java.io.Serializable;
-
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+
+import java.io.Serializable;
 
 /**
  * Stateless DAO.
@@ -32,58 +32,57 @@ import org.jboss.capedwarf.server.api.domain.AbstractEntity;
  * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessDAO<T extends AbstractEntity>
-{
-   /**
-    * Insert a row.
-    *
-    * @param entity a new transient instance
-    * @return entity's id
-    */
-   Long insert(T entity);
+public interface StatelessDAO<T extends AbstractEntity> {
+    /**
+     * Insert a row.
+     *
+     * @param entity a new transient instance
+     * @return entity's id
+     */
+    Long insert(T entity);
 
-   /**
-    * Update a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void update(T entity);
+    /**
+     * Update a row.
+     *
+     * @param entity a detached entity instance
+     */
+    void update(T entity);
 
-   /**
-    * Delete a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void delete(T entity);
+    /**
+     * Delete a row.
+     *
+     * @param entity a detached entity instance
+     */
+    void delete(T entity);
 
-   /**
-    * Retrieve a row.
-    *
-    * @param entityClass the entity class
-    * @param id the id
-    * @return a detached entity instance
-    */
-   T get(Class<T> entityClass, Serializable id);
+    /**
+     * Retrieve a row.
+     *
+     * @param entityClass the entity class
+     * @param id          the id
+     * @return a detached entity instance
+     */
+    T get(Class<T> entityClass, Serializable id);
 
-   /**
-    * Refresh the entity instance state from the database.
-    *
-    * @param entity The entity to be refreshed.
-    */
-   void refresh(T entity);
+    /**
+     * Refresh the entity instance state from the database.
+     *
+     * @param entity The entity to be refreshed.
+     */
+    void refresh(T entity);
 
-   /**
-    * Force initialization of a proxy.
-    * <p/>
-    * Note: This only ensures intialization of a proxy object.
-    *
-    * @param proxy a persistable object, proxy
-    */
-   void initialize(T proxy);
+    /**
+     * Force initialization of a proxy.
+     * <p/>
+     * Note: This only ensures intialization of a proxy object.
+     *
+     * @param proxy a persistable object, proxy
+     */
+    void initialize(T proxy);
 
-   /**
-    * Close DAO.
-    * (release underlying adapter)
-    */
-   void close();
+    /**
+     * Close DAO.
+     * (release underlying adapter)
+     */
+    void close();
 }

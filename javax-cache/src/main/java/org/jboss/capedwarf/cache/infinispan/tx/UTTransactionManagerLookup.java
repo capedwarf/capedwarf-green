@@ -23,19 +23,17 @@
 
 package org.jboss.capedwarf.cache.infinispan.tx;
 
-import javax.transaction.TransactionManager;
-
 import org.infinispan.transaction.lookup.TransactionManagerLookup;
+
+import javax.transaction.TransactionManager;
 
 /**
  * UserTransaction TM lookup.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class UTTransactionManagerLookup implements TransactionManagerLookup
-{
-   public TransactionManager getTransactionManager() throws Exception
-   {
-      return UTTransactionManager.INSTANCE;
-   }
+public class UTTransactionManagerLookup implements TransactionManagerLookup {
+    public TransactionManager getTransactionManager() throws Exception {
+        return UTTransactionManager.INSTANCE;
+    }
 }

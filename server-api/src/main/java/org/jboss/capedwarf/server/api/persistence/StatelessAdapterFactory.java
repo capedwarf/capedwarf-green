@@ -29,13 +29,12 @@ import javax.persistence.EntityManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessAdapterFactory
-{
-   /**
-    * Get stateless adapter.
-    *
-    * @param em the entity manager
-    * @return new stateless view
-    */
-   StatelessAdapter createStatelessAdapter(EntityManager em);
+public interface StatelessAdapterFactory {
+    /**
+     * Get stateless adapter.
+     *
+     * @param em the entity manager
+     * @return new stateless view
+     */
+    StatelessAdapter createStatelessAdapter(EntityManager em);
 }

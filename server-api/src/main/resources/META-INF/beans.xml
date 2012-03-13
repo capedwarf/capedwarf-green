@@ -6,15 +6,15 @@
          http://jboss.org/schema/weld/beans
          http://jboss.org/schema/weld/beans_1_1.xsd">
 
-   <weld:scan>
-      <weld:exclude pattern="org\.jboss\.capedwarf\.server\.api\.domain\.[a-zA-Z]+"/>
-   </weld:scan>
+    <weld:scan>
+        <weld:exclude pattern="org\.jboss\.capedwarf\.server\.api\.domain\.[a-zA-Z]+"/>
+    </weld:scan>
 
-   <interceptors>
-       <class>org.jboss.capedwarf.server.api.security.SecurityInterceptor</class>
-       <class>org.jboss.capedwarf.server.api.cache.CacheInterceptor</class>
-       <class>org.jboss.capedwarf.server.api.persistence.ProxyingInterceptor</class>
-       <class>org.jboss.capedwarf.server.api.tx.TxInterceptor</class>
-   </interceptors>
+    <interceptors>
+        <class>org.jboss.capedwarf.server.api.security.SecurityInterceptor</class>
+        <class>org.jboss.capedwarf.server.api.cache.CacheInterceptor</class>
+        <class>org.jboss.capedwarf.server.api.persistence.ProxyingInterceptor</class>
+        <class>org.jboss.capedwarf.server.api.tx.TxInterceptor</class>
+    </interceptors>
 
 </beans>

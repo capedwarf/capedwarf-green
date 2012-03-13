@@ -22,17 +22,17 @@
 
 package org.jboss.capedwarf.server.api.cache;
 
+import javax.cache.Cache;
+import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import javax.cache.Cache;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
 
 /**
  * Cache interceptor.
@@ -41,104 +41,98 @@ import javax.interceptor.InvocationContext;
  */
 @Cacheable
 @Interceptor
-public class CacheInterceptor implements Serializable
-{
-   private static final long serialVersionUID = 1l;
-   private static final Logger log = Logger.getLogger(CacheInterceptor.class.getName());
+public class CacheInterceptor implements Serializable {
+    private static final long serialVersionUID = 1l;
+    private static final Logger log = Logger.getLogger(CacheInterceptor.class.getName());
 
-   /** The keys */
-   private static Map<Class<? extends KeyStrategy>, KeyStrategy> keys = new ConcurrentHashMap<Class<? extends KeyStrategy>, KeyStrategy>();
+    /**
+     * The keys
+     */
+    private static Map<Class<? extends KeyStrategy>, KeyStrategy> keys = new ConcurrentHashMap<Class<? extends KeyStrategy>, KeyStrategy>();
 
-   /** The cache config */
-   private transient CacheConfig cacheConfig;
+    /**
+     * The cache config
+     */
+    private transient CacheConfig cacheConfig;
 
-   /** The cache execption handler */
-   private transient CacheExceptionHandler exceptionHandler;
+    /**
+     * The cache execption handler
+     */
+    private transient CacheExceptionHandler exceptionHandler;
 
-   @AroundInvoke
-   @SuppressWarnings("unchecked")
-   public Object manageCache(InvocationContext ctx) throws Exception
-   {
-      Class<?> clazz = ctx.getTarget().getClass();
+    @AroundInvoke
+    @SuppressWarnings("unchecked")
+    public Object manageCache(InvocationContext ctx) throws Exception {
+        Class<?> clazz = ctx.getTarget().getClass();
 
-      Method m = ctx.getMethod();
-      Cacheable cacheable = m.getAnnotation(Cacheable.class);
-      if (cacheable == null)
-         cacheable = clazz.getAnnotation(Cacheable.class);
+        Method m = ctx.getMethod();
+        Cacheable cacheable = m.getAnnotation(Cacheable.class);
+        if (cacheable == null)
+            cacheable = clazz.getAnnotation(Cacheable.class);
 
-      // sanity check
-      if (cacheable == null)
-         throw new IllegalArgumentException("Null cachable, invalid usage?");
+        // sanity check
+        if (cacheable == null)
+            throw new IllegalArgumentException("Null cachable, invalid usage?");
 
-      String cacheName = cacheable.name();
-      Cache cache = cacheConfig.configureCache(cacheName);
+        String cacheName = cacheable.name();
+        Cache cache = cacheConfig.configureCache(cacheName);
 
-      CacheMode mode = cacheable.mode(); // should not be null, as we got intercepted
+        CacheMode mode = cacheable.mode(); // should not be null, as we got intercepted
 
-      Class<? extends KeyStrategy> ksClass = cacheable.key();
-      KeyStrategy ks = keys.get(ksClass);
-      if (ks == null)
-      {
-         try
-         {
-            ks = ksClass.newInstance();
-         }
-         catch (Exception e)
-         {
-            log.fine("Error creating KeyStrategy: " + e);
+        Class<? extends KeyStrategy> ksClass = cacheable.key();
+        KeyStrategy ks = keys.get(ksClass);
+        if (ks == null) {
+            try {
+                ks = ksClass.newInstance();
+            } catch (Exception e) {
+                log.fine("Error creating KeyStrategy: " + e);
 
-            Constructor<? extends KeyStrategy> ctor = ksClass.getConstructor(CacheConfig.class);
-            ks = ctor.newInstance(cacheConfig);
-         }
-         keys.put(ksClass, ks);
-      }
+                Constructor<? extends KeyStrategy> ctor = ksClass.getConstructor(CacheConfig.class);
+                ks = ctor.newInstance(cacheConfig);
+            }
+            keys.put(ksClass, ks);
+        }
 
-      Object target = ctx.getTarget();
-      Object[] args = ctx.getParameters();
-      Serializable key = ks.createKey(target, m, args);
+        Object target = ctx.getTarget();
+        Object[] args = ctx.getParameters();
+        Serializable key = ks.createKey(target, m, args);
 
-      Object value = null;
+        Object value = null;
 
-      try
-      {
-         if (mode == CacheMode.READ_ONLY || mode == CacheMode.ALL)
-            value = cache.get(key);
+        try {
+            if (mode == CacheMode.READ_ONLY || mode == CacheMode.ALL)
+                value = cache.get(key);
 
-         if (value != null)
-         {
-            Object unwraped = ks.unwrap(value, target, m, args);
-            if (unwraped != null) // could be invalidated
-               return unwraped;
-         }
+            if (value != null) {
+                Object unwraped = ks.unwrap(value, target, m, args);
+                if (unwraped != null) // could be invalidated
+                    return unwraped;
+            }
 
-         value = ctx.proceed();
+            value = ctx.proceed();
 
-         if (value != null && (mode == CacheMode.WRITE_ONLY || mode == CacheMode.ALL))
-            cache.put(key, ks.wrap(value, target, m, args));
-         else if (mode == CacheMode.REMOVE)
-            cache.remove(key);
-         else if (mode == CacheMode.EVICT)
-            cache.evict();
-         else if (mode == CacheMode.CLEAR)
-            cache.clear();
+            if (value != null && (mode == CacheMode.WRITE_ONLY || mode == CacheMode.ALL))
+                cache.put(key, ks.wrap(value, target, m, args));
+            else if (mode == CacheMode.REMOVE)
+                cache.remove(key);
+            else if (mode == CacheMode.EVICT)
+                cache.evict();
+            else if (mode == CacheMode.CLEAR)
+                cache.clear();
 
-         return value;
-      }
-      catch (Throwable e)
-      {
-         return exceptionHandler.handleException(cache, ctx, key, value, e);
-      }
-   }
+            return value;
+        } catch (Throwable e) {
+            return exceptionHandler.handleException(cache, ctx, key, value, e);
+        }
+    }
 
-   @Inject
-   public void setExceptionHandler(CacheExceptionHandler exceptionHandler)
-   {
-      this.exceptionHandler = exceptionHandler;
-   }
+    @Inject
+    public void setExceptionHandler(CacheExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
+    }
 
-   @Inject
-   public void setCacheConfig(CacheConfig cacheConfig)
-   {
-      this.cacheConfig = cacheConfig;
-   }
+    @Inject
+    public void setCacheConfig(CacheConfig cacheConfig) {
+        this.cacheConfig = cacheConfig;
+    }
 }

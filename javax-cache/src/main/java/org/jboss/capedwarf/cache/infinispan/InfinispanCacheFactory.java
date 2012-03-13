@@ -46,112 +46,83 @@ import java.util.logging.Logger;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @MetaInfServices
-public class InfinispanCacheFactory implements CacheFactory
-{
-   private static Logger log = Logger.getLogger(InfinispanCacheFactory.class.getName());
-   private static String[] defaultJndiNames = {"java:jboss/infinispan/container/capedwarf", "java:jboss/infinispan/capedwarf", "java:CacheManager/capedwarf"};
-   private EmbeddedCacheManager cacheManager;
+public class InfinispanCacheFactory implements CacheFactory {
+    private static Logger log = Logger.getLogger(InfinispanCacheFactory.class.getName());
+    private static String[] defaultJndiNames = {"java:jboss/infinispan/container/capedwarf", "java:jboss/infinispan/capedwarf", "java:CacheManager/capedwarf"};
+    private EmbeddedCacheManager cacheManager;
 
-   public InfinispanCacheFactory() throws IOException
-   {
-      try
-      {
-         cacheManager = doJNDILookup();
-      }
-      catch (Throwable t)
-      {
-         log.warning("Failed to do JNDI lookup, using standalone configuration: " + t);
-         cacheManager = doStandalone();
-      }
-   }
+    public InfinispanCacheFactory() throws IOException {
+        try {
+            cacheManager = doJNDILookup();
+        } catch (Throwable t) {
+            log.warning("Failed to do JNDI lookup, using standalone configuration: " + t);
+            cacheManager = doStandalone();
+        }
+    }
 
-   protected EmbeddedCacheManager doJNDILookup() throws IOException
-   {
-      Properties jndiProperties = new Properties();
-      URL jndiPropertiesURL = getClass().getClassLoader().getResource("jndi.properties");
-      if (jndiPropertiesURL != null)
-      {
-         InputStream is = jndiPropertiesURL.openStream();
-         try
-         {
-            jndiProperties.load(is);
-         }
-         finally
-         {
-            try
-            {
-               is.close();
+    protected EmbeddedCacheManager doJNDILookup() throws IOException {
+        Properties jndiProperties = new Properties();
+        URL jndiPropertiesURL = getClass().getClassLoader().getResource("jndi.properties");
+        if (jndiPropertiesURL != null) {
+            InputStream is = jndiPropertiesURL.openStream();
+            try {
+                jndiProperties.load(is);
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException ignored) {
+                }
             }
-            catch (IOException ignored)
-            {
+        }
+
+        String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name");
+        Context ctx = null;
+        try {
+            ctx = new InitialContext(jndiProperties);
+
+            EmbeddedCacheManager manager;
+            if (jndiNamespace != null)
+                manager = (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
+            else
+                manager = checkDefaultNames(ctx);
+
+            log.info("Using JNDI found CacheManager: " + manager);
+            return manager;
+        } catch (NamingException ne) {
+            String msg = "Unable to retrieve CacheManager from JNDI [" + jndiNamespace + "]";
+            log.info(msg + ": " + ne);
+            throw new IOException(msg);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (NamingException ne) {
+                    log.info("Unable to release initial context: " + ne);
+                }
             }
-         }
-      }
+        }
+    }
 
-      String jndiNamespace = jndiProperties.getProperty("infinispan.jndi.name");
-      Context ctx = null;
-      try
-      {
-         ctx = new InitialContext(jndiProperties);
-
-         EmbeddedCacheManager manager;
-         if (jndiNamespace != null)
-            manager = (EmbeddedCacheManager) ctx.lookup(jndiNamespace);
-         else
-            manager = checkDefaultNames(ctx);
-
-         log.info("Using JNDI found CacheManager: " + manager);
-         return manager;
-      }
-      catch (NamingException ne)
-      {
-         String msg = "Unable to retrieve CacheManager from JNDI [" + jndiNamespace + "]";
-         log.info(msg + ": " + ne);
-         throw new IOException(msg);
-      }
-      finally
-      {
-         if (ctx != null)
-         {
-            try
-            {
-               ctx.close();
+    protected EmbeddedCacheManager checkDefaultNames(Context ctx) throws IOException {
+        for (String jndiName : defaultJndiNames) {
+            try {
+                return (EmbeddedCacheManager) ctx.lookup(jndiName);
+            } catch (NamingException ne) {
+                String msg = "Unable to retrieve CacheManager from JNDI [" + jndiName + "]";
+                log.fine(msg + ": " + ne);
             }
-            catch (NamingException ne)
-            {
-               log.info("Unable to release initial context: " + ne);
-            }
-         }
-      }
-   }
+        }
+        throw new IOException("Cannot find default JNDI cache manager: " + Arrays.toString(defaultJndiNames));
+    }
 
-   protected EmbeddedCacheManager checkDefaultNames(Context ctx) throws IOException
-   {
-      for (String jndiName : defaultJndiNames)
-      {
-         try
-         {
-            return (EmbeddedCacheManager) ctx.lookup(jndiName);
-         }
-         catch (NamingException ne)
-         {
-            String msg = "Unable to retrieve CacheManager from JNDI [" + jndiName + "]";
-            log.fine(msg + ": " + ne);
-         }
-      }
-      throw new IOException("Cannot find default JNDI cache manager: " + Arrays.toString(defaultJndiNames));
-   }
+    protected EmbeddedCacheManager doStandalone() throws IOException {
+        String configurationFile = System.getProperty("org.jboss.capedwarf.cache.configurationFile", "infinispan-config.xml");
+        return new DefaultCacheManager(configurationFile, true);
+    }
 
-   protected EmbeddedCacheManager doStandalone() throws IOException
-   {
-      String configurationFile = System.getProperty("org.jboss.capedwarf.cache.configurationFile", "infinispan-config.xml");
-      return new DefaultCacheManager(configurationFile, true);
-   }
-
-   public Cache createCache(Map map) throws CacheException
-   {
-      String cacheName = (String) map.get("cache-name");
-      org.infinispan.Cache cache = cacheManager.getCache(cacheName);
-      return new InfinispanCache(cache);
-   }
+    public Cache createCache(Map map) throws CacheException {
+        String cacheName = (String) map.get("cache-name");
+        org.infinispan.Cache cache = cacheManager.getCache(cacheName);
+        return new InfinispanCache(cache);
+    }
 }

@@ -30,13 +30,11 @@ import java.util.Arrays;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class SingleKeyStrategy extends PassThroughKeyStrategy
-{
-   public String createKey(Object target, Method m, Object[] args)
-   {
-      if (args == null || args.length != 1)
-         throw new IllegalArgumentException("Illegal arguments: " + Arrays.toString(args));
+public class SingleKeyStrategy extends PassThroughKeyStrategy {
+    public String createKey(Object target, Method m, Object[] args) {
+        if (args == null || args.length != 1)
+            throw new IllegalArgumentException("Illegal arguments: " + Arrays.toString(args));
 
-      return String.valueOf(args[0]);
-   }
+        return String.valueOf(args[0]);
+    }
 }

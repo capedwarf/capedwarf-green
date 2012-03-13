@@ -24,12 +24,7 @@ package org.jboss.capedwarf.server.api.cache;
 
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Cacheable.
@@ -40,26 +35,25 @@ import java.lang.annotation.Target;
 @InterceptorBinding
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cacheable
-{
-   /**
-    * The cache name.
-    *
-    * @return the cache name
-    */
-   @Nonbinding String name() default "DefaultCache";
+public @interface Cacheable {
+    /**
+     * The cache name.
+     *
+     * @return the cache name
+     */
+    @Nonbinding String name() default "DefaultCache";
 
-   /**
-    * Get cache mode.
-    *
-    * @return the cache mode
-    */
-   @Nonbinding CacheMode mode() default CacheMode.ALL;
+    /**
+     * Get cache mode.
+     *
+     * @return the cache mode
+     */
+    @Nonbinding CacheMode mode() default CacheMode.ALL;
 
-   /**
-    * The cache key strategy.
-    *
-    * @return the key strategy class
-    */
-   @Nonbinding Class<? extends KeyStrategy> key() default DefaultKeyStrategy.class;
+    /**
+     * The cache key strategy.
+     *
+     * @return the key strategy class
+     */
+    @Nonbinding Class<? extends KeyStrategy> key() default DefaultKeyStrategy.class;
 }

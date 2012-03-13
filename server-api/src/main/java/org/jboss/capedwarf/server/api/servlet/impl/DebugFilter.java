@@ -22,13 +22,7 @@
 
 package org.jboss.capedwarf.server.api.servlet.impl;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
+import javax.servlet.*;
 import java.io.IOException;
 
 /**
@@ -36,36 +30,25 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class DebugFilter implements Filter
-{
-   public void init(FilterConfig config) throws ServletException
-   {
-   }
+public class DebugFilter implements Filter {
+    public void init(FilterConfig config) throws ServletException {
+    }
 
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-   {
-      try
-      {
-         chain.doFilter(request, response);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-         throw e;
-      }
-      catch (ServletException e)
-      {
-         e.printStackTrace();
-         throw e;
-      }
-      catch (Throwable t)
-      {
-         t.printStackTrace();
-         throw new ServletException(t);
-      }
-   }
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try {
+            chain.doFilter(request, response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (ServletException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new ServletException(t);
+        }
+    }
 
-   public void destroy()
-   {
-   }
+    public void destroy() {
+    }
 }

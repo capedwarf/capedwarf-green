@@ -12,19 +12,18 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DTOProperty
-{
-   /**
-    * The matching dto property.
-    *
-    * @return the dto property name
-    */
-   String property() default "";
+public @interface DTOProperty {
+    /**
+     * The matching dto property.
+     *
+     * @return the dto property name
+     */
+    String property() default "";
 
-   /**
-    * Convert value.
-    *
-    * @return the value converter class
-    */
-   Class<? extends ValueConverter> converter() default NoopValueConverter.class;
+    /**
+     * Convert value.
+     *
+     * @return the value converter class
+     */
+    Class<? extends ValueConverter> converter() default NoopValueConverter.class;
 }

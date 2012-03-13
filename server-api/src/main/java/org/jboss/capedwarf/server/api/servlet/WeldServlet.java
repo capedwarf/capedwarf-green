@@ -22,22 +22,15 @@
 
 package org.jboss.capedwarf.server.api.servlet;
 
-import java.io.IOException;
-import java.io.Writer;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Wrap plain request into Weld aware context.
@@ -45,102 +38,87 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class WeldServlet extends HttpServlet implements Filter
-{
-   /** The const */
-   private static String REQUEST_HANDLER = "request-handler";
-   /** The request handler */
-   private RequestHandler handler;
+public class WeldServlet extends HttpServlet implements Filter {
+    /**
+     * The const
+     */
+    private static String REQUEST_HANDLER = "request-handler";
+    /**
+     * The request handler
+     */
+    private RequestHandler handler;
 
-   @Override
-   public void init(ServletConfig config) throws ServletException
-   {
-      super.init(config);
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
 
-      ServletContext context = config.getServletContext();
-      String wrapperClass = config.getInitParameter(REQUEST_HANDLER);
-      init(context, wrapperClass);
-   }
+        ServletContext context = config.getServletContext();
+        String wrapperClass = config.getInitParameter(REQUEST_HANDLER);
+        init(context, wrapperClass);
+    }
 
-   @SuppressWarnings("unchecked")
-   private void init(ServletContext context, String wrapperClass) throws ServletException
-   {
-      if (wrapperClass == null)
-         throw new IllegalArgumentException("Missing handler class parameter");
+    @SuppressWarnings("unchecked")
+    private void init(ServletContext context, String wrapperClass) throws ServletException {
+        if (wrapperClass == null)
+            throw new IllegalArgumentException("Missing handler class parameter");
 
-      BeanManager manager = BeanManagerUtils.lookup(context);
+        BeanManager manager = BeanManagerUtils.lookup(context);
 
-      try
-      {
-         ClassLoader cl = RequestHandler.class.getClassLoader();
-         Class<?> tmp = cl.loadClass(wrapperClass);
-         if (RequestHandler.class.isAssignableFrom(tmp) == false)
-            throw new ServletException("Illegal handler class, wrong type: " + tmp);
+        try {
+            ClassLoader cl = RequestHandler.class.getClassLoader();
+            Class<?> tmp = cl.loadClass(wrapperClass);
+            if (RequestHandler.class.isAssignableFrom(tmp) == false)
+                throw new ServletException("Illegal handler class, wrong type: " + tmp);
 
-         Class<RequestHandler> clazz = (Class<RequestHandler>) tmp;
+            Class<RequestHandler> clazz = (Class<RequestHandler>) tmp;
 
-         InjectionTarget<RequestHandler> it = manager.createInjectionTarget(manager.createAnnotatedType(clazz));
-         CreationalContext<RequestHandler> cc = manager.createCreationalContext(null);
-         handler = it.produce(cc);
-         it.inject(handler, cc);
+            InjectionTarget<RequestHandler> it = manager.createInjectionTarget(manager.createAnnotatedType(clazz));
+            CreationalContext<RequestHandler> cc = manager.createCreationalContext(null);
+            handler = it.produce(cc);
+            it.inject(handler, cc);
 
-         handler.initialize(context);
-      }
-      catch (ServletException e)
-      {
-         throw e;
-      }
-      catch (Exception e)
-      {
-         throw new ServletException(e);
-      }
-   }
+            handler.initialize(context);
+        } catch (ServletException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
 
-   public void init(FilterConfig config) throws ServletException
-   {
-      ServletContext context = config.getServletContext();
-      String wrapperClass = config.getInitParameter(REQUEST_HANDLER);
-      init(context, wrapperClass);
-   }
+    public void init(FilterConfig config) throws ServletException {
+        ServletContext context = config.getServletContext();
+        String wrapperClass = config.getInitParameter(REQUEST_HANDLER);
+        init(context, wrapperClass);
+    }
 
-   @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      handle(req, resp);
-   }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handle(req, resp);
+    }
 
-   @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      handle(req, resp);
-   }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handle(req, resp);
+    }
 
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-   {
-      if (request instanceof HttpServletRequest && response instanceof HttpServletResponse)
-      {
-         if (handler instanceof FilterHandler)
-         {
-            FilterHandler fh = (FilterHandler) handler;
-            if (fh.accepts((HttpServletRequest) request, (HttpServletResponse) response) == false)
-               return; // don't go down the chain
-         }
-         else
-         {
-            handle((HttpServletRequest) request, (HttpServletResponse) response);
-         }
-         chain.doFilter(request, response);
-      }
-      else
-      {
-         Writer writer = response.getWriter();
-         writer.write("ERROR -- can only handle Http requests / response.");
-         writer.flush();
-      }
-   }
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+            if (handler instanceof FilterHandler) {
+                FilterHandler fh = (FilterHandler) handler;
+                if (fh.accepts((HttpServletRequest) request, (HttpServletResponse) response) == false)
+                    return; // don't go down the chain
+            } else {
+                handle((HttpServletRequest) request, (HttpServletResponse) response);
+            }
+            chain.doFilter(request, response);
+        } else {
+            Writer writer = response.getWriter();
+            writer.write("ERROR -- can only handle Http requests / response.");
+            writer.flush();
+        }
+    }
 
-   protected final void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      handler.handle(req, resp);
-   }
+    protected final void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handler.handle(req, resp);
+    }
 }

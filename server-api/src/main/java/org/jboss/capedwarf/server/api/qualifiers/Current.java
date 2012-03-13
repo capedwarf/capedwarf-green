@@ -36,6 +36,5 @@ import java.lang.annotation.Target;
 @Qualifier
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Current
-{
+public @interface Current {
 }

@@ -22,15 +22,15 @@
 
 package org.jboss.capedwarf.server.api.validation;
 
+import org.jboss.capedwarf.server.api.lifecycle.After;
+import org.jboss.capedwarf.server.api.lifecycle.Notification;
+import org.jboss.capedwarf.validation.api.ValidationListener;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.validation.ValidatorFactory;
-
-import org.jboss.capedwarf.server.api.lifecycle.After;
-import org.jboss.capedwarf.server.api.lifecycle.Notification;
-import org.jboss.capedwarf.validation.api.ValidationListener;
 
 
 /**
@@ -39,23 +39,19 @@ import org.jboss.capedwarf.validation.api.ValidationListener;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class PersistenceValidation
-{
-   private ValidatorFactory factory;
+public class PersistenceValidation {
+    private ValidatorFactory factory;
 
-   public void initialize(@Observes @After Notification<EntityManagerFactory> status)
-   {
-      applyListener();
-   }
+    public void initialize(@Observes @After Notification<EntityManagerFactory> status) {
+        applyListener();
+    }
 
-   protected void applyListener()
-   {
-      ValidationListener.setFactory(factory);
-   }
+    protected void applyListener() {
+        ValidationListener.setFactory(factory);
+    }
 
-   @Inject
-   public void setFactory(ValidatorFactory factory)
-   {
-      this.factory = factory;
-   }
+    @Inject
+    public void setFactory(ValidatorFactory factory) {
+        this.factory = factory;
+    }
 }

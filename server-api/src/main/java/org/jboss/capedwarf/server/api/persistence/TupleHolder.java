@@ -29,119 +29,99 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-final class TupleHolder
-{
-   private static ThreadLocal<Tuple> tl = new ThreadLocal<Tuple>();
+final class TupleHolder {
+    private static ThreadLocal<Tuple> tl = new ThreadLocal<Tuple>();
 
-   static Tuple get()
-   {
-      Tuple tuple = tl.get();
+    static Tuple get() {
+        Tuple tuple = tl.get();
 
-      if (tuple != null)
-         tuple.count++;
+        if (tuple != null)
+            tuple.count++;
 
-      return tuple;
-   }
+        return tuple;
+    }
 
-   static Tuple create(StatelessAdapter adapter)
-   {
-      Tuple tuple = new Tuple();
-      tuple.adapter = new StatelessAdapterWrapper(adapter);
-      tuple.count = 1;
-      tl.set(tuple);
-      return tuple;
-   }
+    static Tuple create(StatelessAdapter adapter) {
+        Tuple tuple = new Tuple();
+        tuple.adapter = new StatelessAdapterWrapper(adapter);
+        tuple.count = 1;
+        tl.set(tuple);
+        return tuple;
+    }
 
-   static void close()
-   {
-      Tuple tuple = tl.get();
-      if (tuple == null)
-         throw new IllegalStateException("No tuple!");
+    static void close() {
+        Tuple tuple = tl.get();
+        if (tuple == null)
+            throw new IllegalStateException("No tuple!");
 
-      tuple.count--;
-      if (tuple.count == 0)
-      {
-         tl.remove();
-         tuple.adapter.doClose();
-      }
-   }
+        tuple.count--;
+        if (tuple.count == 0) {
+            tl.remove();
+            tuple.adapter.doClose();
+        }
+    }
 
-   static class Tuple
-   {
-      private StatelessAdapterWrapper adapter;
-      private int count;
+    static class Tuple {
+        private StatelessAdapterWrapper adapter;
+        private int count;
 
-      StatelessAdapter getAdapter()
-      {
-         return adapter;
-      }
-   }
+        StatelessAdapter getAdapter() {
+            return adapter;
+        }
+    }
 
-   private static class StatelessAdapterWrapper implements StatelessAdapter
-   {
-      private final StatelessAdapter delegate;
+    private static class StatelessAdapterWrapper implements StatelessAdapter {
+        private final StatelessAdapter delegate;
 
-      private StatelessAdapterWrapper(StatelessAdapter delegate)
-      {
-         this.delegate = delegate;
-      }
+        private StatelessAdapterWrapper(StatelessAdapter delegate) {
+            this.delegate = delegate;
+        }
 
-      void doClose()
-      {
-         delegate.close();
-      }
+        void doClose() {
+            delegate.close();
+        }
 
-      public void close()
-      {
-         TupleHolder.close();
-      }
+        public void close() {
+            TupleHolder.close();
+        }
 
-      public Long insert(Object entity)
-      {
-         return delegate.insert(entity);
-      }
+        public Long insert(Object entity) {
+            return delegate.insert(entity);
+        }
 
-      public void update(Object entity)
-      {
-         delegate.update(entity);
-      }
+        public void update(Object entity) {
+            delegate.update(entity);
+        }
 
-      public void delete(Object entity)
-      {
-         delegate.delete(entity);
-      }
+        public void delete(Object entity) {
+            delegate.delete(entity);
+        }
 
-      public <T> T get(Class<T> entityClass, Serializable id)
-      {
-         return delegate.get(entityClass, id);
-      }
+        public <T> T get(Class<T> entityClass, Serializable id) {
+            return delegate.get(entityClass, id);
+        }
 
-      public void refresh(Object entity)
-      {
-         delegate.refresh(entity);
-      }
+        public void refresh(Object entity) {
+            delegate.refresh(entity);
+        }
 
-      public void initialize(Object proxy)
-      {
-         delegate.initialize(proxy);
-      }
+        public void initialize(Object proxy) {
+            delegate.initialize(proxy);
+        }
 
-      @Override
-      public int hashCode()
-      {
-         return delegate.hashCode();
-      }
+        @Override
+        public int hashCode() {
+            return delegate.hashCode();
+        }
 
-      @Override
-      public boolean equals(Object obj)
-      {
-         return delegate.equals(obj);
-      }
+        @Override
+        public boolean equals(Object obj) {
+            return delegate.equals(obj);
+        }
 
-      @Override
-      public String toString()
-      {
-         return delegate.toString();
-      }
-   }
+        @Override
+        public String toString() {
+            return delegate.toString();
+        }
+    }
 }

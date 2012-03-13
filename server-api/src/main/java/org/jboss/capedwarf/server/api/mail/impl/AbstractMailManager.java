@@ -33,24 +33,20 @@ import java.util.logging.Logger;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractMailManager implements MailManager
-{
-   protected Logger log = Logger.getLogger(AbstractMailManager.class.getName());
-   protected AdminManager adminManager;
+public abstract class AbstractMailManager implements MailManager {
+    protected Logger log = Logger.getLogger(AbstractMailManager.class.getName());
+    protected AdminManager adminManager;
 
-   public void sendEmailFromAdmin(String subject, String textBody, String... tos)
-   {
-      sendEmail(adminManager.getAppAdminEmail(), subject, textBody, tos);
-   }
+    public void sendEmailFromAdmin(String subject, String textBody, String... tos) {
+        sendEmail(adminManager.getAppAdminEmail(), subject, textBody, tos);
+    }
 
-   public void sendEmailToAdmins(String subject, String textBody)
-   {
-      sendEmailToAdmins(adminManager.getAppAdminEmail(), subject, textBody);
-   }
+    public void sendEmailToAdmins(String subject, String textBody) {
+        sendEmailToAdmins(adminManager.getAppAdminEmail(), subject, textBody);
+    }
 
-   @Inject
-   public void setAdminManager(AdminManager adminManager)
-   {
-      this.adminManager = adminManager;
-   }
+    @Inject
+    public void setAdminManager(AdminManager adminManager) {
+        this.adminManager = adminManager;
+    }
 }

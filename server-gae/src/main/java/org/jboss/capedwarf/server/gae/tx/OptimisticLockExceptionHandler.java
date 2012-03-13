@@ -28,13 +28,12 @@ package org.jboss.capedwarf.server.gae.tx;
  * @param <T> exact result type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface OptimisticLockExceptionHandler<T>
-{
-   /**
-    * Handle version conflict.
-    *
-    * @param args the previous args
-    * @return null or fallback result
-    */
+public interface OptimisticLockExceptionHandler<T> {
+    /**
+     * Handle version conflict.
+     *
+     * @param args the previous args
+     * @return null or fallback result
+     */
     T handleVersionConflict(Object... args);
 }

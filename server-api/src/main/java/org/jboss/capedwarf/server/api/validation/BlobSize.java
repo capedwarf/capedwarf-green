@@ -24,31 +24,25 @@ package org.jboss.capedwarf.server.api.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Blob size constraint.
- * 
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = BlobSizeValidator.class)
 @Documented
-public @interface BlobSize
-{
-   String message() default "{org.jboss.capedwarf.server.api.validator.constraints.blobsize}";
+public @interface BlobSize {
+    String message() default "{org.jboss.capedwarf.server.api.validator.constraints.blobsize}";
 
-   Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-   Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
-   int min() default 0;
+    int min() default 0;
 
-   int max() default Integer.MAX_VALUE;
+    int max() default Integer.MAX_VALUE;
 }

@@ -22,11 +22,11 @@
 
 package org.jboss.capedwarf.server.api.lifecycle;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.inject.Qualifier;
 
 /**
  * After notification.
@@ -36,6 +36,5 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface After
-{
+public @interface After {
 }

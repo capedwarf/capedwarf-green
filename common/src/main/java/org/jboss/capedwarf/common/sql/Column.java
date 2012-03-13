@@ -12,19 +12,18 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Column
-{
-   /**
-    * Column name.
-    *
-    * @return the name
-    */
-   String name() default "";
+public @interface Column {
+    /**
+     * Column name.
+     *
+     * @return the name
+     */
+    String name() default "";
 
-   /**
-    * Default value.
-    *
-    * @return the default value
-    */
-   String defaultValue() default "";
+    /**
+     * Default value.
+     *
+     * @return the default value
+     */
+    String defaultValue() default "";
 }

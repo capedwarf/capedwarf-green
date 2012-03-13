@@ -22,13 +22,13 @@
 
 package org.jboss.capedwarf.server.api.cache;
 
+import org.jboss.capedwarf.server.api.lifecycle.Before;
+import org.jboss.capedwarf.server.api.lifecycle.Notification;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
-
-import org.jboss.capedwarf.server.api.lifecycle.Before;
-import org.jboss.capedwarf.server.api.lifecycle.Notification;
 
 /**
  * Configure persistence cache.
@@ -36,22 +36,19 @@ import org.jboss.capedwarf.server.api.lifecycle.Notification;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class PersistenceCache
-{
-   public final static String ENTITY_CACHE = "DataNucleus";
-   public final static String QUERY_CACHE = "DataNucleus-Query";
+public class PersistenceCache {
+    public final static String ENTITY_CACHE = "DataNucleus";
+    public final static String QUERY_CACHE = "DataNucleus-Query";
 
-   private CacheConfig cacheConfig;
+    private CacheConfig cacheConfig;
 
-   public void onCreate(@Observes @Before Notification<EntityManagerFactory> status) throws Exception
-   {
-      cacheConfig.configureCache(ENTITY_CACHE);
-      cacheConfig.configureCache(QUERY_CACHE);
-   }
+    public void onCreate(@Observes @Before Notification<EntityManagerFactory> status) throws Exception {
+        cacheConfig.configureCache(ENTITY_CACHE);
+        cacheConfig.configureCache(QUERY_CACHE);
+    }
 
-   @Inject
-   public void setCacheConfig(CacheConfig cacheConfig)
-   {
-      this.cacheConfig = cacheConfig;
-   }
+    @Inject
+    public void setCacheConfig(CacheConfig cacheConfig) {
+        this.cacheConfig = cacheConfig;
+    }
 }

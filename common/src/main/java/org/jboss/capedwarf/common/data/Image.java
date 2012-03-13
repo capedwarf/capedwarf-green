@@ -5,8 +5,7 @@ package org.jboss.capedwarf.common.data;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum Image
-{
-   BIG,
-   SMALL
+public enum Image {
+    BIG,
+    SMALL
 }

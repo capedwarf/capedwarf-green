@@ -22,30 +22,29 @@
 
 package org.jboss.capedwarf.server.api.mvc;
 
+import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import org.jboss.capedwarf.server.api.servlet.RequestHandler;
 
 /**
  * Multi request handler.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface HandlerMapping
-{
-   /**
-    * Initialize handler.
-    *
-    * @param context the servlet context
-    */
-   void initialize(ServletContext context);
+public interface HandlerMapping {
+    /**
+     * Initialize handler.
+     *
+     * @param context the servlet context
+     */
+    void initialize(ServletContext context);
 
-   /**
-    * Find matching request handler.
-    *
-    * @param req the request
-    * @return matching request handler or null if no match
-    */
-   RequestHandler findHandler(HttpServletRequest req);
+    /**
+     * Find matching request handler.
+     *
+     * @param req the request
+     * @return matching request handler or null if no match
+     */
+    RequestHandler findHandler(HttpServletRequest req);
 }

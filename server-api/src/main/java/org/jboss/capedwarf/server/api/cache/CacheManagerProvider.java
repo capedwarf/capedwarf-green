@@ -29,12 +29,10 @@ import javax.enterprise.inject.Produces;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CacheManagerProvider
-{
-   @Produces
-   @ApplicationScoped
-   public CacheManager createManager()
-   {
-      return CacheManager.getInstance();
-   }
+public class CacheManagerProvider {
+    @Produces
+    @ApplicationScoped
+    public CacheManager createManager() {
+        return CacheManager.getInstance();
+    }
 }

@@ -27,12 +27,11 @@ package org.jboss.capedwarf.server.api.cache;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum CacheMode
-{
-   READ_ONLY,
-   WRITE_ONLY,
-   ALL,
-   REMOVE,
-   EVICT,
-   CLEAR
+public enum CacheMode {
+    READ_ONLY,
+    WRITE_ONLY,
+    ALL,
+    REMOVE,
+    EVICT,
+    CLEAR
 }

@@ -22,16 +22,16 @@
 
 package org.jboss.capedwarf.server.api.captcha.impl;
 
+import com.octo.captcha.service.CaptchaServiceException;
+import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
+import com.octo.captcha.service.image.ImageCaptchaService;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Alternative;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
-
-import com.octo.captcha.service.CaptchaServiceException;
-import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
-import com.octo.captcha.service.image.ImageCaptchaService;
 
 /**
  * JCaptcha service.
@@ -41,43 +41,35 @@ import com.octo.captcha.service.image.ImageCaptchaService;
  */
 @ApplicationScoped
 @Alternative
-public class JCaptchaService extends AbstractCaptchaService
-{
-   private static final long serialVersionUID = 1L;
-   private volatile ImageCaptchaService imageCaptchaService;
+public class JCaptchaService extends AbstractCaptchaService {
+    private static final long serialVersionUID = 1L;
+    private volatile ImageCaptchaService imageCaptchaService;
 
-   protected ImageCaptchaService getImageCaptchaService()
-   {
-      if (imageCaptchaService == null)
-         imageCaptchaService = new DefaultManageableImageCaptchaService();
-      return imageCaptchaService;
-   }
+    protected ImageCaptchaService getImageCaptchaService() {
+        if (imageCaptchaService == null)
+            imageCaptchaService = new DefaultManageableImageCaptchaService();
+        return imageCaptchaService;
+    }
 
-   public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException
-   {
-      BufferedImage challenge = getImageCaptchaService().getImageChallengeForID(id, locale);
-      renderCaptcha(challenge, format, out);
-   }
+    public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException {
+        BufferedImage challenge = getImageCaptchaService().getImageChallengeForID(id, locale);
+        renderCaptcha(challenge, format, out);
+    }
 
-   public boolean verifyCaptcha(String id, String captcha)
-   {
-      Boolean isResponseCorrect = Boolean.FALSE;
-      try
-      {
-         isResponseCorrect = getImageCaptchaService().validateResponseForID(id, captcha);
-      }
-      catch (CaptchaServiceException ignored)
-      {
-      }
+    public boolean verifyCaptcha(String id, String captcha) {
+        Boolean isResponseCorrect = Boolean.FALSE;
+        try {
+            isResponseCorrect = getImageCaptchaService().validateResponseForID(id, captcha);
+        } catch (CaptchaServiceException ignored) {
+        }
 
-      if (isResponseCorrect == null)
-         throw new IllegalStateException("Invalid CAPTCHA!");
+        if (isResponseCorrect == null)
+            throw new IllegalStateException("Invalid CAPTCHA!");
 
-      return isResponseCorrect;
-   }
+        return isResponseCorrect;
+    }
 
-   public void setImageCaptchaService(ImageCaptchaService imageCaptchaService)
-   {
-      this.imageCaptchaService = imageCaptchaService;
-   }
+    public void setImageCaptchaService(ImageCaptchaService imageCaptchaService) {
+        this.imageCaptchaService = imageCaptchaService;
+    }
 }

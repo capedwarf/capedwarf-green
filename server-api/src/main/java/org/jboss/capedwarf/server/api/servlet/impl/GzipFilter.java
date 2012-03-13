@@ -22,61 +22,43 @@
 
 package org.jboss.capedwarf.server.api.servlet.impl;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-
-
 import org.jboss.capedwarf.common.Constants;
 import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Classic gzip filter.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GzipFilter implements Filter
-{
-   public void init(FilterConfig filterConfig) throws ServletException
-   {
-   }
+public class GzipFilter implements Filter {
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-   {
-      if (request instanceof HttpServletRequest && response instanceof HttpServletResponse)
-      {
-         HttpServletRequest req = (HttpServletRequest) request;
-         HttpServletResponse resp = (HttpServletResponse) response;
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+            HttpServletRequest req = (HttpServletRequest) request;
+            HttpServletResponse resp = (HttpServletResponse) response;
 
-         String ignoreGzipHeader = req.getHeader(Constants.IGNORE_GZIP);
-         boolean ignoreGzip = Boolean.parseBoolean(ignoreGzipHeader);
-         if (ignoreGzip)
-         {
-            GzipOptionalSerializator.disableGzip();
-            try
-            {
-               chain.doFilter(req, resp);   
+            String ignoreGzipHeader = req.getHeader(Constants.IGNORE_GZIP);
+            boolean ignoreGzip = Boolean.parseBoolean(ignoreGzipHeader);
+            if (ignoreGzip) {
+                GzipOptionalSerializator.disableGzip();
+                try {
+                    chain.doFilter(req, resp);
+                } finally {
+                    GzipOptionalSerializator.enableGzip();
+                }
+            } else {
+                chain.doFilter(req, resp);
             }
-            finally
-            {
-               GzipOptionalSerializator.enableGzip();
-            }
-         }
-         else
-         {
-            chain.doFilter(req, resp);
-         }
-      }
-   }
+        }
+    }
 
-   public void destroy()
-   {
-   }
+    public void destroy() {
+    }
 }

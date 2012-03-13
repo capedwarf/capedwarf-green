@@ -28,12 +28,11 @@ package org.jboss.capedwarf.server.api.lifecycle;
  * @param <T> exact value type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Notification<T>
-{
-   /**
-    * Get value.
-    *
-    * @return the value
-    */
-   T value();
+public interface Notification<T> {
+    /**
+     * Get value.
+     *
+     * @return the value
+     */
+    T value();
 }

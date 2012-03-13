@@ -22,18 +22,18 @@
 
 package org.jboss.capedwarf.server.api.ui;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
+import org.jboss.capedwarf.server.api.cache.CacheConfig;
+import org.jboss.capedwarf.server.api.security.Security;
+
 import javax.cache.Cache;
 import javax.cache.CacheStatistics;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.capedwarf.server.api.cache.CacheConfig;
-import org.jboss.capedwarf.server.api.security.Security;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Cache command.
@@ -42,124 +42,96 @@ import org.jboss.capedwarf.server.api.security.Security;
  */
 @Named("cc")
 @ConversationScoped
-public class CacheCommand extends Command implements Serializable
-{
-   private static final long serialVersionUID = 1l;
+public class CacheCommand extends Command implements Serializable {
+    private static final long serialVersionUID = 1l;
 
-   private transient CacheConfig cacheConfig;
-   private List<CacheEntry> entries = Collections.emptyList();
+    private transient CacheConfig cacheConfig;
+    private List<CacheEntry> entries = Collections.emptyList();
 
-   public List<CacheEntry> getEntries()
-   {
-      return entries;
-   }
+    public List<CacheEntry> getEntries() {
+        return entries;
+    }
 
-   public int getSize()
-   {
-      return entries.size();
-   }
+    public int getSize() {
+        return entries.size();
+    }
 
-   protected void display(Object key, Object value)
-   {
-      entries = Collections.singletonList(new CacheEntry(key, value));
-   }
+    protected void display(Object key, Object value) {
+        entries = Collections.singletonList(new CacheEntry(key, value));
+    }
 
-   protected String getName(String form)
-   {
-      return getParameter(form, "cacheName");
-   }
+    protected String getName(String form) {
+        return getParameter(form, "cacheName");
+    }
 
-   @Security
-   public void evictCache()
-   {
-      String name = getName("evict");
-      display("Evict: " + name, cacheConfig.evictCache(name));
-   }
+    @Security
+    public void evictCache() {
+        String name = getName("evict");
+        display("Evict: " + name, cacheConfig.evictCache(name));
+    }
 
-   @Security
-   public void clearCache()
-   {
-      String name = getName("clear");
-      display("Clear: " + name, cacheConfig.clearCache(name));
-   }
+    @Security
+    public void clearCache() {
+        String name = getName("clear");
+        display("Clear: " + name, cacheConfig.clearCache(name));
+    }
 
-   @Security
-   public void executeCache()
-   {
-      String execute = getParameter("execute", "args");
-      String[] split = execute.split(",");
-      if (split.length != 3)
-         throw new IllegalArgumentException("Illegal execute args: " + execute);
+    @Security
+    public void executeCache() {
+        String execute = getParameter("execute", "args");
+        String[] split = execute.split(",");
+        if (split.length != 3)
+            throw new IllegalArgumentException("Illegal execute args: " + execute);
 
-      String name = split[0];
-      Cache cache = cacheConfig.findCache(name);
-      if (cache != null)
-      {
-         String op = split[1];
-         Object key;
-         try
-         {
-            key = Long.parseLong(split[2]);
-         }
-         catch (Throwable ignored)
-         {
-            key = split[2];
-         }
+        String name = split[0];
+        Cache cache = cacheConfig.findCache(name);
+        if (cache != null) {
+            String op = split[1];
+            Object key;
+            try {
+                key = Long.parseLong(split[2]);
+            } catch (Throwable ignored) {
+                key = split[2];
+            }
 
-         // ops
-         if ("get".equals(op))
-         {
-            display(key, cache.get(key));
-         }
-         else if ("getCacheEntry".equals(op))
-         {
-            display(key, cache.getCacheEntry(key));
-         }
-         else if ("peek".equals(op))
-         {
-            display(key, cache.peek(key));
-         }
-         else if ("remove".equals(op))
-         {
-            display(key, cache.remove(key));
-         }
-         else if ("size".equals(op))
-         {
-            display("Size: ", cache.size());
-         }
-      }
-      else
-      {
-         display("", "No such cache:" + name);
-      }
-   }
+            // ops
+            if ("get".equals(op)) {
+                display(key, cache.get(key));
+            } else if ("getCacheEntry".equals(op)) {
+                display(key, cache.getCacheEntry(key));
+            } else if ("peek".equals(op)) {
+                display(key, cache.peek(key));
+            } else if ("remove".equals(op)) {
+                display(key, cache.remove(key));
+            } else if ("size".equals(op)) {
+                display("Size: ", cache.size());
+            }
+        } else {
+            display("", "No such cache:" + name);
+        }
+    }
 
-   @Security
-   public void statsCache() throws Exception
-   {
-      String execute = getParameter("stats", "args");
-      String[] split = execute.split(",");
-      if (split.length != 2)
-         throw new IllegalArgumentException("Illegal stats args: " + execute);
+    @Security
+    public void statsCache() throws Exception {
+        String execute = getParameter("stats", "args");
+        String[] split = execute.split(",");
+        if (split.length != 2)
+            throw new IllegalArgumentException("Illegal stats args: " + execute);
 
-      String name = split[0];
-      Cache cache = cacheConfig.findCache(name);
-      if (cache != null)
-      {
-         CacheStatistics stats = cache.getCacheStatistics();
-         String op = split[1];
-         Method m = CacheStatistics.class.getMethod(op);
-         display(op, m.invoke(stats));
-      }
-      else
-      {
-         display("", "No such cache:" + name);
-      }
-   }
+        String name = split[0];
+        Cache cache = cacheConfig.findCache(name);
+        if (cache != null) {
+            CacheStatistics stats = cache.getCacheStatistics();
+            String op = split[1];
+            Method m = CacheStatistics.class.getMethod(op);
+            display(op, m.invoke(stats));
+        } else {
+            display("", "No such cache:" + name);
+        }
+    }
 
-   @Inject
-   public void setCacheConfig(CacheConfig cacheConfig)
-   {
-      this.cacheConfig = cacheConfig;
-   }
+    @Inject
+    public void setCacheConfig(CacheConfig cacheConfig) {
+        this.cacheConfig = cacheConfig;
+    }
 }

@@ -22,11 +22,11 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.inject.Qualifier;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -34,6 +34,5 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PersistenceUnitName
-{
+public @interface PersistenceUnitName {
 }

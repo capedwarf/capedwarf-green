@@ -22,8 +22,6 @@
 
 package org.jboss.capedwarf.cache.infinispan;
 
-import javax.cache.CacheListener;
-
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryCreated;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryEvicted;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryLoaded;
@@ -33,60 +31,53 @@ import org.infinispan.notifications.cachelistener.event.CacheEntryEvictedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryLoadedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
 
+import javax.cache.CacheListener;
+
 /**
  * Infinispan javax.cache listener.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @org.infinispan.notifications.Listener
-public class InfinispanCacheListener
-{
-   private CacheListener listener;
+public class InfinispanCacheListener {
+    private CacheListener listener;
 
-   InfinispanCacheListener(CacheListener listener)
-   {
-      this.listener = listener;
-   }
+    InfinispanCacheListener(CacheListener listener) {
+        this.listener = listener;
+    }
 
-   @CacheEntryEvicted
-   public void onEvict(CacheEntryEvictedEvent event)
-   {
-      listener.onEvict(event.getKey());
-   }
+    @CacheEntryEvicted
+    public void onEvict(CacheEntryEvictedEvent event) {
+        listener.onEvict(event.getKey());
+    }
 
-   @CacheEntryLoaded
-   public void onLoad(CacheEntryLoadedEvent event)
-   {
-      listener.onLoad(event.getKey());
-   }
+    @CacheEntryLoaded
+    public void onLoad(CacheEntryLoadedEvent event) {
+        listener.onLoad(event.getKey());
+    }
 
-   @CacheEntryCreated
-   public void onPut(CacheEntryCreatedEvent event)
-   {
-      listener.onPut(event.getKey());
-   }
+    @CacheEntryCreated
+    public void onPut(CacheEntryCreatedEvent event) {
+        listener.onPut(event.getKey());
+    }
 
-   @CacheEntryRemoved
-   public void onRemove(CacheEntryRemovedEvent event)
-   {
-      listener.onRemove(event.getKey());
-   }
+    @CacheEntryRemoved
+    public void onRemove(CacheEntryRemovedEvent event) {
+        listener.onRemove(event.getKey());
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return listener.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return listener.hashCode();
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      return listener.equals(obj);
-   }
+    @Override
+    public boolean equals(Object obj) {
+        return listener.equals(obj);
+    }
 
-   @Override
-   public String toString()
-   {
-      return listener.toString();
-   }
+    @Override
+    public String toString() {
+        return listener.toString();
+    }
 }

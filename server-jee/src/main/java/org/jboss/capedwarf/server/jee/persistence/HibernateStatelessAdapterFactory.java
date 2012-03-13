@@ -22,10 +22,6 @@
 
 package org.jboss.capedwarf.server.jee.persistence;
 
-import java.io.Serializable;
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -33,68 +29,61 @@ import org.hibernate.StatelessSession;
 import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class HibernateStatelessAdapterFactory extends AbstractStatelessAdapterFactory
-{
-   protected StatelessAdapter doCreateStatelessAdapter(EntityManager em)
-   {
-      Object delegate = em.getDelegate();
-      if (delegate instanceof Session == false)
-         throw new IllegalArgumentException("Can only handle Hibernate Session: " + delegate);
+public class HibernateStatelessAdapterFactory extends AbstractStatelessAdapterFactory {
+    protected StatelessAdapter doCreateStatelessAdapter(EntityManager em) {
+        Object delegate = em.getDelegate();
+        if (delegate instanceof Session == false)
+            throw new IllegalArgumentException("Can only handle Hibernate Session: " + delegate);
 
-      Session session = (Session) delegate;
-      SessionFactory factory = session.getSessionFactory();
-      return new HibernateStatelessAdapter(factory.openStatelessSession());
-   }
+        Session session = (Session) delegate;
+        SessionFactory factory = session.getSessionFactory();
+        return new HibernateStatelessAdapter(factory.openStatelessSession());
+    }
 
-   private static class HibernateStatelessAdapter implements StatelessAdapter
-   {
-      private final StatelessSession session;
+    private static class HibernateStatelessAdapter implements StatelessAdapter {
+        private final StatelessSession session;
 
-      private HibernateStatelessAdapter(StatelessSession session)
-      {
-         this.session = session;
-      }
+        private HibernateStatelessAdapter(StatelessSession session) {
+            this.session = session;
+        }
 
-      public Long insert(Object entity)
-      {
-         return (Long) session.insert(entity);
-      }
+        public Long insert(Object entity) {
+            return (Long) session.insert(entity);
+        }
 
-      public void update(Object entity)
-      {
-         session.update(entity);
-      }
+        public void update(Object entity) {
+            session.update(entity);
+        }
 
-      public void delete(Object entity)
-      {
-         session.delete(entity);
-      }
+        public void delete(Object entity) {
+            session.delete(entity);
+        }
 
-      public <T> T get(Class<T> entityClass, Serializable id)
-      {
-         if (entityClass == null)
-            throw new IllegalArgumentException("Null entity class!");
+        public <T> T get(Class<T> entityClass, Serializable id) {
+            if (entityClass == null)
+                throw new IllegalArgumentException("Null entity class!");
 
-         return entityClass.cast(session.get(entityClass, id));
-      }
+            return entityClass.cast(session.get(entityClass, id));
+        }
 
-      public void refresh(Object entity)
-      {
-         session.refresh(entity);
-      }
+        public void refresh(Object entity) {
+            session.refresh(entity);
+        }
 
-      public void close()
-      {
-         session.close();
-      }
+        public void close() {
+            session.close();
+        }
 
-      public void initialize(Object proxy)
-      {
-         Hibernate.initialize(proxy);
-      }
-   }
+        public void initialize(Object proxy) {
+            Hibernate.initialize(proxy);
+        }
+    }
 }

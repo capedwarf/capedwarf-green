@@ -22,11 +22,6 @@
 
 package org.jboss.capedwarf.server.gae.io;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import javax.enterprise.context.ApplicationScoped;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -38,51 +33,48 @@ import com.google.appengine.api.files.FileWriteChannel;
 import org.jboss.capedwarf.server.api.io.AbstractBlobService;
 import org.jboss.capedwarf.server.api.io.Blob;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 /**
  * GAE blob service impl.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class BlobServiceImpl extends AbstractBlobService
-{
-   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-   private FileService fileService = FileServiceFactory.getFileService();
+public class BlobServiceImpl extends AbstractBlobService {
+    private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    private FileService fileService = FileServiceFactory.getFileService();
 
-   protected Blob toBlobInternal(byte[] bytes)
-   {
-      return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
-   }
+    protected Blob toBlobInternal(byte[] bytes) {
+        return new BlobImpl(new com.google.appengine.api.datastore.Blob(bytes));
+    }
 
-   protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
-   {
-      BlobKey blobKey = new BlobKey(key);
-      return blobstoreService.fetchData(blobKey, startIndex, endIndex);
-   }
+    protected byte[] loadBytesInternal(String key, long startIndex, long endIndex) {
+        BlobKey blobKey = new BlobKey(key);
+        return blobstoreService.fetchData(blobKey, startIndex, endIndex);
+    }
 
-   /**
-    * Note: can gzip be used unless you decorate response?
-    */
-   public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException
-   {
-      BlobKey blobKey = new BlobKey(key);
-      ByteRange range = (end == Long.MAX_VALUE) ? new ByteRange(start) : new ByteRange(start, end);
-      blobstoreService.serve(blobKey, range, respose);
-   }
+    /**
+     * Note: can gzip be used unless you decorate response?
+     */
+    public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException {
+        BlobKey blobKey = new BlobKey(key);
+        ByteRange range = (end == Long.MAX_VALUE) ? new ByteRange(start) : new ByteRange(start, end);
+        blobstoreService.serve(blobKey, range, respose);
+    }
 
-   protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException
-   {
-      AppEngineFile file = fileService.createNewBlobFile(mimeType);
-      FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
-      try
-      {
-         writeChannel.write(buffer);
-      }
-      finally
-      {
-         writeChannel.closeFinally();
-      }
-      BlobKey blobKey = fileService.getBlobKey(file);
-      return blobKey.getKeyString();
-   }
+    protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException {
+        AppEngineFile file = fileService.createNewBlobFile(mimeType);
+        FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+        try {
+            writeChannel.write(buffer);
+        } finally {
+            writeChannel.closeFinally();
+        }
+        BlobKey blobKey = fileService.getBlobKey(file);
+        return blobKey.getKeyString();
+    }
 }

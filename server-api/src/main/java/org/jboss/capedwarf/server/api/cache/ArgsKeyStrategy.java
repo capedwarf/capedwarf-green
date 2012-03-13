@@ -30,10 +30,8 @@ import java.util.Arrays;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ArgsKeyStrategy extends PassThroughKeyStrategy
-{
-   public String createKey(Object target, Method m, Object[] args)
-   {
-      return Arrays.toString(args);
-   }
+public class ArgsKeyStrategy extends PassThroughKeyStrategy {
+    public String createKey(Object target, Method m, Object[] args) {
+        return Arrays.toString(args);
+    }
 }

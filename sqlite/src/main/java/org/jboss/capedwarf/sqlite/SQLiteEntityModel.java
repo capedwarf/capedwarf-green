@@ -22,10 +22,10 @@
 
 package org.jboss.capedwarf.sqlite;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import java.util.List;
 
 /**
  * SQLite model.
@@ -33,93 +33,92 @@ import android.database.Cursor;
  * @param <T> exact entity type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-interface SQLiteEntityModel<T>
-{
-   /**
-    * Get table name.
-    *
-    * @return the table name
-    */
-   String getTable();
-   
-   /**
-    * Key name.
-    *
-    * @return the key name
-    */
-   String getKey();
+interface SQLiteEntityModel<T> {
+    /**
+     * Get table name.
+     *
+     * @return the table name
+     */
+    String getTable();
 
-   /**
-    * Get columns.
-    *
-    * @return the columns
-    */
-   String[] getKeyAndColumns();
+    /**
+     * Key name.
+     *
+     * @return the key name
+     */
+    String getKey();
 
-   /**
-    * Get columns description.
-    *
-    * @return the columns description
-    */
-   String[] getColumnsDescription();
+    /**
+     * Get columns.
+     *
+     * @return the columns
+     */
+    String[] getKeyAndColumns();
 
-   /**
-    * The key value.
-    *
-    * @param entity the current entity
-    * @return key value
-    */
-   Long getKeyValue(T entity);
+    /**
+     * Get columns description.
+     *
+     * @return the columns description
+     */
+    String[] getColumnsDescription();
 
-   /**
-    * Set key value.
-    *
-    * @param entity the current entity
-    * @param key value
-    */
-   void setKeyValue(T entity, Long key);
+    /**
+     * The key value.
+     *
+     * @param entity the current entity
+     * @return key value
+     */
+    Long getKeyValue(T entity);
 
-   /**
-    * Read results from cursor.
-    *
-    * @param cursor the cursor
-    * @return results
-    */
-   List<T> readCursor(Cursor cursor);
+    /**
+     * Set key value.
+     *
+     * @param entity the current entity
+     * @param key    value
+     */
+    void setKeyValue(T entity, Long key);
 
-   /**
-    * Get content values.
-    *
-    * @param entity the entity
-    * @return content values
-    */
-   ContentValues getContentValues(T entity);
+    /**
+     * Read results from cursor.
+     *
+     * @param cursor the cursor
+     * @return results
+     */
+    List<T> readCursor(Cursor cursor);
 
-   /**
-    * Get on insert.
-    *
-    * @return on insert
-    */
-   EntityListener onInsert();
+    /**
+     * Get content values.
+     *
+     * @param entity the entity
+     * @return content values
+     */
+    ContentValues getContentValues(T entity);
 
-   /**
-    * Get on load.
-    *
-    * @return on insert
-    */
-   EntityListener onLoad();
+    /**
+     * Get on insert.
+     *
+     * @return on insert
+     */
+    EntityListener onInsert();
 
-   /**
-    * Get on update.
-    *
-    * @return on insert
-    */
-   EntityListener onUpdate();
+    /**
+     * Get on load.
+     *
+     * @return on insert
+     */
+    EntityListener onLoad();
 
-   /**
-    * Get on delete.
-    *
-    * @return on insert
-    */
-   EntityListener onDelete();
+    /**
+     * Get on update.
+     *
+     * @return on insert
+     */
+    EntityListener onUpdate();
+
+    /**
+     * Get on delete.
+     *
+     * @return on insert
+     */
+    EntityListener onDelete();
 }

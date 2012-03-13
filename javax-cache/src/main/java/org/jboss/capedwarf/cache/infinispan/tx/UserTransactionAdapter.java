@@ -34,72 +34,56 @@ import javax.transaction.UserTransaction;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class UserTransactionAdapter
-{
-   private static ThreadLocal<UserTransaction> uts = new ThreadLocal<UserTransaction>();
-   public static boolean ignoreThreadLocal;
+class UserTransactionAdapter {
+    private static ThreadLocal<UserTransaction> uts = new ThreadLocal<UserTransaction>();
+    public static boolean ignoreThreadLocal;
 
-   static
-   {
-      ignoreThreadLocal = Boolean.getBoolean("org.jboss.capedwarf.cache.infinispan.tx.ignoreThreadLocal");
-   }
+    static {
+        ignoreThreadLocal = Boolean.getBoolean("org.jboss.capedwarf.cache.infinispan.tx.ignoreThreadLocal");
+    }
 
-   protected UserTransaction getUserTransaction() throws SystemException
-   {
-      if (ignoreThreadLocal == false)
-      {
-         UserTransaction ut = uts.get();
-         if (ut == null)
-         {
-            ut = getUserTransactionInternal();
+    protected UserTransaction getUserTransaction() throws SystemException {
+        if (ignoreThreadLocal == false) {
+            UserTransaction ut = uts.get();
+            if (ut == null) {
+                ut = getUserTransactionInternal();
+                uts.set(ut);
+            }
+            return ut;
+        } else {
+            return getUserTransactionInternal();
+        }
+    }
+
+    /**
+     * Set UserTransaction.
+     *
+     * @param ut the user transaction
+     */
+    public static void setup(UserTransaction ut) {
+        if (ignoreThreadLocal == false)
             uts.set(ut);
-         }
-         return ut;
-      }
-      else
-      {
-         return getUserTransactionInternal();
-      }
-   }
+    }
 
-   /**
-    * Set UserTransaction.
-    *
-    * @param ut the user transaction
-    */
-   public static void setup(UserTransaction ut)
-   {
-      if (ignoreThreadLocal == false)
-         uts.set(ut);
-   }
+    /**
+     * Cleanup current user transaction.
+     */
+    public static void cleanup() {
+        if (ignoreThreadLocal == false)
+            uts.remove();
+    }
 
-   /**
-    * Cleanup current user transaction.
-    */
-   public static void cleanup()
-   {
-      if (ignoreThreadLocal == false)
-         uts.remove();
-   }
-
-   protected UserTransaction getUserTransactionInternal() throws SystemException
-   {
-      try
-      {
-         Context context = new InitialContext();
-         try
-         {
-            Object lookup = context.lookup("java:comp/UserTransaction");
-            return UserTransaction.class.cast(lookup);
-         }
-         finally
-         {
-            context.close();
-         }
-      }
-      catch (NamingException e)
-      {
-         throw new SystemException(e.getMessage());
-      }
-   }
+    protected UserTransaction getUserTransactionInternal() throws SystemException {
+        try {
+            Context context = new InitialContext();
+            try {
+                Object lookup = context.lookup("java:comp/UserTransaction");
+                return UserTransaction.class.cast(lookup);
+            } finally {
+                context.close();
+            }
+        } catch (NamingException e) {
+            throw new SystemException(e.getMessage());
+        }
+    }
 }

@@ -22,18 +22,17 @@
 
 package org.jboss.capedwarf.server.api.io.impl;
 
+import org.jboss.capedwarf.server.api.io.ResourceReader;
+import org.jboss.seam.solder.resourceLoader.Resource;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.Set;
-
-import org.jboss.capedwarf.server.api.io.ResourceReader;
-import org.jboss.seam.solder.resourceLoader.Resource;
 
 /**
  * Read resources.
@@ -41,57 +40,45 @@ import org.jboss.seam.solder.resourceLoader.Resource;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class ClassLoaderResourceReader implements ResourceReader
-{
-   @Produces @Resource("")
-   public byte[] getResource(InjectionPoint ip)
-   {
-      return getResource(getName(ip));
-   }
+public class ClassLoaderResourceReader implements ResourceReader {
+    @Produces
+    @Resource("")
+    public byte[] getResource(InjectionPoint ip) {
+        return getResource(getName(ip));
+    }
 
-   public byte[] getResource(String resource)
-   {
-      try
-      {
-         ClassLoader cl = getClass().getClassLoader();
-         URL url = cl.getResource(resource);
-         if (url == null)
-            return null;
+    public byte[] getResource(String resource) {
+        try {
+            ClassLoader cl = getClass().getClassLoader();
+            URL url = cl.getResource(resource);
+            if (url == null)
+                return null;
 
-         InputStream is = url.openStream();
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int b;
-            while ((b = is.read()) >= 0)
-            {
-               baos.write(b);
+            InputStream is = url.openStream();
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int b;
+                while ((b = is.read()) >= 0) {
+                    baos.write(b);
+                }
+                baos.flush();
+                baos.close();
+                return baos.toByteArray();
+            } finally {
+                is.close();
             }
-            baos.flush();
-            baos.close();
-            return baos.toByteArray();
-         }
-         finally
-         {
-            is.close();
-         }
-      }
-      catch (Exception ignored)
-      {
-      }
-      return null;        
-   }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
 
-   private String getName(InjectionPoint ip)
-   {
-      Set<Annotation> qualifiers = ip.getQualifiers();
-      for (Annotation qualifier : qualifiers)
-      {
-         if (qualifier.annotationType().equals(Resource.class))
-         {
-            return ((Resource) qualifier).value();
-         }
-      }
-      throw new IllegalArgumentException("Injection point " + ip + " does not have @Resource qualifier");
-   }
+    private String getName(InjectionPoint ip) {
+        Set<Annotation> qualifiers = ip.getQualifiers();
+        for (Annotation qualifier : qualifiers) {
+            if (qualifier.annotationType().equals(Resource.class)) {
+                return ((Resource) qualifier).value();
+            }
+        }
+        throw new IllegalArgumentException("Injection point " + ip + " does not have @Resource qualifier");
+    }
 }

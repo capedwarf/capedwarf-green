@@ -27,12 +27,11 @@ package org.jboss.capedwarf.jpa;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ProxyEntity<T>
-{
-   /**
-    * Get real entity.
-    *
-    * @return the real entity
-    */
-   T getRealEntity();
+public interface ProxyEntity<T> {
+    /**
+     * Get real entity.
+     *
+     * @return the real entity
+     */
+    T getRealEntity();
 }

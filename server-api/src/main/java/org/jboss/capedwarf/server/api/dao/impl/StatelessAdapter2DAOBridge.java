@@ -22,79 +22,67 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
-import java.io.Serializable;
-
 import org.jboss.capedwarf.server.api.dao.StatelessDAO;
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
+
+import java.io.Serializable;
 
 /**
  * API bridge between adapter and DAO.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements StatelessDAO<T>
-{
-   private final StatelessAdapter adapter;
+final class StatelessAdapter2DAOBridge<T extends AbstractEntity> implements StatelessDAO<T> {
+    private final StatelessAdapter adapter;
 
-   StatelessAdapter2DAOBridge(StatelessAdapter adapter)
-   {
-      if (adapter == null)
-         throw new IllegalArgumentException("Null adapter");
-      this.adapter = adapter;
-   }
+    StatelessAdapter2DAOBridge(StatelessAdapter adapter) {
+        if (adapter == null)
+            throw new IllegalArgumentException("Null adapter");
+        this.adapter = adapter;
+    }
 
-   public Long insert(T entity)
-   {
-      return adapter.insert(entity);
-   }
+    public Long insert(T entity) {
+        return adapter.insert(entity);
+    }
 
-   public void update(T entity)
-   {
-      adapter.update(entity);
-   }
+    public void update(T entity) {
+        adapter.update(entity);
+    }
 
-   public void delete(T entity)
-   {
-      adapter.delete(entity);
-   }
+    public void delete(T entity) {
+        adapter.delete(entity);
+    }
 
-   @SuppressWarnings({"unchecked"})
-   public T get(Class entityClass, Serializable id)
-   {
-      return (T) adapter.get(entityClass, id);
-   }
+    @SuppressWarnings({"unchecked"})
+    public T get(Class entityClass, Serializable id) {
+        return (T) adapter.get(entityClass, id);
+    }
 
-   public void refresh(T entity)
-   {
-      adapter.refresh(entity);
-   }
+    public void refresh(T entity) {
+        adapter.refresh(entity);
+    }
 
-   public void initialize(T proxy)
-   {
-      adapter.initialize(proxy);
-   }
+    public void initialize(T proxy) {
+        adapter.initialize(proxy);
+    }
 
-   public void close()
-   {
-      adapter.close();
-   }
+    public void close() {
+        adapter.close();
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return adapter.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return adapter.hashCode();
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      return adapter.equals(obj);
-   }
+    @Override
+    public boolean equals(Object obj) {
+        return adapter.equals(obj);
+    }
 
-   @Override
-   public String toString()
-   {
-      return adapter.toString();
-   }
+    @Override
+    public String toString() {
+        return adapter.toString();
+    }
 }

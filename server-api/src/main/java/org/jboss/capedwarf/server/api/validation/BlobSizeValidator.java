@@ -29,31 +29,28 @@ import javax.validation.ConstraintValidatorContext;
 
 /**
  * Blob size validator.
- * 
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class BlobSizeValidator implements ConstraintValidator<BlobSize, Object>
-{
-   private int min;
-   private int max;
+public class BlobSizeValidator implements ConstraintValidator<BlobSize, Object> {
+    private int min;
+    private int max;
 
-   public void initialize(BlobSize bs)
-   {
-      min = bs.min();
-      max = bs.max();
-   }
+    public void initialize(BlobSize bs) {
+        min = bs.min();
+        max = bs.max();
+    }
 
-   public boolean isValid(Object value, ConstraintValidatorContext context)
-   {
-      if (value == null)
-         return true;
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        if (value == null)
+            return true;
 
-      if (value instanceof Blob == false)
-         return false;
+        if (value instanceof Blob == false)
+            return false;
 
-      Blob blob = (Blob) value;
-      byte[] bytes = blob.getBytes();
-      int length = bytes.length;
-      return length >= min && length <= max; 
-   }
+        Blob blob = (Blob) value;
+        byte[] bytes = blob.getBytes();
+        int length = bytes.length;
+        return length >= min && length <= max;
+    }
 }

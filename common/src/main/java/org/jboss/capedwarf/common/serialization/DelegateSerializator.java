@@ -5,19 +5,16 @@ package org.jboss.capedwarf.common.serialization;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class DelegateSerializator extends AbstractSerializator
-{
-   protected Serializator delegate;
+public abstract class DelegateSerializator extends AbstractSerializator {
+    protected Serializator delegate;
 
-   public DelegateSerializator(Serializator delegate)
-   {
-      if (delegate == null)
-         throw new IllegalArgumentException("Null delegate");
-      this.delegate = delegate;
-   }
+    public DelegateSerializator(Serializator delegate) {
+        if (delegate == null)
+            throw new IllegalArgumentException("Null delegate");
+        this.delegate = delegate;
+    }
 
-   public boolean isValid(Class<?> clazz)
-   {
-      return delegate.isValid(clazz);
-   }
+    public boolean isValid(Class<?> clazz) {
+        return delegate.isValid(clazz);
+    }
 }

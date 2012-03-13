@@ -27,59 +27,48 @@ import org.jboss.capedwarf.common.social.SocialEvent;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class TestSocialEvent implements SocialEvent
-{
-   private Long userId;
-   private String content;
-   private Long parentId;
+public class TestSocialEvent implements SocialEvent {
+    private Long userId;
+    private String content;
+    private Long parentId;
 
-   public TestSocialEvent(String content)
-   {
-      this.content = content;
-   }
+    public TestSocialEvent(String content) {
+        this.content = content;
+    }
 
-   public Long userId()
-   {
-      return getUserId();
-   }
+    public Long userId() {
+        return getUserId();
+    }
 
-   public String content()
-   {
-      return getContent();
-   }
+    public String content() {
+        return getContent();
+    }
 
-   public Long parentId()
-   {
-      return getParentId();
-   }
+    public Long parentId() {
+        return getParentId();
+    }
 
-   public Long getUserId()
-   {
-      return userId;
-   }
+    public Long getUserId() {
+        return userId;
+    }
 
-   public void setUserId(Long userId)
-   {
-      this.userId = userId;
-   }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-   public String getContent()
-   {
-      return content;
-   }
+    public String getContent() {
+        return content;
+    }
 
-   public void setContent(String content)
-   {
-      this.content = content;
-   }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-   public Long getParentId()
-   {
-      return parentId;
-   }
+    public Long getParentId() {
+        return parentId;
+    }
 
-   public void setParentId(Long parentId)
-   {
-      this.parentId = parentId;
-   }
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 }

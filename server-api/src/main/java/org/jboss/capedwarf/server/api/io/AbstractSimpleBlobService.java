@@ -27,16 +27,12 @@ package org.jboss.capedwarf.server.api.io;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractSimpleBlobService extends AbstractBlobService
-{
-   protected Blob toBlobInternal(final byte[] bytes)
-   {
-      return new Blob()
-      {
-         public byte[] getBytes()
-         {
-            return bytes;
-         }
-      };
-   }
+public abstract class AbstractSimpleBlobService extends AbstractBlobService {
+    protected Blob toBlobInternal(final byte[] bytes) {
+        return new Blob() {
+            public byte[] getBytes() {
+                return bytes;
+            }
+        };
+    }
 }

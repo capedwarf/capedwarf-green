@@ -8,17 +8,14 @@ import javax.validation.ValidatorContext;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class SimpleValidatorContext extends ValidatorHolder<SimpleValidatorContext> implements ValidatorContext
-{
-   private SimpleValidatorFactory factory;
+class SimpleValidatorContext extends ValidatorHolder<SimpleValidatorContext> implements ValidatorContext {
+    private SimpleValidatorFactory factory;
 
-   SimpleValidatorContext(SimpleValidatorFactory factory)
-   {
-      this.factory = factory;
-   }
+    SimpleValidatorContext(SimpleValidatorFactory factory) {
+        this.factory = factory;
+    }
 
-   public Validator getValidator()
-   {
-      return new SimpleValidator(factory, getMessageInterpolator(), getTraversableResolver(), getConstraintValidatorFactory());
-   }
+    public Validator getValidator() {
+        return new SimpleValidator(factory, getMessageInterpolator(), getTraversableResolver(), getConstraintValidatorFactory());
+    }
 }

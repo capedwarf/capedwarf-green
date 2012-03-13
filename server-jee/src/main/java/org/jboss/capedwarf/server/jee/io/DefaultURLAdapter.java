@@ -35,10 +35,8 @@ import java.net.URL;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class DefaultURLAdapter implements URLAdapter
-{
-   public InputStream fetch(URL url) throws IOException
-   {
-      return url.openStream();
-   }
+public class DefaultURLAdapter implements URLAdapter {
+    public InputStream fetch(URL url) throws IOException {
+        return url.openStream();
+    }
 }

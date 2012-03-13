@@ -29,19 +29,18 @@ import javax.persistence.EntityManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EntityManagerProvider
-{
-   /**
-    * Get entity manager.
-    *
-    * @return the em
-    */
-   EntityManager getEntityManager();
+public interface EntityManagerProvider {
+    /**
+     * Get entity manager.
+     *
+     * @return the em
+     */
+    EntityManager getEntityManager();
 
-   /**
-    * Close entity manager.
-    *
-    * @param em the entity manager
-    */
-   void close(EntityManager em);
+    /**
+     * Close entity manager.
+     *
+     * @param em the entity manager
+     */
+    void close(EntityManager em);
 }

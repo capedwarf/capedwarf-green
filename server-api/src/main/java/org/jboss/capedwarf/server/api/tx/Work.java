@@ -29,85 +29,69 @@ import javax.persistence.EntityTransaction;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class Work<T>
-{
-   /**
-    * Do actual work.
-    *
-    * @return the result
-    * @throws Exception for any error
-    */
-   protected abstract T work() throws Exception;
+public abstract class Work<T> {
+    /**
+     * Do actual work.
+     *
+     * @return the result
+     * @throws Exception for any error
+     */
+    protected abstract T work() throws Exception;
 
-   /**
-    * Do we need new transaction.
-    *
-    * @param transactionActive is current transaction active
-    * @return true if we need new transaction, false otherwise
-    */
-   protected boolean isNewTransactionRequired(boolean transactionActive)
-   {
-      return transactionActive == false;
-   }
+    /**
+     * Do we need new transaction.
+     *
+     * @param transactionActive is current transaction active
+     * @return true if we need new transaction, false otherwise
+     */
+    protected boolean isNewTransactionRequired(boolean transactionActive) {
+        return transactionActive == false;
+    }
 
-   public final T workInTransaction(EntityTransaction transaction) throws Exception
-   {
-      boolean newTransactionRequired = isNewTransactionRequired(transaction.isActive());
-      EntityTransaction userTransaction = newTransactionRequired ? transaction : null;
+    public final T workInTransaction(EntityTransaction transaction) throws Exception {
+        boolean newTransactionRequired = isNewTransactionRequired(transaction.isActive());
+        EntityTransaction userTransaction = newTransactionRequired ? transaction : null;
 
-      if (newTransactionRequired)
-      {
-         userTransaction.begin();
-      }
+        if (newTransactionRequired) {
+            userTransaction.begin();
+        }
 
-      try
-      {
-         T result = work();
+        try {
+            T result = work();
 
-         if (newTransactionRequired)
-         {
-            if (transaction.getRollbackOnly())
-            {
-               userTransaction.rollback();
+            if (newTransactionRequired) {
+                if (transaction.getRollbackOnly()) {
+                    userTransaction.rollback();
+                } else {
+                    userTransaction.commit();
+                }
             }
-            else
-            {
-               userTransaction.commit();
+
+            return result;
+        } catch (Exception e) {
+            T fallback = handleException(e);
+            if (newTransactionRequired && fallback == null && userTransaction.isActive()) {
+                try {
+                    userTransaction.rollback();
+                } catch (Exception ignored) {
+                    // not really useful
+                }
             }
-         }
+            if (fallback == null)
+                throw e;
 
-         return result;
-      }
-      catch (Exception e)
-      {
-         T fallback = handleException(e);
-         if (newTransactionRequired && fallback == null && userTransaction.isActive())
-         {
-            try
-            {
-               userTransaction.rollback();
-            }
-            catch (Exception ignored)
-            {
-               // not really useful
-            }
-         }
-         if (fallback == null)
-            throw e;
+            return fallback;
+        }
 
-         return fallback;
-      }
+    }
 
-   }
-
-   /**
-    * Handle exception.
-    *
-    * @param e the exception
-    * @return null if we should throw the exception, proper fallback result otherwise
-    */
-   protected T handleException(Exception e)
-   {
-      return null;
-   }
+    /**
+     * Handle exception.
+     *
+     * @param e the exception
+     * @return null if we should throw the exception, proper fallback result otherwise
+     */
+    protected T handleException(Exception e) {
+        return null;
+    }
 }

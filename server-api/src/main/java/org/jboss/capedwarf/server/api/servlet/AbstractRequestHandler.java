@@ -23,7 +23,6 @@
 package org.jboss.capedwarf.server.api.servlet;
 
 import javax.servlet.ServletContext;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -31,38 +30,33 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractRequestHandler implements RequestHandler
-{
-   protected static final int NOT_INSTALLED = 0;
-   protected static final int INSTALLING = 1;
-   protected static final int INSTALLED = 2;
+public abstract class AbstractRequestHandler implements RequestHandler {
+    protected static final int NOT_INSTALLED = 0;
+    protected static final int INSTALLING = 1;
+    protected static final int INSTALLED = 2;
 
-   private AtomicInteger state = new AtomicInteger(NOT_INSTALLED);
+    private AtomicInteger state = new AtomicInteger(NOT_INSTALLED);
 
-   protected AtomicInteger getState()
-   {
-      return state;
-   }
+    protected AtomicInteger getState() {
+        return state;
+    }
 
-   protected boolean next(int expect)
-   {
-      return state.compareAndSet(expect, expect + 1);
-   }
+    protected boolean next(int expect) {
+        return state.compareAndSet(expect, expect + 1);
+    }
 
-   // should not override this -- use doInitialize
-   public void initialize(ServletContext context)
-   {
-      if (next(NOT_INSTALLED))
-      {
-         doInitialize(context);
-         next(INSTALLING);
-      }
-   }
+    // should not override this -- use doInitialize
+    public void initialize(ServletContext context) {
+        if (next(NOT_INSTALLED)) {
+            doInitialize(context);
+            next(INSTALLING);
+        }
+    }
 
-   /**
-    * Do initialize.
-    *
-    * @param context the servlet context
-    */
-   protected abstract void doInitialize(ServletContext context);
+    /**
+     * Do initialize.
+     *
+     * @param context the servlet context
+     */
+    protected abstract void doInitialize(ServletContext context);
 }

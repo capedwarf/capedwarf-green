@@ -26,18 +26,17 @@ package org.jboss.capedwarf.sqlite;
  * On sql op.
  *
  * @param <DB> exact database type
- * @param <T> exact entity type
+ * @param <T>  exact entity type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EntityListener<DB, T>
-{
-   /**
-    * Perform on sql op.
-    *
-    * @param db the database.
-    * @param entity the current entity
-    * @param phase the sql op phase
-    */
-   void action(DB db, T entity, Phase phase);
+public interface EntityListener<DB, T> {
+    /**
+     * Perform on sql op.
+     *
+     * @param db     the database.
+     * @param entity the current entity
+     * @param phase  the sql op phase
+     */
+    void action(DB db, T entity, Phase phase);
 }
 

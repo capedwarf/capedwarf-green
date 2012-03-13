@@ -23,30 +23,25 @@
 
 package org.jboss.capedwarf.cache.infinispan.tx;
 
+import org.infinispan.transaction.lookup.TransactionManagerLookup;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
-
-import org.infinispan.transaction.lookup.TransactionManagerLookup;
 
 /**
  * JBossAS7 TM lookup.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class JBossAS7TransactionManagerLookup implements TransactionManagerLookup
-{
-   public TransactionManager getTransactionManager() throws Exception
-   {
-      Context context = new InitialContext();
-      try
-      {
-         Object lookup = context.lookup("java:jboss/TransactionManager");
-         return TransactionManager.class.cast(lookup);
-      }
-      finally
-      {
-         context.close();
-      }
-   }
+public class JBossAS7TransactionManagerLookup implements TransactionManagerLookup {
+    public TransactionManager getTransactionManager() throws Exception {
+        Context context = new InitialContext();
+        try {
+            Object lookup = context.lookup("java:jboss/TransactionManager");
+            return TransactionManager.class.cast(lookup);
+        } finally {
+            context.close();
+        }
+    }
 }

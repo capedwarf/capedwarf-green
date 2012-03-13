@@ -30,12 +30,11 @@ import javax.persistence.PersistenceContext;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class JeeEMInjector extends ManagedEMInjector
-{
-   @PersistenceContext private transient EntityManager em;
+public class JeeEMInjector extends ManagedEMInjector {
+    @PersistenceContext
+    private transient EntityManager em;
 
-   protected EntityManager getInjectedEntityManager()
-   {
-      return em;
-   }
+    protected EntityManager getInjectedEntityManager() {
+        return em;
+    }
 }

@@ -29,15 +29,12 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class PassThroughKeyStrategy implements KeyStrategy<Object, Object>
-{
-   public Object wrap(Object orginal, Object target, Method method, Object[] args)
-   {
-      return orginal;
-   }
+public abstract class PassThroughKeyStrategy implements KeyStrategy<Object, Object> {
+    public Object wrap(Object orginal, Object target, Method method, Object[] args) {
+        return orginal;
+    }
 
-   public Object unwrap(Object cached, Object target, Method method, Object[] args)
-   {
-      return cached;
-   }
+    public Object unwrap(Object cached, Object target, Method method, Object[] args) {
+        return cached;
+    }
 }

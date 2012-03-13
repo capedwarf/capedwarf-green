@@ -32,19 +32,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RequestScoped
-class HttpServletRequestManager
-{
-   private HttpServletRequest request;
+class HttpServletRequestManager {
+    private HttpServletRequest request;
 
-   @Produces
-   @RequestScoped
-   public HttpServletRequest getRequest()
-   {
-      return request;
-   }
+    @Produces
+    @RequestScoped
+    public HttpServletRequest getRequest() {
+        return request;
+    }
 
-   public void setRequest(HttpServletRequest request)
-   {
-      this.request = request;
-   }
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
 }

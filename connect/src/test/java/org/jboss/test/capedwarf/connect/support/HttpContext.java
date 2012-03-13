@@ -30,9 +30,8 @@ import java.io.OutputStream;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface HttpContext
-{
-   InputStream getInputStream() throws IOException;
+public interface HttpContext {
+    InputStream getInputStream() throws IOException;
 
-   OutputStream getOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
 }

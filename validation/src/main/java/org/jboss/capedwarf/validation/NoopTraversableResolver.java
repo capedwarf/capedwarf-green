@@ -2,7 +2,6 @@ package org.jboss.capedwarf.validation;
 
 import javax.validation.Path;
 import javax.validation.TraversableResolver;
-
 import java.lang.annotation.ElementType;
 
 /**
@@ -10,17 +9,14 @@ import java.lang.annotation.ElementType;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class NoopTraversableResolver implements TraversableResolver
-{
-   static TraversableResolver INSTANCE = new NoopTraversableResolver();
+class NoopTraversableResolver implements TraversableResolver {
+    static TraversableResolver INSTANCE = new NoopTraversableResolver();
 
-   public boolean isReachable(Object traversableObject, Path.Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType)
-   {
-      return true;
-   }
+    public boolean isReachable(Object traversableObject, Path.Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType) {
+        return true;
+    }
 
-   public boolean isCascadable(Object traversableObject, Path.Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType)
-   {
-      return false;
-   }
+    public boolean isCascadable(Object traversableObject, Path.Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType) {
+        return false;
+    }
 }

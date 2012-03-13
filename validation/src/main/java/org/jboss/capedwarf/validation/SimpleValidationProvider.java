@@ -11,20 +11,16 @@ import javax.validation.spi.ValidationProvider;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class SimpleValidationProvider implements ValidationProvider<SimpleConfiguration>
-{
-   public Configuration<?> createGenericConfiguration(BootstrapState state)
-   {
-      return createSpecializedConfiguration(state);
-   }
+public class SimpleValidationProvider implements ValidationProvider<SimpleConfiguration> {
+    public Configuration<?> createGenericConfiguration(BootstrapState state) {
+        return createSpecializedConfiguration(state);
+    }
 
-   public SimpleConfiguration createSpecializedConfiguration(BootstrapState state)
-   {
-      return new SimpleConfiguration();
-   }
+    public SimpleConfiguration createSpecializedConfiguration(BootstrapState state) {
+        return new SimpleConfiguration();
+    }
 
-   public ValidatorFactory buildValidatorFactory(ConfigurationState configurationState)
-   {
-      return new SimpleValidatorFactory();
-   }
+    public ValidatorFactory buildValidatorFactory(ConfigurationState configurationState) {
+        return new SimpleValidatorFactory();
+    }
 }

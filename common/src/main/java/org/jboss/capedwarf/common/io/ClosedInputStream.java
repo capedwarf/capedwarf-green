@@ -8,21 +8,17 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ClosedInputStream extends DelegateInputStream
-{
-   private boolean closed;
+public class ClosedInputStream extends DelegateInputStream {
+    private boolean closed;
 
-   public ClosedInputStream(InputStream delegate)
-   {
-      super(delegate);
-   }
+    public ClosedInputStream(InputStream delegate) {
+        super(delegate);
+    }
 
-   public void close() throws IOException
-   {
-      if (closed == false)
-      {
-         closed = true;
-         super.close();
-      }
-   }
+    public void close() throws IOException {
+        if (closed == false) {
+            closed = true;
+            super.close();
+        }
+    }
 }

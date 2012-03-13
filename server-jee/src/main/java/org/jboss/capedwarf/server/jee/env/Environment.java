@@ -31,21 +31,20 @@ import javax.transaction.TransactionManager;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Environment
-{
-   /**
-    * Lookup tx manager.
-    *
-    * @return the tx manager
-    * @throws Exception for any error
-    */
-   TransactionManager lookupTxManager() throws Exception;
+public interface Environment {
+    /**
+     * Lookup tx manager.
+     *
+     * @return the tx manager
+     * @throws Exception for any error
+     */
+    TransactionManager lookupTxManager() throws Exception;
 
-   /**
-    * Lookup mail session.
-    *
-    * @return the mail session
-    * @throws Exception for any error
-    */
-   Session lookupMailSession() throws Exception;
+    /**
+     * Lookup mail session.
+     *
+     * @return the mail session
+     * @throws Exception for any error
+     */
+    Session lookupMailSession() throws Exception;
 }

@@ -31,24 +31,24 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  * Produce EntityManager per request.
- * 
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class EM
-{
-   /** The entity manager factory */
-   private EntityManagerFactory factory;
+public class EM {
+    /**
+     * The entity manager factory
+     */
+    private EntityManagerFactory factory;
 
-   @Produces @RequestScoped
-   public EntityManager createManager()
-   {
-      return factory.createEntityManager();
-   }
+    @Produces
+    @RequestScoped
+    public EntityManager createManager() {
+        return factory.createEntityManager();
+    }
 
-   @Inject
-   public void setFactory(EntityManagerFactory factory)
-   {
-      this.factory = factory;
-   }
+    @Inject
+    public void setFactory(EntityManagerFactory factory) {
+        this.factory = factory;
+    }
 }

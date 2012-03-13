@@ -33,10 +33,8 @@ import javax.persistence.EntityManager;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class TxEMInjector implements EMInjector
-{
-   public EntityManager getEM()
-   {
-      return TransactionInterceptor.getEntityManager();
-   }
+public class TxEMInjector implements EMInjector {
+    public EntityManager getEM() {
+        return TransactionInterceptor.getEntityManager();
+    }
 }

@@ -37,42 +37,32 @@ import java.util.logging.Logger;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class BasicMailManager extends AbstractMailManager
-{
-   private Logger log = Logger.getLogger(BasicMailManager.class.getName());
+public class BasicMailManager extends AbstractMailManager {
+    private Logger log = Logger.getLogger(BasicMailManager.class.getName());
 
-   private MailService mailService = MailServiceFactory.getMailService();
+    private MailService mailService = MailServiceFactory.getMailService();
 
-   public void sendEmail(String sender, String subject, String textBody, String... tos)
-   {
-      for (String to : tos)
-      {
-         try
-         {
-            MailService.Message msg = new MailService.Message(sender, to, subject, textBody);
-            mailService.send(msg);
-         }
-         catch (Throwable t)
-         {
-            log.warning("Failed to send email: " + t);
-         }
-      }
-   }
+    public void sendEmail(String sender, String subject, String textBody, String... tos) {
+        for (String to : tos) {
+            try {
+                MailService.Message msg = new MailService.Message(sender, to, subject, textBody);
+                mailService.send(msg);
+            } catch (Throwable t) {
+                log.warning("Failed to send email: " + t);
+            }
+        }
+    }
 
-   public void sendEmailToAdmins(String sender, String subject, String textBody)
-   {
-      try
-      {
-         MailService.Message msg = new MailService.Message();
-         msg.setSender(sender);
-         msg.setSubject(subject);
-         msg.setTextBody(textBody);
-         mailService.sendToAdmins(msg);
-      }
-      catch (Throwable t)
-      {
-         String info = Arrays.asList(sender, subject, textBody).toString();
-         log.log(Level.WARNING, "Failed to send email: " + info, t);
-      }
-   }
+    public void sendEmailToAdmins(String sender, String subject, String textBody) {
+        try {
+            MailService.Message msg = new MailService.Message();
+            msg.setSender(sender);
+            msg.setSubject(subject);
+            msg.setTextBody(textBody);
+            mailService.sendToAdmins(msg);
+        } catch (Throwable t) {
+            String info = Arrays.asList(sender, subject, textBody).toString();
+            log.log(Level.WARNING, "Failed to send email: " + info, t);
+        }
+    }
 }

@@ -22,11 +22,7 @@
 
 package org.jboss.capedwarf.server.gae.io;
 
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.appengine.api.urlfetch.*;
 import org.jboss.capedwarf.common.io.URLAdapter;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -41,14 +37,12 @@ import java.net.URL;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class URLAdapterImpl implements URLAdapter
-{
-   private URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+public class URLAdapterImpl implements URLAdapter {
+    private URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
-   public InputStream fetch(URL url) throws IOException
-   {
-      HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
-      HTTPResponse response = urlFetchService.fetch(request);
-      return new ByteArrayInputStream(response.getContent());
-   }
+    public InputStream fetch(URL url) throws IOException {
+        HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
+        HTTPResponse response = urlFetchService.fetch(request);
+        return new ByteArrayInputStream(response.getContent());
+    }
 }

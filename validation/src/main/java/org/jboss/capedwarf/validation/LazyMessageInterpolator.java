@@ -1,7 +1,6 @@
 package org.jboss.capedwarf.validation;
 
 import javax.validation.MessageInterpolator;
-
 import java.util.Locale;
 
 /**
@@ -9,26 +8,22 @@ import java.util.Locale;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class LazyMessageInterpolator implements MessageInterpolator
-{
-   static MessageInterpolator INSTANCE = new LazyMessageInterpolator();
-   private volatile MessageInterpolator delegate;
+class LazyMessageInterpolator implements MessageInterpolator {
+    static MessageInterpolator INSTANCE = new LazyMessageInterpolator();
+    private volatile MessageInterpolator delegate;
 
-   protected MessageInterpolator getDelegate()
-   {
-      if (delegate == null)
-         delegate = new SimpleMessageInterpolator();
+    protected MessageInterpolator getDelegate() {
+        if (delegate == null)
+            delegate = new SimpleMessageInterpolator();
 
-      return delegate;
-   }
+        return delegate;
+    }
 
-   public String interpolate(String messageTemplate, Context context)
-   {
-      return getDelegate().interpolate(messageTemplate, context);
-   }
+    public String interpolate(String messageTemplate, Context context) {
+        return getDelegate().interpolate(messageTemplate, context);
+    }
 
-   public String interpolate(String messageTemplate, Context context, Locale locale)
-   {
-      return getDelegate().interpolate(messageTemplate, context, locale);
-   }
+    public String interpolate(String messageTemplate, Context context, Locale locale) {
+        return getDelegate().interpolate(messageTemplate, context, locale);
+    }
 }

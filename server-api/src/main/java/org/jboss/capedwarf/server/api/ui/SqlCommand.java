@@ -22,20 +22,20 @@
 
 package org.jboss.capedwarf.server.api.ui;
 
-import java.io.Serializable;
-import java.util.List;
-import javax.enterprise.context.ConversationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import org.jboss.capedwarf.jpa.Entity;
 import org.jboss.capedwarf.jpa.ProxyingEnum;
 import org.jboss.capedwarf.server.api.persistence.EMInjector;
 import org.jboss.capedwarf.server.api.persistence.Proxying;
 import org.jboss.capedwarf.server.api.security.Security;
 import org.jboss.capedwarf.server.api.tx.Transactional;
+
+import javax.enterprise.context.ConversationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -45,55 +45,48 @@ import org.jboss.capedwarf.server.api.tx.Transactional;
  */
 @Named("sql")
 @ConversationScoped
-public class SqlCommand extends Command implements Serializable
-{
-   private static final long serialVersionUID = 1l;
+public class SqlCommand extends Command implements Serializable {
+    private static final long serialVersionUID = 1l;
 
-   private EMInjector emInjector;
+    private EMInjector emInjector;
 
-   private List<Entity> results;
-   private int count = -1;
+    private List<Entity> results;
+    private int count = -1;
 
-   public int getSize()
-   {
-      return (results != null) ? results.size() : 0;
-   }
+    public int getSize() {
+        return (results != null) ? results.size() : 0;
+    }
 
-   public List<Entity> getResults()
-   {
-      return results;
-   }
+    public List<Entity> getResults() {
+        return results;
+    }
 
-   public int getCount()
-   {
-      return count;
-   }
+    public int getCount() {
+        return count;
+    }
 
-   @SuppressWarnings({"unchecked"})
-   @Security({"admin", "editor"})
-   @Transactional
-   @Proxying(ProxyingEnum.DISABLE)
-   public void executeSelect()
-   {
-      String query = getParameter("select" , "query");
-      EntityManager em = emInjector.getEM();
-      Query q = em.createQuery(query);
-      results = q.getResultList();
-   }
+    @SuppressWarnings({"unchecked"})
+    @Security({"admin", "editor"})
+    @Transactional
+    @Proxying(ProxyingEnum.DISABLE)
+    public void executeSelect() {
+        String query = getParameter("select", "query");
+        EntityManager em = emInjector.getEM();
+        Query q = em.createQuery(query);
+        results = q.getResultList();
+    }
 
-   @Transactional
-   @Security
-   public void executeDelete()
-   {
-      String query = getParameter("delete" , "query");
-      EntityManager em = emInjector.getEM();
-      Query q = em.createQuery(query);
-      count = q.executeUpdate();
-   }
+    @Transactional
+    @Security
+    public void executeDelete() {
+        String query = getParameter("delete", "query");
+        EntityManager em = emInjector.getEM();
+        Query q = em.createQuery(query);
+        count = q.executeUpdate();
+    }
 
-   @Inject
-   public void setEmInjector(EMInjector emInjector)
-   {
-      this.emInjector = emInjector;
-   }
+    @Inject
+    public void setEmInjector(EMInjector emInjector) {
+        this.emInjector = emInjector;
+    }
 }

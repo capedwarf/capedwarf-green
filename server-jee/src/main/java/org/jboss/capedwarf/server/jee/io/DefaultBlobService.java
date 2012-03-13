@@ -22,17 +22,13 @@
 
 package org.jboss.capedwarf.server.jee.io;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.UUID;
+import org.jboss.capedwarf.server.api.io.AbstractSimpleBlobService;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-
-import org.jboss.capedwarf.server.api.io.AbstractSimpleBlobService;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 /**
  * Default blob service.
@@ -41,88 +37,68 @@ import org.jboss.capedwarf.server.api.io.AbstractSimpleBlobService;
  */
 @ApplicationScoped
 @Alternative
-public class DefaultBlobService extends AbstractSimpleBlobService
-{
-   private volatile File dataDir;
+public class DefaultBlobService extends AbstractSimpleBlobService {
+    private volatile File dataDir;
 
-   protected File getDataDir()
-   {
-      if (dataDir == null)
-      {
-         synchronized (this)
-         {
-            if (dataDir == null)
-            {
-               String dataDirProp = System.getProperty("jboss.server.data.dir", System.getProperty("user.home"));
-               File tmp = new File(dataDirProp, "capedwarf");
-               //noinspection ResultOfMethodCallIgnored
-               tmp.mkdirs();
-               dataDir = tmp;
+    protected File getDataDir() {
+        if (dataDir == null) {
+            synchronized (this) {
+                if (dataDir == null) {
+                    String dataDirProp = System.getProperty("jboss.server.data.dir", System.getProperty("user.home"));
+                    File tmp = new File(dataDirProp, "capedwarf");
+                    //noinspection ResultOfMethodCallIgnored
+                    tmp.mkdirs();
+                    dataDir = tmp;
+                }
             }
-         }
-      }
-      return dataDir;
-   }
+        }
+        return dataDir;
+    }
 
-   protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
-   {
-      File file = new File(getDataDir(), key);
-      if (file.exists() == false)
-         return null;
+    protected byte[] loadBytesInternal(String key, long startIndex, long endIndex) {
+        File file = new File(getDataDir(), key);
+        if (file.exists() == false)
+            return null;
 
 
-      FileInputStream fis = null;
-      try
-      {
-         fis = new FileInputStream(file);
-         if (startIndex > 0)
-            startIndex = fis.skip(startIndex);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            if (startIndex > 0)
+                startIndex = fis.skip(startIndex);
 
-         endIndex = endIndex - startIndex; // actual length
-         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-         int b;
-         while ((endIndex > 0) && ((b = fis.read()) != -1))
-         {
-               baos.write(b);
+            endIndex = endIndex - startIndex; // actual length
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int b;
+            while ((endIndex > 0) && ((b = fis.read()) != -1)) {
+                baos.write(b);
 
-            endIndex--;
-         }
-         return baos.toByteArray();
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e);
-      }
-      finally
-      {
-         if (fis != null)
-         {
-            try
-            {
-               fis.close();
+                endIndex--;
             }
-            catch (IOException ignored)
-            {
+            return baos.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ignored) {
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException
-   {
-      String key = UUID.randomUUID().toString();
-      File file = new File(getDataDir(), key);
-      FileOutputStream fos = new FileOutputStream(file);
-      try
-      {
-         while(buffer.hasRemaining())
-            fos.write(buffer.get());
-         fos.flush();
-      }
-      finally
-      {
-         fos.close();
-      }
-      return key;
-   }
+    protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException {
+        String key = UUID.randomUUID().toString();
+        File file = new File(getDataDir(), key);
+        FileOutputStream fos = new FileOutputStream(file);
+        try {
+            while (buffer.hasRemaining())
+                fos.write(buffer.get());
+            fos.flush();
+        } finally {
+            fos.close();
+        }
+        return key;
+    }
 }

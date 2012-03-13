@@ -47,92 +47,78 @@ import java.util.logging.Logger;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class FacebookObserver
-{
-   private static final Logger log = Logger.getLogger(FacebookObserver.class.getName());
+public class FacebookObserver {
+    private static final Logger log = Logger.getLogger(FacebookObserver.class.getName());
 
-   static final String OBJECT_URL = "https://graph.facebook.com/%1$1s";
-   static final String CONNECTION_URL = OBJECT_URL + "/%2$1s?access_token=%3$1s&message=%4$1s";
+    static final String OBJECT_URL = "https://graph.facebook.com/%1$1s";
+    static final String CONNECTION_URL = OBJECT_URL + "/%2$1s?access_token=%3$1s&message=%4$1s";
 
-   static final String CURRENT_USER = "me";
-   static final String FEED = "feed";
-   static final String COMMENTS = "comments";
+    static final String CURRENT_USER = "me";
+    static final String FEED = "feed";
+    static final String COMMENTS = "comments";
 
-   private URLAdapter urlAdapter;
+    private URLAdapter urlAdapter;
 
-   /**
-    * Handle social event.
-    *
-    * @param event the social event
-    * @return post id or null if no post has been made
-    */
-   public String publish(@Observes(during = TransactionPhase.AFTER_SUCCESS) SocialEvent event)
-   {
-      Long userId = event.userId();
-      String accessToken = readAccessToken(userId);
-      if (accessToken != null)
-      {
-         List<String> args = new ArrayList<String>();
-         Long parentId = event.parentId();
-         if (parentId == null)
-         {
-            args.addAll(Arrays.asList(CURRENT_USER, FEED));
-         }
-         else
-         {
-            String postId = readPostId(userId, parentId);
-            if (postId != null)
-            {
-               args.addAll(Arrays.asList(postId, COMMENTS));
+    /**
+     * Handle social event.
+     *
+     * @param event the social event
+     * @return post id or null if no post has been made
+     */
+    public String publish(@Observes(during = TransactionPhase.AFTER_SUCCESS) SocialEvent event) {
+        Long userId = event.userId();
+        String accessToken = readAccessToken(userId);
+        if (accessToken != null) {
+            List<String> args = new ArrayList<String>();
+            Long parentId = event.parentId();
+            if (parentId == null) {
+                args.addAll(Arrays.asList(CURRENT_USER, FEED));
+            } else {
+                String postId = readPostId(userId, parentId);
+                if (postId != null) {
+                    args.addAll(Arrays.asList(postId, COMMENTS));
+                }
             }
-         }
-         if (args.size() > 0)
-         {
-            try
-            {
-               args.add(URLEncoder.encode(accessToken, "UTF-8"));
-               args.add(URLEncoder.encode(event.content(), "UTF-8"));
-               String query = new Formatter().format(CONNECTION_URL, args.toArray()).toString();
-               URL url = new URL(query);
-               InputStream is = urlAdapter.fetch(url);
-               PostId postId = JSONSerializator.INSTANCE.deserialize(is, PostId.class);
-               return postId.getId();
+            if (args.size() > 0) {
+                try {
+                    args.add(URLEncoder.encode(accessToken, "UTF-8"));
+                    args.add(URLEncoder.encode(event.content(), "UTF-8"));
+                    String query = new Formatter().format(CONNECTION_URL, args.toArray()).toString();
+                    URL url = new URL(query);
+                    InputStream is = urlAdapter.fetch(url);
+                    PostId postId = JSONSerializator.INSTANCE.deserialize(is, PostId.class);
+                    return postId.getId();
+                } catch (IOException e) {
+                    log.log(Level.WARNING, "Unable to publish social event: " + event, e);
+                }
             }
-            catch (IOException e)
-            {
-               log.log(Level.WARNING, "Unable to publish social event: " + event, e);
-            }
-         }
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 
-   /**
-    * Read the access token for client / user.
-    *
-    * @param userId the user id.
-    * @return access token or null if no such token
-    */
-   protected String readAccessToken(Long userId)
-   {
-      return "";
-   }
+    /**
+     * Read the access token for client / user.
+     *
+     * @param userId the user id.
+     * @return access token or null if no such token
+     */
+    protected String readAccessToken(Long userId) {
+        return "";
+    }
 
-   /**
-    * Read post id.
-    *
-    * @param userId the user id
-    * @param parentId the parent id
-    * @return previous post id
-    */
-   protected String readPostId(Long userId, Long parentId)
-   {
-      return null;
-   }
+    /**
+     * Read post id.
+     *
+     * @param userId   the user id
+     * @param parentId the parent id
+     * @return previous post id
+     */
+    protected String readPostId(Long userId, Long parentId) {
+        return null;
+    }
 
-   @Inject
-   public void setUrlAdapter(URLAdapter urlAdapter)
-   {
-      this.urlAdapter = urlAdapter;
-   }
+    @Inject
+    public void setUrlAdapter(URLAdapter urlAdapter) {
+        this.urlAdapter = urlAdapter;
+    }
 }

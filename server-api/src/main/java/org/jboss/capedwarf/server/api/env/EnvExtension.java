@@ -19,7 +19,7 @@ public class EnvExtension implements Extension {
 
     private static final Set<Class<?>> builtInBeanTypes;
     private static final Set<String> gaeBeans;
-    
+
     private Boolean isGAE;
 
     static {
@@ -31,7 +31,7 @@ public class EnvExtension implements Extension {
         gaeBeans = new HashSet<String>();
         gaeBeans.add("org.jboss.capedwarf.server.gae.validation.CdiValidationFactoryProvider");
     }
-    
+
     protected boolean isGAE() {
         if (isGAE == null) {
             isGAE = (System.getProperty("jboss.home.dir") == null); // TODO other containers
@@ -51,7 +51,7 @@ public class EnvExtension implements Extension {
         }
         return false;
     }
-    
+
     public void processBeans(@Observes ProcessAnnotatedType pat) {
         if (isGAE() == false) {
             AnnotatedType annotatedType = pat.getAnnotatedType();

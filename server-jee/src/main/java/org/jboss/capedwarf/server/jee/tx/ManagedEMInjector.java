@@ -32,12 +32,11 @@ import javax.persistence.PersistenceUnit;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RequestScoped
-public abstract class ManagedEMInjector extends BaseEMInjector
-{
-   @PersistenceUnit private transient EntityManagerFactory emf;
+public abstract class ManagedEMInjector extends BaseEMInjector {
+    @PersistenceUnit
+    private transient EntityManagerFactory emf;
 
-   protected EntityManagerFactory getInjectedEntityManagerFactory()
-   {
-      return emf;
-   }
+    protected EntityManagerFactory getInjectedEntityManagerFactory() {
+        return emf;
+    }
 }

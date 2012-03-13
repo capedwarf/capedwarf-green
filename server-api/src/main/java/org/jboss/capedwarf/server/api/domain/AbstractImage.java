@@ -22,39 +22,36 @@
 
 package org.jboss.capedwarf.server.api.domain;
 
-import java.io.InputStream;
 import javax.persistence.MappedSuperclass;
+import java.io.InputStream;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @MappedSuperclass
-public abstract class AbstractImage extends AbstractEntity
-{
-   private String mimeType;
-   private long length;
+public abstract class AbstractImage extends AbstractEntity {
+    private String mimeType;
+    private long length;
 
-   public abstract void write(byte[] bytes) throws Exception;
-   public abstract void write(InputStream stream) throws Exception;
-   public abstract byte[] read(long start, long end) throws Exception;
+    public abstract void write(byte[] bytes) throws Exception;
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public abstract void write(InputStream stream) throws Exception;
 
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    public abstract byte[] read(long start, long end) throws Exception;
 
-   public long getLength()
-   {
-      return length;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   public void setLength(long length)
-   {
-      this.length = length;
-   }
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
 }

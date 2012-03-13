@@ -11,23 +11,19 @@ import java.util.zip.GZIPOutputStream;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GzipSerializator extends DelegateSerializator
-{
-   public GzipSerializator(Serializator delegate)
-   {
-      super(delegate);
-   }
+public class GzipSerializator extends DelegateSerializator {
+    public GzipSerializator(Serializator delegate) {
+        super(delegate);
+    }
 
-   public void serialize(Object instance, OutputStream out) throws IOException
-   {
-      GZIPOutputStream gzip = new GZIPOutputStream(out);
-      delegate.serialize(instance, gzip);
-      gzip.finish();
-   }
+    public void serialize(Object instance, OutputStream out) throws IOException {
+        GZIPOutputStream gzip = new GZIPOutputStream(out);
+        delegate.serialize(instance, gzip);
+        gzip.finish();
+    }
 
-   public <T> T deserialize(InputStream stream, Class<T> clazz) throws IOException
-   {
-      InputStream gzip = new GZIPInputStream(stream);
-      return delegate.deserialize(gzip, clazz);
-   }
+    public <T> T deserialize(InputStream stream, Class<T> clazz) throws IOException {
+        InputStream gzip = new GZIPInputStream(stream);
+        return delegate.deserialize(gzip, clazz);
+    }
 }

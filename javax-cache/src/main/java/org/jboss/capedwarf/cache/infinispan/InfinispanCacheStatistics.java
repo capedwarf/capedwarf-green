@@ -22,52 +22,44 @@
 
 package org.jboss.capedwarf.cache.infinispan;
 
-import javax.cache.CacheStatistics;
-
 import org.infinispan.AdvancedCache;
 import org.infinispan.stats.Stats;
+
+import javax.cache.CacheStatistics;
 
 /**
  * Infinispan javax.cache stats.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class InfinispanCacheStatistics implements CacheStatistics
-{
-   private AdvancedCache cache;
+class InfinispanCacheStatistics implements CacheStatistics {
+    private AdvancedCache cache;
 
-   InfinispanCacheStatistics(AdvancedCache cache)
-   {
-      this.cache = cache;
-   }
+    InfinispanCacheStatistics(AdvancedCache cache) {
+        this.cache = cache;
+    }
 
-   protected Stats getStats()
-   {
-      return cache.getStats();
-   }
+    protected Stats getStats() {
+        return cache.getStats();
+    }
 
-   public void clearStatistics()
-   {
-      // TODO?
-   }
+    public void clearStatistics() {
+        // TODO?
+    }
 
-   public int getCacheHits()
-   {
-      return new Long(getStats().getHits()).intValue();
-   }
+    public int getCacheHits() {
+        return new Long(getStats().getHits()).intValue();
+    }
 
-   public int getCacheMisses()
-   {
-      return new Long(getStats().getMisses()).intValue();
-   }
+    public int getCacheMisses() {
+        return new Long(getStats().getMisses()).intValue();
+    }
 
-   public int getObjectCount()
-   {
-      return getStats().getCurrentNumberOfEntries();
-   }
+    public int getObjectCount() {
+        return getStats().getCurrentNumberOfEntries();
+    }
 
-   public int getStatisticsAccuracy()
-   {
-      return CacheStatistics.STATISTICS_ACCURACY_GUARANTEED;
-   }
+    public int getStatisticsAccuracy() {
+        return CacheStatistics.STATISTICS_ACCURACY_GUARANTEED;
+    }
 }

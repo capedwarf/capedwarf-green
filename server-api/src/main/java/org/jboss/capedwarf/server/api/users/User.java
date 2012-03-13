@@ -27,12 +27,11 @@ package org.jboss.capedwarf.server.api.users;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface User
-{
-   /**
-    * Get user's email.
-    *
-    * @return the email
-    */
-   String getEmail();
+public interface User {
+    /**
+     * Get user's email.
+     *
+     * @return the email
+     */
+    String getEmail();
 }

@@ -22,43 +22,38 @@
 
 package org.jboss.capedwarf.server.api.ui;
 
-import java.util.Enumeration;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * Command controller -- request scoped.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class Command
-{
-   protected static final String HOME = "home.cdi";
-   private transient HttpServletRequest req;
+public abstract class Command {
+    protected static final String HOME = "home.cdi";
+    private transient HttpServletRequest req;
 
-   @SuppressWarnings({"unchecked"})
-   protected String getParameter(String form, String key)
-   {
-      String suffix = form + ":" + key;
-      Enumeration<String> names = req.getParameterNames();
-      while (names.hasMoreElements())
-      {
-         String name = names.nextElement();
-         if (name.endsWith(suffix))
-            return req.getParameter(name);
-      }
-      return null;
-   }
+    @SuppressWarnings({"unchecked"})
+    protected String getParameter(String form, String key) {
+        String suffix = form + ":" + key;
+        Enumeration<String> names = req.getParameterNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            if (name.endsWith(suffix))
+                return req.getParameter(name);
+        }
+        return null;
+    }
 
-   protected Long getLong(String form, String key)
-   {
-      String sid = getParameter(form, key);
-      return (sid != null) ? Long.parseLong(sid) : null;
-   }
+    protected Long getLong(String form, String key) {
+        String sid = getParameter(form, key);
+        return (sid != null) ? Long.parseLong(sid) : null;
+    }
 
-   @Inject
-   public void setReq(HttpServletRequest req)
-   {
-      this.req = req;
-   }
+    @Inject
+    public void setReq(HttpServletRequest req) {
+        this.req = req;
+    }
 }

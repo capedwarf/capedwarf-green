@@ -28,11 +28,7 @@ import javax.cache.Cache;
 import javax.cache.CacheEntry;
 import javax.cache.CacheListener;
 import javax.cache.CacheStatistics;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Infinispan javax.cache wrapper.
@@ -40,140 +36,115 @@ import java.util.Set;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SuppressWarnings({"unchecked"})
-class InfinispanCache implements Cache
-{
-   private final org.infinispan.Cache cache;
-   private final CacheStatistics stats;
+class InfinispanCache implements Cache {
+    private final org.infinispan.Cache cache;
+    private final CacheStatistics stats;
 
-   InfinispanCache(org.infinispan.Cache cache)
-   {
-      this.cache = cache;
-      this.stats = new InfinispanCacheStatistics(cache.getAdvancedCache());
-   }
+    InfinispanCache(org.infinispan.Cache cache) {
+        this.cache = cache;
+        this.stats = new InfinispanCacheStatistics(cache.getAdvancedCache());
+    }
 
-   public void start()
-   {
-      cache.start();
-   }
+    public void start() {
+        cache.start();
+    }
 
-   public void stop()
-   {
-      cache.stop();
-   }
+    public void stop() {
+        cache.stop();
+    }
 
-   public void addListener(CacheListener cacheListener)
-   {
-      cache.addListener(new InfinispanCacheListener(cacheListener));
-   }
+    public void addListener(CacheListener cacheListener) {
+        cache.addListener(new InfinispanCacheListener(cacheListener));
+    }
 
-   public void removeListener(CacheListener cacheListener)
-   {
-      cache.removeListener(new InfinispanCacheListener(cacheListener));
-   }
+    public void removeListener(CacheListener cacheListener) {
+        cache.removeListener(new InfinispanCacheListener(cacheListener));
+    }
 
-   public void evict()
-   {
-      cache.getAdvancedCache().getEvictionManager().processEviction();
-   }
+    public void evict() {
+        cache.getAdvancedCache().getEvictionManager().processEviction();
+    }
 
-   public Map getAll(Collection collection)
-   {
-      if (collection == null || collection.isEmpty())
-         return Collections.emptyMap();
+    public Map getAll(Collection collection) {
+        if (collection == null || collection.isEmpty())
+            return Collections.emptyMap();
 
-      Map results = new HashMap();
-      for (Object key : collection)
-         results.put(key, get(key));
-      return results;
-   }
+        Map results = new HashMap();
+        for (Object key : collection)
+            results.put(key, get(key));
+        return results;
+    }
 
-   public CacheEntry getCacheEntry(Object key)
-   {
-      InternalCacheEntry entry = cache.getAdvancedCache().getDataContainer().get(key);
-      return (entry != null)? new InfinispanCacheEntry(entry) : null;
-   }
+    public CacheEntry getCacheEntry(Object key) {
+        InternalCacheEntry entry = cache.getAdvancedCache().getDataContainer().get(key);
+        return (entry != null) ? new InfinispanCacheEntry(entry) : null;
+    }
 
-   public CacheStatistics getCacheStatistics()
-   {
-      return stats;
-   }
+    public CacheStatistics getCacheStatistics() {
+        return stats;
+    }
 
-   public void load(Object key)
-   {
-      get(key);
-   }
+    public void load(Object key) {
+        get(key);
+    }
 
-   public void loadAll(Collection c)
-   {
-      if (c == null || c.isEmpty())
-         return;
+    public void loadAll(Collection c) {
+        if (c == null || c.isEmpty())
+            return;
 
-      for (Object o : c)
-         load(o);
-   }
+        for (Object o : c)
+            load(o);
+    }
 
-   public Object peek(Object key)
-   {
-      return get(key);
-   }
+    public Object peek(Object key) {
+        return get(key);
+    }
 
-   public int size()
-   {
-      return cache.size();
-   }
+    public int size() {
+        return cache.size();
+    }
 
-   public boolean isEmpty()
-   {
-      return cache.isEmpty();
-   }
+    public boolean isEmpty() {
+        return cache.isEmpty();
+    }
 
-   public boolean containsKey(Object key)
-   {
-      return cache.containsKey(key);
-   }
+    public boolean containsKey(Object key) {
+        return cache.containsKey(key);
+    }
 
-   public boolean containsValue(Object value)
-   {
-      return cache.containsValue(value);
-   }
+    public boolean containsValue(Object value) {
+        return cache.containsValue(value);
+    }
 
-   public Object get(Object key)
-   {
-      return cache.get(key);
-   }
+    public Object get(Object key) {
+        return cache.get(key);
+    }
 
-   public Object put(Object key, Object value)
-   {
-      return cache.put(key, value);
-   }
+    public Object put(Object key, Object value) {
+        return cache.put(key, value);
+    }
 
-   public Object remove(Object key)
-   {
-      return cache.remove(key);
-   }
+    public Object remove(Object key) {
+        return cache.remove(key);
+    }
 
-   public void putAll(Map m)
-   {
-      cache.putAll(m);
-   }
+    public void putAll(Map m) {
+        cache.putAll(m);
+    }
 
-   public void clear()
-   {
-      cache.clear();
-   }
+    public void clear() {
+        cache.clear();
+    }
 
-   public Set keySet()
-   {
-      return cache.keySet();
-   }
+    public Set keySet() {
+        return cache.keySet();
+    }
 
-   public Collection values()
-   {
-      return cache.values();
-   }
+    public Collection values() {
+        return cache.values();
+    }
 
-   public Set entrySet()
-   {
-      return cache.entrySet();
-   }
+    public Set entrySet() {
+        return cache.entrySet();
+    }
 }

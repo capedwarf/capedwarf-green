@@ -29,58 +29,57 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface StatelessAdapter
-{
-   /**
-    * Close adapter.
-    */
-   void close();
+public interface StatelessAdapter {
+    /**
+     * Close adapter.
+     */
+    void close();
 
-   /**
-    * Insert a row.
-    *
-    * @param entity a new transient instance
-    * @return entity's id
-    */
-   Long insert(Object entity);
+    /**
+     * Insert a row.
+     *
+     * @param entity a new transient instance
+     * @return entity's id
+     */
+    Long insert(Object entity);
 
-   /**
-    * Update a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void update(Object entity);
+    /**
+     * Update a row.
+     *
+     * @param entity a detached entity instance
+     */
+    void update(Object entity);
 
-   /**
-    * Delete a row.
-    *
-    * @param entity a detached entity instance
-    */
-   void delete(Object entity);
+    /**
+     * Delete a row.
+     *
+     * @param entity a detached entity instance
+     */
+    void delete(Object entity);
 
-   /**
-    * Retrieve a row.
-    *
-    * @param entityClass the entity class
-    * @param id the id
-    * @return a detached entity instance
-    */
-   <T> T get(Class<T> entityClass, Serializable id);
+    /**
+     * Retrieve a row.
+     *
+     * @param entityClass the entity class
+     * @param id          the id
+     * @return a detached entity instance
+     */
+    <T> T get(Class<T> entityClass, Serializable id);
 
-   /**
-    * Refresh the entity instance state from the database.
-    *
-    * @param entity The entity to be refreshed.
-    */
-   void refresh(Object entity);
+    /**
+     * Refresh the entity instance state from the database.
+     *
+     * @param entity The entity to be refreshed.
+     */
+    void refresh(Object entity);
 
-   /**
-    * Force initialization of a proxy or persistent collection.
-    * <p/>
-    * Note: This only ensures intialization of a proxy object or collection;
-    * it is not guaranteed that the elements INSIDE the collection will be initialized/materialized.
-    *
-    * @param proxy a persistable object, proxy, persistent collection or <tt>null</tt>
-    */
-   void initialize(Object proxy);
+    /**
+     * Force initialization of a proxy or persistent collection.
+     * <p/>
+     * Note: This only ensures intialization of a proxy object or collection;
+     * it is not guaranteed that the elements INSIDE the collection will be initialized/materialized.
+     *
+     * @param proxy a persistable object, proxy, persistent collection or <tt>null</tt>
+     */
+    void initialize(Object proxy);
 }

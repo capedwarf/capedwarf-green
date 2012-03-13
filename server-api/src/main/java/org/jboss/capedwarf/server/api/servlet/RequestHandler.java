@@ -26,7 +26,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 /**
@@ -34,22 +33,21 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface RequestHandler
-{
-   /**
-    * Initialize handler.
-    *
-    * @param context the servlet context
-    */
-   void initialize(ServletContext context);
+public interface RequestHandler {
+    /**
+     * Initialize handler.
+     *
+     * @param context the servlet context
+     */
+    void initialize(ServletContext context);
 
-   /**
-    * Handle request.
-    *
-    * @param req the request
-    * @param resp the response
-    * @throws ServletException for any servlet exception
-    * @throws IOException for any IO exception
-    */
-   void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+    /**
+     * Handle request.
+     *
+     * @param req  the request
+     * @param resp the response
+     * @throws ServletException for any servlet exception
+     * @throws IOException      for any IO exception
+     */
+    void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 }

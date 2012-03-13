@@ -27,7 +27,6 @@ import org.jboss.capedwarf.common.serialization.JSONSerializator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 
@@ -36,16 +35,13 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class JSONAwareAbstractAction<T extends JSONAware> extends ResultAbstractAction<T>
-{
-   protected static <I> I deserialize(HttpServletRequest req, Class<I> clazz) throws IOException
-   {
-      return JSONSerializator.OPTIONAL_GZIP_BUFFERED.deserialize(req.getInputStream(), clazz);
-   }
+public abstract class JSONAwareAbstractAction<T extends JSONAware> extends ResultAbstractAction<T> {
+    protected static <I> I deserialize(HttpServletRequest req, Class<I> clazz) throws IOException {
+        return JSONSerializator.OPTIONAL_GZIP_BUFFERED.deserialize(req.getInputStream(), clazz);
+    }
 
-   protected void doWriteResult(HttpServletResponse resp, T result) throws IOException
-   {
-      prepareResponse(resp);
-      JSONSerializator.OPTIONAL_GZIP.serialize(result, resp.getOutputStream());   
-   }
+    protected void doWriteResult(HttpServletResponse resp, T result) throws IOException {
+        prepareResponse(resp);
+        JSONSerializator.OPTIONAL_GZIP.serialize(result, resp.getOutputStream());
+    }
 }

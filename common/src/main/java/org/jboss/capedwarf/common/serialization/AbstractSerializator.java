@@ -9,29 +9,25 @@ import java.util.logging.Logger;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractSerializator implements Serializator
-{
-   protected Logger log = Logger.getLogger(getClass().getName());
+public abstract class AbstractSerializator implements Serializator {
+    protected Logger log = Logger.getLogger(getClass().getName());
 
-   protected AbstractSerializator()
-   {
-   }
+    protected AbstractSerializator() {
+    }
 
-   /**
-    * By default we return true.
-    *
-    * @param clazz the class
-    * @return true
-    */
-   public boolean isValid(Class<?> clazz)
-   {
-      return true;
-   }
+    /**
+     * By default we return true.
+     *
+     * @param clazz the class
+     * @return true
+     */
+    public boolean isValid(Class<?> clazz) {
+        return true;
+    }
 
-   public byte[] serialize(Object instance) throws IOException
-   {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      serialize(instance, baos);
-      return baos.toByteArray();
-   }
+    public byte[] serialize(Object instance) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serialize(instance, baos);
+        return baos.toByteArray();
+    }
 }

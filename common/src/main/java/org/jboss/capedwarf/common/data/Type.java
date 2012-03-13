@@ -5,10 +5,9 @@ package org.jboss.capedwarf.common.data;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum Type
-{
-   SYSTEM,
-   DEFAULT,
-   PRIVATE,
-   COMMERCIAL
+public enum Type {
+    SYSTEM,
+    DEFAULT,
+    PRIVATE,
+    COMMERCIAL
 }

@@ -22,6 +22,11 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
+import org.jboss.capedwarf.server.api.cache.CacheConfig;
+import org.jboss.capedwarf.server.api.cache.EntityListKeyStrategy;
+import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
+
+import javax.cache.CacheException;
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,66 +34,52 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
-import javax.cache.CacheException;
-
-import org.jboss.capedwarf.server.api.cache.CacheConfig;
-import org.jboss.capedwarf.server.api.cache.EntityListKeyStrategy;
-import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
 
 /**
  * Timestamped list handling.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class TimestampedListKeyStrategy<E extends TimestampedEntity> extends EntityListKeyStrategy<TimestampedListCachedResult, E>
-{
-   protected TimestampedListKeyStrategy(CacheConfig config) throws CacheException
-   {
-      super(config);
-   }
+public abstract class TimestampedListKeyStrategy<E extends TimestampedEntity> extends EntityListKeyStrategy<TimestampedListCachedResult, E> {
+    protected TimestampedListKeyStrategy(CacheConfig config) throws CacheException {
+        super(config);
+    }
 
-   protected int getKeyIndex()
-   {
-      return 0;
-   }
+    protected int getKeyIndex() {
+        return 0;
+    }
 
-   protected int getTimestampIndex()
-   {
-      return 1;
-   }
+    protected int getTimestampIndex() {
+        return 1;
+    }
 
-   public Serializable createKey(Object target, Method method, Object[] args)
-   {
-      Prefix prefix = method.getAnnotation(Prefix.class);
-      return createKey(prefix != null ? prefix.value() : null, args[getKeyIndex()]);
-   }
+    public Serializable createKey(Object target, Method method, Object[] args) {
+        Prefix prefix = method.getAnnotation(Prefix.class);
+        return createKey(prefix != null ? prefix.value() : null, args[getKeyIndex()]);
+    }
 
-   protected Serializable createKey(String prefix, Object arg)
-   {
-      return (prefix != null) ? prefix + arg : (Serializable) arg;
-   }
+    protected Serializable createKey(String prefix, Object arg) {
+        return (prefix != null) ? prefix + arg : (Serializable) arg;
+    }
 
-   public TimestampedListCachedResult wrap(List<E> orginal, Object target, Method method, Object[] args)
-   {
-      return new TimestampedListCachedResult((Long) args[getTimestampIndex()], orginal);
-   }
+    public TimestampedListCachedResult wrap(List<E> orginal, Object target, Method method, Object[] args) {
+        return new TimestampedListCachedResult((Long) args[getTimestampIndex()], orginal);
+    }
 
-   public List<E> unwrap(TimestampedListCachedResult cached, Object target, Method method, Object[] args)
-   {
-      List<Long> ids = cached.getSubList((Long) args[getTimestampIndex()]);
-      return getEntities(ids);
-   }
+    public List<E> unwrap(TimestampedListCachedResult cached, Object target, Method method, Object[] args) {
+        List<Long> ids = cached.getSubList((Long) args[getTimestampIndex()]);
+        return getEntities(ids);
+    }
 
-   @Retention(RetentionPolicy.RUNTIME)
-   @Target(ElementType.METHOD)
-   public static @interface Prefix
-   {
-      /**
-       * The prefix.
-       *
-       * @return the prefix
-       */
-      String value();
-   }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface Prefix {
+        /**
+         * The prefix.
+         *
+         * @return the prefix
+         */
+        String value();
+    }
 }
 

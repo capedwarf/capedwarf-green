@@ -22,69 +22,62 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.jboss.capedwarf.server.api.cache.EntityListCachedResult;
 import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Timestamped list cache result.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-class TimestampedListCachedResult extends EntityListCachedResult
-{
-   private static final long serialVersionUID = 1l;
+class TimestampedListCachedResult extends EntityListCachedResult {
+    private static final long serialVersionUID = 1l;
 
-   private long timestamp;
-   private long[] timestamps;
+    private long timestamp;
+    private long[] timestamps;
 
-   public TimestampedListCachedResult(long timestamp, List<? extends TimestampedEntity> results)
-   {
-      super(toIds(results));
-      this.timestamp = timestamp;
-      if (results != null && results.isEmpty() == false)
-      {
-         this.timestamps = new long[results.size()];
-         int i = 0;
-         for (TimestampedEntity te : results)
-            timestamps[i++] = te.getTimestamp();
-      }
-      else
-      {
-         timestamps = new long[0];
-      }
-   }
+    public TimestampedListCachedResult(long timestamp, List<? extends TimestampedEntity> results) {
+        super(toIds(results));
+        this.timestamp = timestamp;
+        if (results != null && results.isEmpty() == false) {
+            this.timestamps = new long[results.size()];
+            int i = 0;
+            for (TimestampedEntity te : results)
+                timestamps[i++] = te.getTimestamp();
+        } else {
+            timestamps = new long[0];
+        }
+    }
 
-   /**
-    * Get proper entity id sublist based on timestamp.
-    *
-    * @param ts the timestamp
-    * @return id sublist
-    */
-   List<Long> getSubList(long ts)
-   {
-      if (ts < timestamp)
-         return null; // we need to get new timestamps
+    /**
+     * Get proper entity id sublist based on timestamp.
+     *
+     * @param ts the timestamp
+     * @return id sublist
+     */
+    List<Long> getSubList(long ts) {
+        if (ts < timestamp)
+            return null; // we need to get new timestamps
 
-      int size = timestamps.length;
+        int size = timestamps.length;
 
-      if (size == 0)
-         return Collections.emptyList();
+        if (size == 0)
+            return Collections.emptyList();
 
-      long lastTs = timestamps[size - 1];
-      if (ts > lastTs)
-         return Collections.emptyList();
+        long lastTs = timestamps[size - 1];
+        if (ts > lastTs)
+            return Collections.emptyList();
 
-      for (int i = 0; i < size; i++)
-      {
-         Long te = timestamps[i];
-         if (te > ts)
-            return getIds().subList(i, size);
-      }
+        for (int i = 0; i < size; i++) {
+            Long te = timestamps[i];
+            if (te > ts)
+                return getIds().subList(i, size);
+        }
 
-      return Collections.emptyList();
-   }
+        return Collections.emptyList();
+    }
 }
 

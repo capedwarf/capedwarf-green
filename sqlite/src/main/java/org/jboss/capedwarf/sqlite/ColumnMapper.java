@@ -29,21 +29,20 @@ import android.database.Cursor;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ColumnMapper<T>
-{
-   /**
-    * Get column name.
-    *
-    * @return the column name
-    */
-   String column();
+public interface ColumnMapper<T> {
+    /**
+     * Get column name.
+     *
+     * @return the column name
+     */
+    String column();
 
-   /**
-    * The value.
-    *
-    * @param cursor the cursor
-    * @param index the column index
-    * @return the value
-    */
-   T value(Cursor cursor, int index);
+    /**
+     * The value.
+     *
+     * @param cursor the cursor
+     * @param index  the column index
+     * @return the value
+     */
+    T value(Cursor cursor, int index);
 }

@@ -28,38 +28,32 @@ import javax.cache.CacheListener;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class TestListener implements CacheListener
-{
-   public Object target;
-   public String state;
+public class TestListener implements CacheListener {
+    public Object target;
+    public String state;
 
-   public void onLoad(Object o)
-   {
-      target = o;
-      state = "Load";
-   }
+    public void onLoad(Object o) {
+        target = o;
+        state = "Load";
+    }
 
-   public void onPut(Object o)
-   {
-      target = o;
-      state = "Put";
-   }
+    public void onPut(Object o) {
+        target = o;
+        state = "Put";
+    }
 
-   public void onEvict(Object o)
-   {
-      target = null;
-      state = "Evict";
-   }
+    public void onEvict(Object o) {
+        target = null;
+        state = "Evict";
+    }
 
-   public void onRemove(Object o)
-   {
-      target = null;
-      state = "Remove";
-   }
+    public void onRemove(Object o) {
+        target = null;
+        state = "Remove";
+    }
 
-   public void onClear()
-   {
-      target = null;
-      state = "Clear";
-   }
+    public void onClear() {
+        target = null;
+        state = "Clear";
+    }
 }

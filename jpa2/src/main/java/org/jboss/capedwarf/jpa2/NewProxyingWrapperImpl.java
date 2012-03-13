@@ -22,25 +22,22 @@
 
 package org.jboss.capedwarf.jpa2;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
 import org.jboss.capedwarf.jpa.ProxyingWrapper;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  * JPA2 proxying wrapper.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class NewProxyingWrapperImpl implements ProxyingWrapper
-{
-   public EntityManagerFactory lazy(String puName)
-   {
-      return new Lazy2EntityManagerFactory(puName);
-   }
+public class NewProxyingWrapperImpl implements ProxyingWrapper {
+    public EntityManagerFactory lazy(String puName) {
+        return new Lazy2EntityManagerFactory(puName);
+    }
 
-   public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider)
-   {
-      return new NewProxyingEntityManagerFactory(delegate, provider);
-   }
+    public EntityManagerFactory wrap(EntityManagerFactory delegate, EntityManagerProvider provider) {
+        return new NewProxyingEntityManagerFactory(delegate, provider);
+    }
 }

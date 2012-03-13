@@ -22,44 +22,40 @@
 
 package org.jboss.capedwarf.server.api.cache.impl;
 
-import javax.cache.Cache;
-
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
+
+import javax.cache.Cache;
 
 /**
  * Abstract CEL.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCacheEntryLookup implements CacheEntryLookup
-{
-   protected Cache cache;
+public abstract class AbstractCacheEntryLookup implements CacheEntryLookup {
+    protected Cache cache;
 
-   protected abstract Object toImplementationId(Class<?> entryType, Object id);
+    protected abstract Object toImplementationId(Class<?> entryType, Object id);
 
-   protected <T> T toEntity(Class<T> entryType, Object result)
-   {
-      return entryType.cast(result);
-   }
+    protected <T> T toEntity(Class<T> entryType, Object result) {
+        return entryType.cast(result);
+    }
 
-   public <T> T getCachedEntry(Class<T> entryType, Object id)
-   {
-      if (entryType == null || id == null)
-         return null;
+    public <T> T getCachedEntry(Class<T> entryType, Object id) {
+        if (entryType == null || id == null)
+            return null;
 
-      Object oid = toImplementationId(entryType, id);
-      if (oid == null)
-         return null;
+        Object oid = toImplementationId(entryType, id);
+        if (oid == null)
+            return null;
 
-      Object result = cache.get(oid);
-      if (result == null)
-         return null;
+        Object result = cache.get(oid);
+        if (result == null)
+            return null;
 
-      return toEntity(entryType, result);
-   }
+        return toEntity(entryType, result);
+    }
 
-   public void setCache(Cache cache)
-   {
-      this.cache = cache;
-   }
+    public void setCache(Cache cache) {
+        this.cache = cache;
+    }
 }

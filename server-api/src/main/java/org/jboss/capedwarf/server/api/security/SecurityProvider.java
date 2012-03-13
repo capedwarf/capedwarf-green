@@ -27,13 +27,12 @@ package org.jboss.capedwarf.server.api.security;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface SecurityProvider
-{
-   /**
-    * Hash the strings.
-    *
-    * @param strings the strings
-    * @return hashed
-    */
-   String hash(String... strings);
+public interface SecurityProvider {
+    /**
+     * Hash the strings.
+     *
+     * @param strings the strings
+     * @return hashed
+     */
+    String hash(String... strings);
 }

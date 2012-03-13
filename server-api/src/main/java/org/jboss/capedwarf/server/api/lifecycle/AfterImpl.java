@@ -29,10 +29,8 @@ import java.lang.annotation.Annotation;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class AfterImpl implements After
-{
-   public Class<? extends Annotation> annotationType()
-   {
-      return After.class;
-   }
+public class AfterImpl implements After {
+    public Class<? extends Annotation> annotationType() {
+        return After.class;
+    }
 }

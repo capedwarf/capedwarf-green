@@ -12,12 +12,11 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Key
-{
-   /**
-    * Key name.
-    *
-    * @return the name
-    */
-   String value();
+public @interface Key {
+    /**
+     * Key name.
+     *
+     * @return the name
+     */
+    String value();
 }

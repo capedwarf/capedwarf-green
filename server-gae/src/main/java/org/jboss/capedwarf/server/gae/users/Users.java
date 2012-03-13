@@ -37,46 +37,38 @@ import javax.enterprise.inject.Produces;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class Users implements UserHandler
-{
-   private UserService userService = UserServiceFactory.getUserService();
+public class Users implements UserHandler {
+    private UserService userService = UserServiceFactory.getUserService();
 
-   @Produces
-   @Current
-   public User currentUser()
-   {
-      com.google.appengine.api.users.User user = userService.getCurrentUser();
-      return (user != null) ? new UserImpl(user) : null;
-   }
+    @Produces
+    @Current
+    public User currentUser() {
+        com.google.appengine.api.users.User user = userService.getCurrentUser();
+        return (user != null) ? new UserImpl(user) : null;
+    }
 
-   public String loginURL(String requestURI)
-   {
-      return userService.createLoginURL(requestURI);
-   }
+    public String loginURL(String requestURI) {
+        return userService.createLoginURL(requestURI);
+    }
 
-   public String logoutURL(String requestURI)
-   {
-      return userService.createLogoutURL(requestURI);
-   }
+    public String logoutURL(String requestURI) {
+        return userService.createLogoutURL(requestURI);
+    }
 
-   private static class UserImpl implements User
-   {
-      com.google.appengine.api.users.User user;
+    private static class UserImpl implements User {
+        com.google.appengine.api.users.User user;
 
-      private UserImpl(com.google.appengine.api.users.User user)
-      {
-         this.user = user;
-      }
+        private UserImpl(com.google.appengine.api.users.User user) {
+            this.user = user;
+        }
 
-      public String getEmail()
-      {
-         return user.getEmail();
-      }
+        public String getEmail() {
+            return user.getEmail();
+        }
 
-      @Override
-      public String toString()
-      {
-         return getEmail();
-      }
-   }
+        @Override
+        public String toString() {
+            return getEmail();
+        }
+    }
 }

@@ -23,21 +23,23 @@
 
 package org.jboss.test.capedwarf.connect.support;
 
-import java.io.InputStream;
-
 import org.apache.http.entity.ContentProducer;
 import org.jboss.capedwarf.common.data.StatusInfo;
 import org.jboss.capedwarf.common.data.UserInfo;
+import org.jboss.capedwarf.common.serialization.Gzip;
+import org.jboss.capedwarf.common.serialization.GzipType;
 import org.jboss.capedwarf.connect.server.QueryParameter;
+
+import java.io.InputStream;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface TestProxy
-{
-   String fooBar(@QueryParameter("foo") int bar);
+public interface TestProxy {
+    String fooBar(@QueryParameter("foo") int bar);
 
-   StatusInfo infoPoke(UserInfo user);
+    StatusInfo infoPoke(UserInfo user);
 
-   InputStream contentDirect(@QueryParameter("x") int x, ContentProducer cp, @QueryParameter("y") int y);
+    @Gzip(GzipType.ENABLE)
+    InputStream contentDirect(@QueryParameter("x") int x, ContentProducer cp, @QueryParameter("y") int y);
 }

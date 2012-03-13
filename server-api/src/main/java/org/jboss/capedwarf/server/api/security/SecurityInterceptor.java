@@ -41,61 +41,51 @@ import java.util.Arrays;
  */
 @Security
 @Interceptor
-public class SecurityInterceptor implements Serializable
-{
-   private static final long serialVersionUID = 1L;
+public class SecurityInterceptor implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-   private transient User user;
-   private transient AdminManager adminManager;
+    private transient User user;
+    private transient AdminManager adminManager;
 
-   @AroundInvoke
-   public Object aroundInvoke(final InvocationContext invocation) throws Exception
-   {
-      Method method = invocation.getMethod();
-      Security security = method.getAnnotation(Security.class);
-      if (security == null)
-      {
-         Class<?> clazz = invocation.getTarget().getClass();
-         security = clazz.getAnnotation(Security.class);
-      }
+    @AroundInvoke
+    public Object aroundInvoke(final InvocationContext invocation) throws Exception {
+        Method method = invocation.getMethod();
+        Security security = method.getAnnotation(Security.class);
+        if (security == null) {
+            Class<?> clazz = invocation.getTarget().getClass();
+            security = clazz.getAnnotation(Security.class);
+        }
 
-      if (security != null && security.value().length > 0)
-      {
-         if (user == null)
-            throw new IllegalArgumentException("Null user, but required roles!");
+        if (security != null && security.value().length > 0) {
+            if (user == null)
+                throw new IllegalArgumentException("Null user, but required roles!");
 
-         String email = user.getEmail();
-         String[] roles = security.value();
-         boolean allowed = false;
-         for (String role : roles)
-         {
-            if (adminManager.isUserInRole(email, role))
-            {
-               allowed = true;
-               break;
+            String email = user.getEmail();
+            String[] roles = security.value();
+            boolean allowed = false;
+            for (String role : roles) {
+                if (adminManager.isUserInRole(email, role)) {
+                    allowed = true;
+                    break;
+                }
             }
-         }
 
-         if (allowed == false)
-            throw new IllegalArgumentException("Illegal user [" + user +"], missing proper role: " + Arrays.asList(roles));
+            if (allowed == false)
+                throw new IllegalArgumentException("Illegal user [" + user + "], missing proper role: " + Arrays.asList(roles));
 
-         return invocation.proceed();
-      }
-      else
-      {
-         return invocation.proceed();
-      }
-   }
+            return invocation.proceed();
+        } else {
+            return invocation.proceed();
+        }
+    }
 
-   @Inject
-   public void setUser(@Current User user)
-   {
-      this.user = user;
-   }
+    @Inject
+    public void setUser(@Current User user) {
+        this.user = user;
+    }
 
-   @Inject
-   public void setAdminManager(AdminManager adminManager)
-   {
-      this.adminManager = adminManager;
-   }
+    @Inject
+    public void setAdminManager(AdminManager adminManager) {
+        this.adminManager = adminManager;
+    }
 }

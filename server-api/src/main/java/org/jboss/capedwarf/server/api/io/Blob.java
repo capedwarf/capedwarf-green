@@ -27,12 +27,11 @@ package org.jboss.capedwarf.server.api.io;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Blob
-{
-   /**
-    * Get bytes.
-    *
-    * @return the bytes
-    */
-   byte[] getBytes();
+public interface Blob {
+    /**
+     * Get bytes.
+     *
+     * @return the bytes
+     */
+    byte[] getBytes();
 }

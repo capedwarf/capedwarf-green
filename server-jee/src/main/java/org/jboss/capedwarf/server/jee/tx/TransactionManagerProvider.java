@@ -22,12 +22,12 @@
 
 package org.jboss.capedwarf.server.jee.tx;
 
-import java.util.logging.Logger;
+import org.jboss.capedwarf.server.jee.env.Environment;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.transaction.TransactionManager;
-
-import org.jboss.capedwarf.server.jee.env.Environment;
+import java.util.logging.Logger;
 
 /**
  * Provide Tx manager.
@@ -35,14 +35,12 @@ import org.jboss.capedwarf.server.jee.env.Environment;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class TransactionManagerProvider
-{
-   protected Logger log = Logger.getLogger(TransactionManagerProvider.class.getName());
+public class TransactionManagerProvider {
+    protected Logger log = Logger.getLogger(TransactionManagerProvider.class.getName());
 
-   @Produces
-   @ApplicationScoped
-   public TransactionManager getTransactionManager(Environment env) throws Exception
-   {
-      return env.lookupTxManager();
-   }
+    @Produces
+    @ApplicationScoped
+    public TransactionManager getTransactionManager(Environment env) throws Exception {
+        return env.lookupTxManager();
+    }
 }

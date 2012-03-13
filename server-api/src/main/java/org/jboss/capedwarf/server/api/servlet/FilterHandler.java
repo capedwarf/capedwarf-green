@@ -25,7 +25,6 @@ package org.jboss.capedwarf.server.api.servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 /**
@@ -33,16 +32,15 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface FilterHandler
-{
-   /**
-    * Handle filter request.
-    *
-    * @param req the request
-    * @param resp the response
-    * @return true if handled OK, false otherwise
-    * @throws javax.servlet.ServletException for any servlet exception
-    * @throws java.io.IOException for any IO exception
-    */
-   boolean accepts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+public interface FilterHandler {
+    /**
+     * Handle filter request.
+     *
+     * @param req  the request
+     * @param resp the response
+     * @return true if handled OK, false otherwise
+     * @throws javax.servlet.ServletException for any servlet exception
+     * @throws java.io.IOException            for any IO exception
+     */
+    boolean accepts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 }

@@ -23,49 +23,42 @@
 
 package org.jboss.capedwarf.server.jee.env.impl;
 
-import java.util.logging.Logger;
 import javax.mail.Session;
 import javax.transaction.TransactionManager;
+import java.util.logging.Logger;
 
 /**
  * Generic environment
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GenericEnvironment extends AbstractEnvironment
-{
-   private static Logger log = Logger.getLogger(GenericEnvironment.class.getName());
+public class GenericEnvironment extends AbstractEnvironment {
+    private static Logger log = Logger.getLogger(GenericEnvironment.class.getName());
 
-   /**
-    * JNDI locations for TransactionManagers we know of
-    */
-   private static String[][] knownJNDIManagers =
-         {
-               {"java:/TransactionManager", "JBoss"},
-               {"java:appserver/TransactionManager", "Glassfish"},
-               {"javax.transaction.TransactionManager", "BEA WebLogic"},
-               {"java:comp/UserTransaction", "Resin, Orion, JOnAS (JOTM)"},
-         };
+    /**
+     * JNDI locations for TransactionManagers we know of
+     */
+    private static String[][] knownJNDIManagers =
+            {
+                    {"java:/TransactionManager", "JBoss"},
+                    {"java:appserver/TransactionManager", "Glassfish"},
+                    {"javax.transaction.TransactionManager", "BEA WebLogic"},
+                    {"java:comp/UserTransaction", "Resin, Orion, JOnAS (JOTM)"},
+            };
 
-   public TransactionManager lookupTxManager() throws Exception
-   {
-      for (String[] jndiManagerName : knownJNDIManagers)
-      {
-         try
-         {
-            TransactionManager tm = doLookup(jndiManagerName[0], TransactionManager.class);
-            log.info("Found Tx manager for " + jndiManagerName[1]);
-            return tm;
-         }
-         catch (Exception ignored)
-         {
-         }
-      }
-      throw new IllegalArgumentException("No Tx manager found!");
-   }
+    public TransactionManager lookupTxManager() throws Exception {
+        for (String[] jndiManagerName : knownJNDIManagers) {
+            try {
+                TransactionManager tm = doLookup(jndiManagerName[0], TransactionManager.class);
+                log.info("Found Tx manager for " + jndiManagerName[1]);
+                return tm;
+            } catch (Exception ignored) {
+            }
+        }
+        throw new IllegalArgumentException("No Tx manager found!");
+    }
 
-   public Session lookupMailSession() throws Exception
-   {
-      return doLookup(true, Session.class, "java:/Mail", "mail/Session");
-   }
+    public Session lookupMailSession() throws Exception {
+        return doLookup(true, Session.class, "java:/Mail", "mail/Session");
+    }
 }

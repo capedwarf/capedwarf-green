@@ -22,16 +22,11 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
+import org.jboss.capedwarf.jpa.ProxyingEnum;
+
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.jboss.capedwarf.jpa.ProxyingEnum;
+import java.lang.annotation.*;
 
 /**
  * Check proxying.
@@ -42,12 +37,11 @@ import org.jboss.capedwarf.jpa.ProxyingEnum;
 @InterceptorBinding
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Proxying
-{
-   /**
-    * Proxying type.
-    *
-    * @return the proxying type
-    */
-   @Nonbinding ProxyingEnum value();
+public @interface Proxying {
+    /**
+     * Proxying type.
+     *
+     * @return the proxying type
+     */
+    @Nonbinding ProxyingEnum value();
 }

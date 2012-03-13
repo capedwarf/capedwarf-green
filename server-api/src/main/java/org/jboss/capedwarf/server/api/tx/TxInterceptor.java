@@ -23,11 +23,11 @@
 
 package org.jboss.capedwarf.server.api.tx;
 
-import java.io.Serializable;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.io.Serializable;
 
 /**
  * Tx interceptor.
@@ -36,19 +36,16 @@ import javax.interceptor.InvocationContext;
  */
 @Transactional
 @Interceptor
-public class TxInterceptor implements Serializable
-{
-   private transient TxInterceptorDelegate delegate;
+public class TxInterceptor implements Serializable {
+    private transient TxInterceptorDelegate delegate;
 
-   @AroundInvoke
-   public Object invoke(final InvocationContext invocation) throws Exception
-   {
-      return delegate.invoke(invocation);
-   }
+    @AroundInvoke
+    public Object invoke(final InvocationContext invocation) throws Exception {
+        return delegate.invoke(invocation);
+    }
 
-   @Inject
-   public void setDelegate(TxInterceptorDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    @Inject
+    public void setDelegate(TxInterceptorDelegate delegate) {
+        this.delegate = delegate;
+    }
 }

@@ -22,56 +22,54 @@
 
 package org.jboss.capedwarf.server.api.servlet;
 
-import java.util.ServiceLoader;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.servlet.ServletContext;
+import java.util.ServiceLoader;
 
 /**
  * BM lookup impl.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class BeanManagerUtils
-{
-   /** The impl detail */
-   private static final String BM_KEY = "org.jboss.weld.environment.servlet" + "." + BeanManager.class.getName();
+public class BeanManagerUtils {
+    /**
+     * The impl detail
+     */
+    private static final String BM_KEY = "org.jboss.weld.environment.servlet" + "." + BeanManager.class.getName();
 
-   /**
-    * Get bean manager.
-    *
-    * @param context the servlet context
-    * @return bean manager
-    */
-   public static BeanManager lookup(ServletContext context)
-   {
-      // check cache
-      BeanManager manager = (BeanManager) context.getAttribute(BeanManagerUtils.class.getName());
-      if (manager != null)
-         return manager;
-
-      manager = doLookup(context);
-
-      // cache it
-      context.setAttribute(BeanManagerUtils.class.getName(), manager);
-
-      return manager;
-   }
-
-   protected static BeanManager doLookup(ServletContext context)
-   {
-      ServiceLoader<BeanManagerLookup> bmls = ServiceLoader.load(BeanManagerLookup.class, BeanManagerUtils.class.getClassLoader());
-      for (BeanManagerLookup bml : bmls)
-      {
-         BeanManager manager = bml.lookup(context);
-         if (manager != null)
+    /**
+     * Get bean manager.
+     *
+     * @param context the servlet context
+     * @return bean manager
+     */
+    public static BeanManager lookup(ServletContext context) {
+        // check cache
+        BeanManager manager = (BeanManager) context.getAttribute(BeanManagerUtils.class.getName());
+        if (manager != null)
             return manager;
-      }
 
-      // Use Weld default
-      BeanManager manager = (BeanManager) context.getAttribute(BM_KEY);
-      if (manager == null)
-         throw new IllegalArgumentException("No Weld manager present");
+        manager = doLookup(context);
 
-      return manager;
-   }
+        // cache it
+        context.setAttribute(BeanManagerUtils.class.getName(), manager);
+
+        return manager;
+    }
+
+    protected static BeanManager doLookup(ServletContext context) {
+        ServiceLoader<BeanManagerLookup> bmls = ServiceLoader.load(BeanManagerLookup.class, BeanManagerUtils.class.getClassLoader());
+        for (BeanManagerLookup bml : bmls) {
+            BeanManager manager = bml.lookup(context);
+            if (manager != null)
+                return manager;
+        }
+
+        // Use Weld default
+        BeanManager manager = (BeanManager) context.getAttribute(BM_KEY);
+        if (manager == null)
+            throw new IllegalArgumentException("No Weld manager present");
+
+        return manager;
+    }
 }

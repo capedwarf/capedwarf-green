@@ -22,13 +22,6 @@
 
 package org.jboss.capedwarf.server.api.persistence;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
 import org.jboss.capedwarf.jpa.EntityManagerProvider;
 import org.jboss.capedwarf.jpa.ProxyingFactory;
 import org.jboss.capedwarf.jpa.ProxyingWrapper;
@@ -36,80 +29,75 @@ import org.jboss.capedwarf.server.api.lifecycle.AfterImpl;
 import org.jboss.capedwarf.server.api.lifecycle.BeforeImpl;
 import org.jboss.capedwarf.server.api.lifecycle.Notification;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 /**
  * EntityManagerFactory provider.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class EMF
-{
-   private volatile EntityManagerFactory emf;
-   private Event<Notification<EntityManagerFactory>> produceEvent;
+public class EMF {
+    private volatile EntityManagerFactory emf;
+    private Event<Notification<EntityManagerFactory>> produceEvent;
 
-   @Produces
-   @ApplicationScoped
-   public EntityManagerFactory produceFactory(EMFInfo info)
-   {
-      produceEvent.select(new BeforeImpl()).fire(new EMFNotification(null)); // let app know we're about to create EMF
-      EntityManagerFactory entityManagerFactory = getFactory(info);
-      produceEvent.select(new AfterImpl()).fire(new EMFNotification(entityManagerFactory)); // let app know we created EMF
-      return entityManagerFactory;
-   }
+    @Produces
+    @ApplicationScoped
+    public EntityManagerFactory produceFactory(EMFInfo info) {
+        produceEvent.select(new BeforeImpl()).fire(new EMFNotification(null)); // let app know we're about to create EMF
+        EntityManagerFactory entityManagerFactory = getFactory(info);
+        produceEvent.select(new AfterImpl()).fire(new EMFNotification(entityManagerFactory)); // let app know we created EMF
+        return entityManagerFactory;
+    }
 
-   @Produces
-   @ApplicationScoped
-   public ProxyingFactory produceProxyingFactory(EMFInfo info)
-   {
-      return (ProxyingFactory) getFactory(info);
-   }
+    @Produces
+    @ApplicationScoped
+    public ProxyingFactory produceProxyingFactory(EMFInfo info) {
+        return (ProxyingFactory) getFactory(info);
+    }
 
-   private EntityManagerFactory getFactory(EMFInfo info)
-   {
-      if (emf == null)
-      {
-         synchronized (this)
-         {
-            if (emf == null)
-            {
-               ProxyingWrapper wrapper = info.getWrapper();
-               EntityManagerFactory delegate = wrapper.lazy(info.getUnitName());
-               EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
-               emf = wrapper.wrap(delegate, provider);
+    private EntityManagerFactory getFactory(EMFInfo info) {
+        if (emf == null) {
+            synchronized (this) {
+                if (emf == null) {
+                    ProxyingWrapper wrapper = info.getWrapper();
+                    EntityManagerFactory delegate = wrapper.lazy(info.getUnitName());
+                    EntityManagerProvider provider = new CurrentEntityManagerProvider(delegate, info.getEmInjector());
+                    emf = wrapper.wrap(delegate, provider);
+                }
             }
-         }
-      }      
-      return emf;
-   }
+        }
+        return emf;
+    }
 
-   @Inject
-   public void setProduceEvent(Event<Notification<EntityManagerFactory>> produceEvent)
-   {
-      this.produceEvent = produceEvent;
-   }
+    @Inject
+    public void setProduceEvent(Event<Notification<EntityManagerFactory>> produceEvent) {
+        this.produceEvent = produceEvent;
+    }
 
-   private static class CurrentEntityManagerProvider implements EntityManagerProvider
-   {
-      private EntityManagerFactory emf;
-      private EMInjector emInjector;
+    private static class CurrentEntityManagerProvider implements EntityManagerProvider {
+        private EntityManagerFactory emf;
+        private EMInjector emInjector;
 
-      private CurrentEntityManagerProvider(EntityManagerFactory emf, EMInjector emInjector)
-      {
-         this.emf = emf;
-         this.emInjector = emInjector;
-      }
+        private CurrentEntityManagerProvider(EntityManagerFactory emf, EMInjector emInjector) {
+            this.emf = emf;
+            this.emInjector = emInjector;
+        }
 
-      public EntityManager getEntityManager()
-      {
-         EntityManager em = emInjector.getEM();
-         return (em != null) ? em : emf.createEntityManager();
-      }
+        public EntityManager getEntityManager() {
+            EntityManager em = emInjector.getEM();
+            return (em != null) ? em : emf.createEntityManager();
+        }
 
-      public void close(EntityManager em)
-      {
-         EntityManager tmp = emInjector.getEM();
-         if (tmp != em)
-            em.close();
-      }
-   }
+        public void close(EntityManager em) {
+            EntityManager tmp = emInjector.getEM();
+            if (tmp != em)
+                em.close();
+        }
+    }
 }

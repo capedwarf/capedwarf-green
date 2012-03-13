@@ -29,6 +29,5 @@ import org.jboss.capedwarf.server.api.domain.AbstractImage;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ImageDAO<T extends AbstractImage> extends GenericDAO<T>
-{
+public interface ImageDAO<T extends AbstractImage> extends GenericDAO<T> {
 }

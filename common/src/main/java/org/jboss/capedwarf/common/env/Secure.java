@@ -12,12 +12,11 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Secure
-{
-   /**
-    * Get the secure path inidicator.
-    *
-    * @return the query
-    */
-   String value() default "secure";
+public @interface Secure {
+    /**
+     * Get the secure path inidicator.
+     *
+     * @return the query
+     */
+    String value() default "secure";
 }

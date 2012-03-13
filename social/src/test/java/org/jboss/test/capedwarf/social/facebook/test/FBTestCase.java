@@ -22,10 +22,6 @@
 
 package org.jboss.test.capedwarf.social.facebook.test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import org.jboss.capedwarf.common.io.URLAdapter;
 import org.jboss.capedwarf.social.facebook.FacebookObserver;
 import org.jboss.test.capedwarf.social.facebook.support.TestSocialEvent;
@@ -33,64 +29,57 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class FBTestCase
-{
-   protected FacebookObserver getFacebookObserver(final String postId)
-   {
-      FacebookObserver observer = new FacebookObserver()
-      {
-         protected String readAccessToken(Long userId)
-         {
-            return "1234567890"; // TODO
-         }
+public class FBTestCase {
+    protected FacebookObserver getFacebookObserver(final String postId) {
+        FacebookObserver observer = new FacebookObserver() {
+            protected String readAccessToken(Long userId) {
+                return "1234567890"; // TODO
+            }
 
-         protected String readPostId(Long userId, Long parentId)
-         {
-            return postId;
-         }
-      };
-      observer.setUrlAdapter(new URLAdapter()
-      {
-         public InputStream fetch(URL url) throws IOException
-         {
-            return url.openStream();
-         }
-      });
-      return observer;
-   }
+            protected String readPostId(Long userId, Long parentId) {
+                return postId;
+            }
+        };
+        observer.setUrlAdapter(new URLAdapter() {
+            public InputStream fetch(URL url) throws IOException {
+                return url.openStream();
+            }
+        });
+        return observer;
+    }
 
-   @Before
-   public void setUp()
-   {
-      // TODO
-   }
+    @Before
+    public void setUp() {
+        // TODO
+    }
 
-   @After
-   public void tearDown()
-   {
-      // TODO
-   }
+    @After
+    public void tearDown() {
+        // TODO
+    }
 
-   @Test
-   public void testUpdateStatus() throws Exception
-   {
-      FacebookObserver fbObserver = getFacebookObserver(null);
-      fbObserver.publish(new TestSocialEvent("Test-" + System.currentTimeMillis()));
-   }
+    @Test
+    public void testUpdateStatus() throws Exception {
+        FacebookObserver fbObserver = getFacebookObserver(null);
+        fbObserver.publish(new TestSocialEvent("Test-" + System.currentTimeMillis()));
+    }
 
-   @Test
-   public void testAddComment() throws Exception
-   {
-      // event
-      FacebookObserver fbObserver = getFacebookObserver(null);
-      String postId = fbObserver.publish(new TestSocialEvent("Test-" + System.currentTimeMillis()));
-      // comment
-      fbObserver = getFacebookObserver(postId);
-      TestSocialEvent event = new TestSocialEvent("Test-" + System.currentTimeMillis());
-      event.setParentId(1L);
-      fbObserver.publish(event);
-   }
+    @Test
+    public void testAddComment() throws Exception {
+        // event
+        FacebookObserver fbObserver = getFacebookObserver(null);
+        String postId = fbObserver.publish(new TestSocialEvent("Test-" + System.currentTimeMillis()));
+        // comment
+        fbObserver = getFacebookObserver(postId);
+        TestSocialEvent event = new TestSocialEvent("Test-" + System.currentTimeMillis());
+        event.setParentId(1L);
+        fbObserver.publish(event);
+    }
 }

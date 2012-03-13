@@ -29,44 +29,43 @@ import java.util.Set;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface AdminManager
-{
-   /**
-    * Get roles.
-    *
-    * @param identification the identification
-    * @return roles
-    */
-   Set<String> getRoles(String identification);
+public interface AdminManager {
+    /**
+     * Get roles.
+     *
+     * @param identification the identification
+     * @return roles
+     */
+    Set<String> getRoles(String identification);
 
-   /**
-    * Is user in role.
-    *
-    * @param identification the identification
-    * @param role the role
-    * @return true if user in role, false otherwise
-    */
-   boolean isUserInRole(String identification, String role);
+    /**
+     * Is user in role.
+     *
+     * @param identification the identification
+     * @param role           the role
+     * @return true if user in role, false otherwise
+     */
+    boolean isUserInRole(String identification, String role);
 
-   /**
-    * Get users by role.
-    *
-    * @param role the role
-    * @return users
-    */
-   Set<String> getUsers(String role);
+    /**
+     * Get users by role.
+     *
+     * @param role the role
+     * @return users
+     */
+    Set<String> getUsers(String role);
 
-   /**
-    * Get app admin email.
-    *
-    * @return the app admin email
-    */
-   String getAppAdminEmail();
+    /**
+     * Get app admin email.
+     *
+     * @return the app admin email
+     */
+    String getAppAdminEmail();
 
-   /**
-    * Get app dev email.
-    *
-    * @return the app admin email
-    */
-   String getAppDevEmail();
+    /**
+     * Get app dev email.
+     *
+     * @return the app admin email
+     */
+    String getAppDevEmail();
 }

@@ -32,37 +32,36 @@ import java.lang.reflect.Method;
  * @param <U> the exact original value type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface KeyStrategy<T, U>
-{
-   /**
-    * Create cache key.
-    *
-    * @param target the target
-    * @param method the intercepted method
-    * @param args the args
-    * @return cache key
-    */
-   Serializable createKey(Object target, Method method, Object[] args);
+public interface KeyStrategy<T, U> {
+    /**
+     * Create cache key.
+     *
+     * @param target the target
+     * @param method the intercepted method
+     * @param args   the args
+     * @return cache key
+     */
+    Serializable createKey(Object target, Method method, Object[] args);
 
-   /**
-    * Wrap the original value.
-    *
-    * @param orginal the original value
-    * @param target the target
-    * @param method the intercepted method
-    * @param args the args
-    * @return wrapped value
-    */
-   T wrap(U orginal, Object target, Method method, Object[] args);
+    /**
+     * Wrap the original value.
+     *
+     * @param orginal the original value
+     * @param target  the target
+     * @param method  the intercepted method
+     * @param args    the args
+     * @return wrapped value
+     */
+    T wrap(U orginal, Object target, Method method, Object[] args);
 
-   /**
-    * Unwrap cached value.
-    *
-    * @param cached the cached value
-    * @param target the target
-    * @param method the intercepted method
-    * @param args the args
-    * @return unwrapped value
-    */
-   U unwrap(T cached, Object target, Method method, Object[] args);
+    /**
+     * Unwrap cached value.
+     *
+     * @param cached the cached value
+     * @param target the target
+     * @param method the intercepted method
+     * @param args   the args
+     * @return unwrapped value
+     */
+    U unwrap(T cached, Object target, Method method, Object[] args);
 }

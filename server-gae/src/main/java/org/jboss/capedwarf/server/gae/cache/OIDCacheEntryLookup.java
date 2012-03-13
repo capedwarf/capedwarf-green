@@ -30,59 +30,46 @@ import java.util.logging.Logger;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OIDCacheEntryLookup extends DNCacheEntryLookup
-{
-   private static final Logger log = Logger.getLogger(OIDCacheEntryLookup.class.getName());
+public class OIDCacheEntryLookup extends DNCacheEntryLookup {
+    private static final Logger log = Logger.getLogger(OIDCacheEntryLookup.class.getName());
 
-   private String oidClassName = "org.datanucleus.identity.OIDImpl";
-   private volatile Class<?> oidClass;
+    private String oidClassName = "org.datanucleus.identity.OIDImpl";
+    private volatile Class<?> oidClass;
 
-   protected Object toImplementationId(Class<?> entryType, Object id)
-   {
-      if (oidClass == null)
-      {
-         synchronized (this)
-         {
-            if (oidClass == null)
-            {
-               if (cache == null)
-               {
-                  oidClass = Void.class;
-                  log.warning("Cache is null, forgot to set it?");
-                  return null;
-               }
+    protected Object toImplementationId(Class<?> entryType, Object id) {
+        if (oidClass == null) {
+            synchronized (this) {
+                if (oidClass == null) {
+                    if (cache == null) {
+                        oidClass = Void.class;
+                        log.warning("Cache is null, forgot to set it?");
+                        return null;
+                    }
 
-               try
-               {
-                  oidClass = getClass().getClassLoader().loadClass(oidClassName);
-               }
-               catch (ClassNotFoundException e)
-               {
-                  log.warning("Cannot create OID: " + e);
-                  oidClass = Void.class;
-               }
+                    try {
+                        oidClass = getClass().getClassLoader().loadClass(oidClassName);
+                    } catch (ClassNotFoundException e) {
+                        log.warning("Cannot create OID: " + e);
+                        oidClass = Void.class;
+                    }
+                }
             }
-         }
-      }
+        }
 
-      // it failed
-      if (oidClass == Void.class)
-         return null;
+        // it failed
+        if (oidClass == Void.class)
+            return null;
 
-      try
-      {
-         Constructor<?> ctor = oidClass.getConstructor(String.class, Object.class);
-         return ctor.newInstance(entryType.getName(), id);
-      }
-      catch (Exception e)
-      {
-         log.fine("Cannot create OID: " + e);
-         return null;
-      }
-   }
+        try {
+            Constructor<?> ctor = oidClass.getConstructor(String.class, Object.class);
+            return ctor.newInstance(entryType.getName(), id);
+        } catch (Exception e) {
+            log.fine("Cannot create OID: " + e);
+            return null;
+        }
+    }
 
-   public void setOidClassName(String oidClassName)
-   {
-      this.oidClassName = oidClassName;
-   }
+    public void setOidClassName(String oidClassName) {
+        this.oidClassName = oidClassName;
+    }
 }

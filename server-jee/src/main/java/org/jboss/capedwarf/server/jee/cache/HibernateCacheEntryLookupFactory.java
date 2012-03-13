@@ -22,11 +22,11 @@
 
 package org.jboss.capedwarf.server.jee.cache;
 
-import javax.cache.Cache;
-import javax.enterprise.context.ApplicationScoped;
-
 import org.jboss.capedwarf.server.api.cache.CacheEntryLookup;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory;
+
+import javax.cache.Cache;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * Hibernate cache entry lookup factory.
@@ -34,12 +34,10 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookupFactory
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class HibernateCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory
-{
-   protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache)
-   {
-      HibernateCacheEntryLookup lookup = new HibernateCacheEntryLookup();
-      lookup.setCache(cache);
-      return lookup;
-   }
+public class HibernateCacheEntryLookupFactory extends AbstractCacheEntryLookupFactory {
+    protected CacheEntryLookup doCreateCacheEntryLookup(Cache cache) {
+        HibernateCacheEntryLookup lookup = new HibernateCacheEntryLookup();
+        lookup.setCache(cache);
+        return lookup;
+    }
 }

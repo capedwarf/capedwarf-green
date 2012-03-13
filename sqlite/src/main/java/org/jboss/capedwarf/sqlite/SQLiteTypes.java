@@ -30,52 +30,49 @@ import java.util.Map;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum SQLiteTypes
-{
-   NONE,
-   INTEGER,
-   TEXT,
-   REAL,
-   NUMERIC,
-   BLOB;
+public enum SQLiteTypes {
+    NONE,
+    INTEGER,
+    TEXT,
+    REAL,
+    NUMERIC,
+    BLOB;
 
-   private static final Map<Class<?>, SQLiteTypes> affinities = new HashMap<Class<?>, SQLiteTypes>();
+    private static final Map<Class<?>, SQLiteTypes> affinities = new HashMap<Class<?>, SQLiteTypes>();
 
-   static
-   {
-      affinities.put(String.class, TEXT);
-      affinities.put(Byte.class, INTEGER);
-      affinities.put(byte.class, INTEGER);
-      affinities.put(Short.class, INTEGER);
-      affinities.put(short.class, INTEGER);
-      affinities.put(Integer.class, INTEGER);
-      affinities.put(int.class, INTEGER);
-      affinities.put(Long.class, INTEGER);
-      affinities.put(long.class, INTEGER);
-      affinities.put(Float.class, REAL);
-      affinities.put(float.class, REAL);
-      affinities.put(Double.class, REAL);
-      affinities.put(double.class, REAL);
-      affinities.put(Boolean.class, INTEGER);
-      affinities.put(boolean.class, INTEGER);
-      affinities.put(byte[].class, BLOB);
-   }
+    static {
+        affinities.put(String.class, TEXT);
+        affinities.put(Byte.class, INTEGER);
+        affinities.put(byte.class, INTEGER);
+        affinities.put(Short.class, INTEGER);
+        affinities.put(short.class, INTEGER);
+        affinities.put(Integer.class, INTEGER);
+        affinities.put(int.class, INTEGER);
+        affinities.put(Long.class, INTEGER);
+        affinities.put(long.class, INTEGER);
+        affinities.put(Float.class, REAL);
+        affinities.put(float.class, REAL);
+        affinities.put(Double.class, REAL);
+        affinities.put(double.class, REAL);
+        affinities.put(Boolean.class, INTEGER);
+        affinities.put(boolean.class, INTEGER);
+        affinities.put(byte[].class, BLOB);
+    }
 
-   /**
-    * Get sqlite type mapping.
-    *
-    * @param type the java type
-    * @return sql type
-    */
-   public static SQLiteTypes getSQLType(Class<?> type)
-   {
-      if (type == null)
-         return NONE;
+    /**
+     * Get sqlite type mapping.
+     *
+     * @param type the java type
+     * @return sql type
+     */
+    public static SQLiteTypes getSQLType(Class<?> type) {
+        if (type == null)
+            return NONE;
 
-      if (Enum.class.isAssignableFrom(type))
-         return INTEGER;
+        if (Enum.class.isAssignableFrom(type))
+            return INTEGER;
 
-      SQLiteTypes affinity = affinities.get(type);
-      return (affinity != null) ? affinity : NONE;
-   }
+        SQLiteTypes affinity = affinities.get(type);
+        return (affinity != null) ? affinity : NONE;
+    }
 }

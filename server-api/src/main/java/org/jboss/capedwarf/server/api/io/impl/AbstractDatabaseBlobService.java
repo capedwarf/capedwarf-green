@@ -22,72 +22,61 @@
 
 package org.jboss.capedwarf.server.api.io.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import org.jboss.capedwarf.server.api.dao.ImageDAO;
 import org.jboss.capedwarf.server.api.domain.AbstractImage;
 import org.jboss.capedwarf.server.api.io.AbstractSimpleBlobService;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public abstract class AbstractDatabaseBlobService<T extends AbstractImage> extends AbstractSimpleBlobService
-{
-   private ImageDAO<T> imageDAO;
+public abstract class AbstractDatabaseBlobService<T extends AbstractImage> extends AbstractSimpleBlobService {
+    private ImageDAO<T> imageDAO;
 
-   protected byte[] loadBytesInternal(String key, long startIndex, long endIndex)
-   {
-      Long id = Long.parseLong(key);
-      AbstractImage image = imageDAO.find(id);
-      if (image != null)
-      {
-         long min = (endIndex == Long.MAX_VALUE) ? image.getLength() : endIndex;
-         try
-         {
-            return image.read(startIndex, min);
-         }
-         catch (Exception e)
-         {
-            throw new RuntimeException(e);
-         }
-      }
-      return null;
-   }
+    protected byte[] loadBytesInternal(String key, long startIndex, long endIndex) {
+        Long id = Long.parseLong(key);
+        AbstractImage image = imageDAO.find(id);
+        if (image != null) {
+            long min = (endIndex == Long.MAX_VALUE) ? image.getLength() : endIndex;
+            try {
+                return image.read(startIndex, min);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
 
-   /**
-    * Create new image instance.
-    *
-    * @return new image instance
-    */
-   protected abstract T createImageInstance();
+    /**
+     * Create new image instance.
+     *
+     * @return new image instance
+     */
+    protected abstract T createImageInstance();
 
-   protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException
-   {
-      try
-      {
-         T image = createImageInstance();
-         image.setMimeType(mimeType);
-         byte[] array = buffer.array();
-         image.write(array);
-         image.setLength(array.length);
-         imageDAO.save(image);
-         return Long.toString(image.getId());
-      }
-      catch (Exception e)
-      {
-         IOException ioe = new IOException();
-         ioe.initCause(e);
-         throw ioe;
-      }
-   }
+    protected String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException {
+        try {
+            T image = createImageInstance();
+            image.setMimeType(mimeType);
+            byte[] array = buffer.array();
+            image.write(array);
+            image.setLength(array.length);
+            imageDAO.save(image);
+            return Long.toString(image.getId());
+        } catch (Exception e) {
+            IOException ioe = new IOException();
+            ioe.initCause(e);
+            throw ioe;
+        }
+    }
 
-   @Inject
-   public void setImageDAO(ImageDAO<T> imageDAO)
-   {
-      this.imageDAO = imageDAO;
-   }
+    @Inject
+    public void setImageDAO(ImageDAO<T> imageDAO) {
+        this.imageDAO = imageDAO;
+    }
 }

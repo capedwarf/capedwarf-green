@@ -22,17 +22,16 @@
 
 package org.jboss.capedwarf.server.gae.validation;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.validation.ValidatorFactory;
-
-import org.jboss.capedwarf.validation.AbstractValidatorFactoryProvider;
-import org.jboss.capedwarf.validation.SimpleValidatorFactory;
 import org.jboss.capedwarf.server.api.validation.BlobSize;
 import org.jboss.capedwarf.server.api.validation.BlobSizeValidator;
 import org.jboss.capedwarf.server.api.validation.JpaEmail;
 import org.jboss.capedwarf.server.api.validation.JpaEmailValidator;
+import org.jboss.capedwarf.validation.AbstractValidatorFactoryProvider;
+import org.jboss.capedwarf.validation.SimpleValidatorFactory;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.validation.ValidatorFactory;
 
 
 /**
@@ -40,22 +39,20 @@ import org.jboss.capedwarf.server.api.validation.JpaEmailValidator;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CdiValidationFactoryProvider extends AbstractValidatorFactoryProvider
-{
-   @Produces
-   @ApplicationScoped
-   public ValidatorFactory createFactory()
-   {
-      SimpleValidatorFactory factory = new SimpleValidatorFactory();
-      factory.put(BlobSize.class, BlobSizeValidator.class);
-      factory.put(JpaEmail.class, JpaEmailValidator.class);
-      return factory;
-   }
+public class CdiValidationFactoryProvider extends AbstractValidatorFactoryProvider {
+    @Produces
+    @ApplicationScoped
+    public ValidatorFactory createFactory() {
+        SimpleValidatorFactory factory = new SimpleValidatorFactory();
+        factory.put(BlobSize.class, BlobSizeValidator.class);
+        factory.put(JpaEmail.class, JpaEmailValidator.class);
+        return factory;
+    }
 
-   /*
-   protected String getFactoryClassName()
-   {
-      return "org.hibernate.validator.util.LazyValidatorFactory";
-   }
-   */
+    /*
+    protected String getFactoryClassName()
+    {
+       return "org.hibernate.validator.util.LazyValidatorFactory";
+    }
+    */
 }

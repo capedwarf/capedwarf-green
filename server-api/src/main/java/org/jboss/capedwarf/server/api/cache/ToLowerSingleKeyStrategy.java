@@ -29,10 +29,8 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ToLowerSingleKeyStrategy extends SingleKeyStrategy
-{
-   public String createKey(Object target, Method m, Object[] args)
-   {
-      return super.createKey(target, m, args).toLowerCase();
-   }
+public class ToLowerSingleKeyStrategy extends SingleKeyStrategy {
+    public String createKey(Object target, Method m, Object[] args) {
+        return super.createKey(target, m, args).toLowerCase();
+    }
 }

@@ -22,64 +22,53 @@
 
 package org.jboss.capedwarf.server.api.io;
 
+import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.zip.GZIPOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
 
 /**
  * Base (using defaults) byte[] handling service.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class BaseBlobService implements BlobService
-{
-   public byte[] loadBytes(String key)
-   {
-      return loadBytes(key, 0, Long.MAX_VALUE);
-   }
+public abstract class BaseBlobService implements BlobService {
+    public byte[] loadBytes(String key) {
+        return loadBytes(key, 0, Long.MAX_VALUE);
+    }
 
-   public void serveBytes(String key, OutputStream outstream) throws IOException
-   {
-      serveBytes(key, 0, outstream);
-   }
+    public void serveBytes(String key, OutputStream outstream) throws IOException {
+        serveBytes(key, 0, outstream);
+    }
 
-   public void serveBytes(String key, long start, OutputStream outstream) throws IOException
-   {
-      serveBytes(key, start, Long.MAX_VALUE, outstream);
-   }
+    public void serveBytes(String key, long start, OutputStream outstream) throws IOException {
+        serveBytes(key, start, Long.MAX_VALUE, outstream);
+    }
 
-   public void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException
-   {
-      byte[] bytes = loadBytes(key, start, end);
-      if (bytes != null)
-      {
-         if (GzipOptionalSerializator.isGzipDisabled())
-         {
-            outstream.write(bytes);
-         }
-         else
-         {
-            GZIPOutputStream gzip = new GZIPOutputStream(outstream);
-            gzip.write(bytes);
-            gzip.finish();
-         }
-      }
-   }
+    public void serveBytes(String key, long start, long end, OutputStream outstream) throws IOException {
+        byte[] bytes = loadBytes(key, start, end);
+        if (bytes != null) {
+            if (GzipOptionalSerializator.isGzipEnabled()) {
+                GZIPOutputStream gzip = new GZIPOutputStream(outstream);
+                gzip.write(bytes);
+                gzip.finish();
+            } else {
+                outstream.write(bytes);
+            }
+        }
+    }
 
-   public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException
-   {
-      serveBytes(key, start, end, respose.getOutputStream());
-   }
+    public void serveBytes(String key, long start, long end, HttpServletResponse respose) throws IOException {
+        serveBytes(key, start, end, respose.getOutputStream());
+    }
 
-   public String storeBytes(String mimeType, byte[] bytes) throws IOException
-   {
-      if (bytes == null)
-         return null;
+    public String storeBytes(String mimeType, byte[] bytes) throws IOException {
+        if (bytes == null)
+            return null;
 
-      return storeBytes(mimeType, ByteBuffer.wrap(bytes));
-   }
+        return storeBytes(mimeType, ByteBuffer.wrap(bytes));
+    }
 }

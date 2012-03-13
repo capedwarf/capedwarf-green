@@ -31,14 +31,13 @@ import java.net.URL;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface URLAdapter
-{
-   /**
-    * Fetch url content.
-    *
-    * @param url the url
-    * @return content as input stream
-    * @throws IOException for any I/O error
-    */
-   InputStream fetch(URL url) throws IOException;
+public interface URLAdapter {
+    /**
+     * Fetch url content.
+     *
+     * @param url the url
+     * @return content as input stream
+     * @throws IOException for any I/O error
+     */
+    InputStream fetch(URL url) throws IOException;
 }

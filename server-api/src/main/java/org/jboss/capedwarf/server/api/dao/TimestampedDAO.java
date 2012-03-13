@@ -30,13 +30,12 @@ import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
  * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface TimestampedDAO<T extends TimestampedEntity> extends GenericDAO<T>
-{
-   /**
-    * Is the entity expired?
-    *
-    * @param entity the entity
-    * @return true if expired, false otherwise
-    */
-   boolean hasExpired(T entity);
+public interface TimestampedDAO<T extends TimestampedEntity> extends GenericDAO<T> {
+    /**
+     * Is the entity expired?
+     *
+     * @param entity the entity
+     * @return true if expired, false otherwise
+     */
+    boolean hasExpired(T entity);
 }

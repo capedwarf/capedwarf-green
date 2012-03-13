@@ -1,92 +1,79 @@
 package org.jboss.test.capedwarf.common.serialization.support;
 
-import java.io.Serializable;
-
 import org.jboss.capedwarf.common.serialization.JSONAware;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class TestData implements JSONAware, Serializable
-{
-   private static final long serialVersionUID = 1l;
-   
-   private long id;
-   private String topic;
-   private double x;
-   private String extra;
+public class TestData implements JSONAware, Serializable {
+    private static final long serialVersionUID = 1l;
 
-   public void writeJSONObject(JSONObject json) throws JSONException
-   {
-      json.put("id", id);
-      json.put("topic", topic);
-      json.put("x", x);
-      json.putOpt("extra", extra);
-   }
+    private long id;
+    private String topic;
+    private double x;
+    private String extra;
 
-   public void readJSONObject(JSONObject json) throws JSONException
-   {
-      id = json.getLong("id");
-      topic = json.getString("topic");
-      x = json.getDouble("x");
-      extra = json.optString("extra");
-   }
+    public void writeJSONObject(JSONObject json) throws JSONException {
+        json.put("id", id);
+        json.put("topic", topic);
+        json.put("x", x);
+        json.putOpt("extra", extra);
+    }
 
-   public long getId()
-   {
-      return id;
-   }
+    public void readJSONObject(JSONObject json) throws JSONException {
+        id = json.getLong("id");
+        topic = json.getString("topic");
+        x = json.getDouble("x");
+        extra = json.optString("extra");
+    }
 
-   public void setId(long id)
-   {
-      this.id = id;
-   }
+    public long getId() {
+        return id;
+    }
 
-   public String getTopic()
-   {
-      return topic;
-   }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-   public void setTopic(String topic)
-   {
-      this.topic = topic;
-   }
+    public String getTopic() {
+        return topic;
+    }
 
-   public double getX()
-   {
-      return x;
-   }
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
-   public void setX(double x)
-   {
-      this.x = x;
-   }
+    public double getX() {
+        return x;
+    }
 
-   public String getExtra()
-   {
-      return extra;
-   }
+    public void setX(double x) {
+        this.x = x;
+    }
 
-   public void setExtra(String extra)
-   {
-      this.extra = extra;
-   }
+    public String getExtra() {
+        return extra;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return topic.hashCode();
-   }
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj instanceof TestData == false)
-         return false;
+    @Override
+    public int hashCode() {
+        return topic.hashCode();
+    }
 
-      TestData td = (TestData) obj;
-      return (id == td.id) && (x == td.x) && (topic.equals(td.topic));  
-   }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TestData == false)
+            return false;
+
+        TestData td = (TestData) obj;
+        return (id == td.id) && (x == td.x) && (topic.equals(td.topic));
+    }
 }

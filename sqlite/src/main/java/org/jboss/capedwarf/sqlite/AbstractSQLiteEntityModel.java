@@ -23,18 +23,10 @@
 package org.jboss.capedwarf.sqlite;
 
 import android.database.Cursor;
-import org.jboss.capedwarf.common.sql.OnDelete;
-import org.jboss.capedwarf.common.sql.OnInsert;
-import org.jboss.capedwarf.common.sql.OnLoad;
-import org.jboss.capedwarf.common.sql.OnUpdate;
-import org.jboss.capedwarf.common.sql.Table;
+import org.jboss.capedwarf.common.sql.*;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,143 +34,113 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractSQLiteEntityModel<T> implements SQLiteEntityModel<T>
-{
-   protected Class<T> entityClass;
-   private Map<String, EntityListener> listeners;
-   private volatile String table;
-   private volatile String[] keyAndColumns;
+public abstract class AbstractSQLiteEntityModel<T> implements SQLiteEntityModel<T> {
+    protected Class<T> entityClass;
+    private Map<String, EntityListener> listeners;
+    private volatile String table;
+    private volatile String[] keyAndColumns;
 
-   protected AbstractSQLiteEntityModel(Class<T> entityClass) throws Exception
-   {
-      if (entityClass == null)
-         throw new IllegalArgumentException("Null entity class");
-      this.entityClass = entityClass;
-      this.listeners = new ConcurrentHashMap<String, EntityListener>();
-   }
+    protected AbstractSQLiteEntityModel(Class<T> entityClass) throws Exception {
+        if (entityClass == null)
+            throw new IllegalArgumentException("Null entity class");
+        this.entityClass = entityClass;
+        this.listeners = new ConcurrentHashMap<String, EntityListener>();
+    }
 
-   public String getTable()
-   {
-      if (table == null)
-      {
-         Table t = entityClass.getAnnotation(Table.class);
-         table = (t != null && t.name().length() > 0) ? t.name() : entityClass.getSimpleName();
-      }
-      return table;
-   }
+    public String getTable() {
+        if (table == null) {
+            Table t = entityClass.getAnnotation(Table.class);
+            table = (t != null && t.name().length() > 0) ? t.name() : entityClass.getSimpleName();
+        }
+        return table;
+    }
 
-   protected abstract Set<String> getColumns();
+    protected abstract Set<String> getColumns();
 
-   public String[] getKeyAndColumns()
-   {
-      if (keyAndColumns == null)
-      {
-         Set<String> all = new LinkedHashSet<String>();
-         all.add(getKey());
-         all.addAll(getColumns());
-         keyAndColumns = all.toArray(new String[all.size()]);
-      }
-      return keyAndColumns;
-   }
+    public String[] getKeyAndColumns() {
+        if (keyAndColumns == null) {
+            Set<String> all = new LinkedHashSet<String>();
+            all.add(getKey());
+            all.addAll(getColumns());
+            keyAndColumns = all.toArray(new String[all.size()]);
+        }
+        return keyAndColumns;
+    }
 
-   static Cursor toFirst(Cursor cursor)
-   {
-      if (cursor == null)
-      {
-         return null;
-      }
-      else if (cursor.moveToFirst() == false)
-      {
-         cursor.close();
-         return null;
-      }
-      return cursor;
-   }
+    static Cursor toFirst(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        } else if (cursor.moveToFirst() == false) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
+    }
 
-   public List<T> readCursor(Cursor cursor)
-   {
-      cursor = toFirst(cursor);
+    public List<T> readCursor(Cursor cursor) {
+        cursor = toFirst(cursor);
 
-      if (cursor == null)
-         return Collections.emptyList();
+        if (cursor == null)
+            return Collections.emptyList();
 
-      try
-      {
-         return readValues(cursor);        
-      }
-      finally
-      {
-         cursor.close();
-      }
-   }
+        try {
+            return readValues(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
 
-   protected abstract List<T> readValues(Cursor cursor);
+    protected abstract List<T> readValues(Cursor cursor);
 
-   protected EntityListener loadEntityListener(String className)
-   {
-      try
-      {
-         Class<?> elc = getClass().getClassLoader().loadClass(className);
-         Object result = elc.newInstance();
-         if (EntityListener.class.isInstance(result) == false)
-            throw new IllegalArgumentException("Not an EntityListener: " + className);
+    protected EntityListener loadEntityListener(String className) {
+        try {
+            Class<?> elc = getClass().getClassLoader().loadClass(className);
+            Object result = elc.newInstance();
+            if (EntityListener.class.isInstance(result) == false)
+                throw new IllegalArgumentException("Not an EntityListener: " + className);
 
-         return (EntityListener) result;
-      }
-      catch (RuntimeException e)
-      {
-         throw e;
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e);
-      }
-   }
+            return (EntityListener) result;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-   protected void putListener(String key, EntityListener listener)
-   {
-      if (listener == null)
-         listeners.remove(key);
-      else
-         listeners.put(key, listener);
-   }
+    protected void putListener(String key, EntityListener listener) {
+        if (listener == null)
+            listeners.remove(key);
+        else
+            listeners.put(key, listener);
+    }
 
-   public EntityListener onInsert()
-   {
-      return listeners.get(OnInsert.class.getSimpleName());
-   }
+    public EntityListener onInsert() {
+        return listeners.get(OnInsert.class.getSimpleName());
+    }
 
-   public EntityListener onLoad()
-   {
-      return listeners.get(OnLoad.class.getSimpleName());
-   }
+    public EntityListener onLoad() {
+        return listeners.get(OnLoad.class.getSimpleName());
+    }
 
-   public EntityListener onUpdate()
-   {
-      return listeners.get(OnUpdate.class.getSimpleName());
-   }
+    public EntityListener onUpdate() {
+        return listeners.get(OnUpdate.class.getSimpleName());
+    }
 
-   public EntityListener onDelete()
-   {
-      return listeners.get(OnDelete.class.getSimpleName());
-   }
+    public EntityListener onDelete() {
+        return listeners.get(OnDelete.class.getSimpleName());
+    }
 
-   protected Object toEnum(Class<?> enumClass, int ordinal)
-   {
-      try
-      {
-         Method m = enumClass.getMethod("values");
-         Object[] values = (Object[]) m.invoke(null);
-         return values[ordinal];
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException(e);
-      }
-   }
+    protected Object toEnum(Class<?> enumClass, int ordinal) {
+        try {
+            Method m = enumClass.getMethod("values");
+            Object[] values = (Object[]) m.invoke(null);
+            return values[ordinal];
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-   public String toString()
-   {
-      return entityClass.getSimpleName();
-   }
+    public String toString() {
+        return entityClass.getSimpleName();
+    }
 }

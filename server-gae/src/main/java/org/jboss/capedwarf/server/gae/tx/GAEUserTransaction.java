@@ -22,73 +22,59 @@
 
 package org.jboss.capedwarf.server.gae.tx;
 
-import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Alternative;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Transaction;
+
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Alternative;
+import javax.transaction.*;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RequestScoped
 @Alternative
-public class GAEUserTransaction implements UserTransaction
-{
-   protected Logger log = Logger.getLogger(GAEUserTransaction.class.getName());
+public class GAEUserTransaction implements UserTransaction {
+    protected Logger log = Logger.getLogger(GAEUserTransaction.class.getName());
 
-   public void begin() throws NotSupportedException, SystemException
-   {
-      DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-      service.beginTransaction();
-   }
+    public void begin() throws NotSupportedException, SystemException {
+        DatastoreService service = DatastoreServiceFactory.getDatastoreService();
+        service.beginTransaction();
+    }
 
-   protected Transaction getCurrentTransaction(boolean allowNoCurrentTx)
-   {
-      DatastoreService service = DatastoreServiceFactory.getDatastoreService();
-      Transaction tx = service.getCurrentTransaction();
-      if (tx == null && allowNoCurrentTx == false)
-         throw new IllegalStateException("No current transaction!");
-      return tx;
-   }
+    protected Transaction getCurrentTransaction(boolean allowNoCurrentTx) {
+        DatastoreService service = DatastoreServiceFactory.getDatastoreService();
+        Transaction tx = service.getCurrentTransaction();
+        if (tx == null && allowNoCurrentTx == false)
+            throw new IllegalStateException("No current transaction!");
+        return tx;
+    }
 
-   public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException
-   {
-      getCurrentTransaction(false).commit();
-   }
+    public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
+        getCurrentTransaction(false).commit();
+    }
 
-   public int getStatus() throws SystemException
-   {
-      Transaction tx = getCurrentTransaction(true);
-      if (tx == null)
-         return Status.STATUS_NO_TRANSACTION;
-      else if (tx.isActive())
-         return Status.STATUS_ACTIVE;
-      else
-         return Status.STATUS_UNKNOWN;
-   }
+    public int getStatus() throws SystemException {
+        Transaction tx = getCurrentTransaction(true);
+        if (tx == null)
+            return Status.STATUS_NO_TRANSACTION;
+        else if (tx.isActive())
+            return Status.STATUS_ACTIVE;
+        else
+            return Status.STATUS_UNKNOWN;
+    }
 
-   public void rollback() throws IllegalStateException, SecurityException, SystemException
-   {
-      getCurrentTransaction(false).rollback();
-   }
+    public void rollback() throws IllegalStateException, SecurityException, SystemException {
+        getCurrentTransaction(false).rollback();
+    }
 
-   public void setRollbackOnly() throws IllegalStateException, SystemException
-   {
-      log.warning("setRollbackOnly is not supported");
-   }
+    public void setRollbackOnly() throws IllegalStateException, SystemException {
+        log.warning("setRollbackOnly is not supported");
+    }
 
-   public void setTransactionTimeout(int i) throws SystemException
-   {
-      log.warning("setTransactionTimeout is not supported");
-   }
+    public void setTransactionTimeout(int i) throws SystemException {
+        log.warning("setTransactionTimeout is not supported");
+    }
 }

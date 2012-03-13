@@ -22,55 +22,45 @@
 
 package org.jboss.capedwarf.server.api.servlet;
 
-import java.io.IOException;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Exposes request and response as beans.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class WeldFilter implements Filter
-{
-   /** The bean manager */
-   private BeanManager manager;
+public class WeldFilter implements Filter {
+    /**
+     * The bean manager
+     */
+    private BeanManager manager;
 
-   public void init(FilterConfig config) throws ServletException
-   {
-      ServletContext context = config.getServletContext();
-      manager = BeanManagerUtils.lookup(context);
-   }
+    public void init(FilterConfig config) throws ServletException {
+        ServletContext context = config.getServletContext();
+        manager = BeanManagerUtils.lookup(context);
+    }
 
-   protected <T> T getBean(Class<T> beanType)
-   {
-      Bean<?> bean = manager.resolve(manager.getBeans(beanType));
-      Object result = manager.getReference(bean, beanType, manager.createCreationalContext(bean));
-      return beanType.cast(result);
-   }
+    protected <T> T getBean(Class<T> beanType) {
+        Bean<?> bean = manager.resolve(manager.getBeans(beanType));
+        Object result = manager.getReference(bean, beanType, manager.createCreationalContext(bean));
+        return beanType.cast(result);
+    }
 
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
-   {
-      if (request instanceof HttpServletRequest && response instanceof HttpServletResponse)
-      {
-         getBean(HttpServletRequestManager.class).setRequest((HttpServletRequest) request);
-         getBean(HttpServletResponseManager.class).setResponse((HttpServletResponse) response);
-      }
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+            getBean(HttpServletRequestManager.class).setRequest((HttpServletRequest) request);
+            getBean(HttpServletResponseManager.class).setResponse((HttpServletResponse) response);
+        }
 
-      chain.doFilter(request, response);
-   }
+        chain.doFilter(request, response);
+    }
 
-   public void destroy()
-   {
-      manager = null;
-   }
+    public void destroy() {
+        manager = null;
+    }
 }

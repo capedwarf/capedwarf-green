@@ -5,19 +5,18 @@ package org.jboss.capedwarf.common.io;
  *
  * @author <a href="mailto:marko.strukelj@gmail.com>Marko Strukelj</a>
  */
-public interface Progress
-{
-   /**
-    * Get total number of bytes to process
-    *
-    * @return total number of bytes
-    */
-   public long getTotal();
+public interface Progress {
+    /**
+     * Get total number of bytes to process
+     *
+     * @return total number of bytes
+     */
+    public long getTotal();
 
-   /**
-    * Get number of bytes processed
-    *
-    * @return number of bytes processed
-    */
-   public long getProcessed();
+    /**
+     * Get number of bytes processed
+     *
+     * @return number of bytes processed
+     */
+    public long getProcessed();
 }

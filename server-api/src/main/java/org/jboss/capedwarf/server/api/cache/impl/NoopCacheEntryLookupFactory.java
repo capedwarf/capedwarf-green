@@ -8,7 +8,7 @@ import javax.enterprise.inject.Alternative;
 
 /**
  * Noop CELF.
- *
+ * <p/>
  * Most cached items are too heavy to extract.
  * e.g. Hibernate has a lot of impl details,
  * where DataNucleus just changes how entries are cached - broken to primitives.

@@ -36,24 +36,21 @@ import javax.inject.Inject;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class TwitterObserver
-{
-   private URLAdapter urlAdapter;
+public class TwitterObserver {
+    private URLAdapter urlAdapter;
 
-   /**
-    * Handle social event.
-    *
-    * @param event the social event
-    * @return post id or null if no post has been made
-    */
-   public String publish(@Observes(during = TransactionPhase.AFTER_SUCCESS) SocialEvent event)
-   {
-      return null;
-   }
+    /**
+     * Handle social event.
+     *
+     * @param event the social event
+     * @return post id or null if no post has been made
+     */
+    public String publish(@Observes(during = TransactionPhase.AFTER_SUCCESS) SocialEvent event) {
+        return null;
+    }
 
-   @Inject
-   public void setUrlAdapter(URLAdapter urlAdapter)
-   {
-      this.urlAdapter = urlAdapter;
-   }
+    @Inject
+    public void setUrlAdapter(URLAdapter urlAdapter) {
+        this.urlAdapter = urlAdapter;
+    }
 }

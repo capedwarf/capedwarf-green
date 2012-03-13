@@ -27,9 +27,8 @@ import org.jboss.capedwarf.validation.api.AbstractEmailConstraintValidator;
 
 /**
  * Blob size validator.
- * 
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class JpaEmailValidator extends AbstractEmailConstraintValidator<JpaEmail>
-{   
+public class JpaEmailValidator extends AbstractEmailConstraintValidator<JpaEmail> {
 }

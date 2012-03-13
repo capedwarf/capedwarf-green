@@ -30,15 +30,13 @@ import java.util.Arrays;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class DefaultKeyStrategy extends PassThroughKeyStrategy
-{
-   public String createKey(Object target, Method m, Object[] args)
-   {
-      CacheKey key = m.getAnnotation(CacheKey.class);
-      if (key != null)
-         return key.value();
+public class DefaultKeyStrategy extends PassThroughKeyStrategy {
+    public String createKey(Object target, Method m, Object[] args) {
+        CacheKey key = m.getAnnotation(CacheKey.class);
+        if (key != null)
+            return key.value();
 
-      Class<?> clazz = target.getClass();
-      return clazz.getName() + "#" + m.getName() + "_" + Arrays.asList(args);
-   }
+        Class<?> clazz = target.getClass();
+        return clazz.getName() + "#" + m.getName() + "_" + Arrays.asList(args);
+    }
 }

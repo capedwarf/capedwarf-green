@@ -30,62 +30,61 @@ import javax.cache.CacheException;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CacheConfig
-{
-   /**
-    * Find the cache.
-    *
-    * @param name the name
-    * @return cache or null if no such cache
-    */
-   Cache findCache(String name);
+public interface CacheConfig {
+    /**
+     * Find the cache.
+     *
+     * @param name the name
+     * @return cache or null if no such cache
+     */
+    Cache findCache(String name);
 
-   /**
-    * Configure the cache.
-    * If such cache already exists we ignore the config.
-    *
-    * @param name the cache name
-    * @return cache instance, existing or new
-    * @throws CacheException for any error
-    */
-   Cache configureCache(String name) throws CacheException;
+    /**
+     * Configure the cache.
+     * If such cache already exists we ignore the config.
+     *
+     * @param name the cache name
+     * @return cache instance, existing or new
+     * @throws CacheException for any error
+     */
+    Cache configureCache(String name) throws CacheException;
 
-   /**
-    * Evict cache.
-    *
-    * @param name the cache name
-    * @return true if such cache exists and was successfully evicted
-    */
-   boolean evictCache(String name);
+    /**
+     * Evict cache.
+     *
+     * @param name the cache name
+     * @return true if such cache exists and was successfully evicted
+     */
+    boolean evictCache(String name);
 
-   /**
-    * Clear cache.
-    *
-    * @param name the cache name
-    * @return true if such cache exists and was successfully cleared
-    */
-   boolean clearCache(String name);
+    /**
+     * Clear cache.
+     *
+     * @param name the cache name
+     * @return true if such cache exists and was successfully cleared
+     */
+    boolean clearCache(String name);
 
-   /**
-    * Dispose cache.
-    *
-    * @param cache the cache to dispose
-    */
-   void disposeCache(Cache cache);
+    /**
+     * Dispose cache.
+     *
+     * @param cache the cache to dispose
+     */
+    void disposeCache(Cache cache);
 
-   /**
-    * Get cache entry lookup.
-    *
-    * @param cacheName the cache name
-    * @return new cache entry lookup instance
-    * @throws CacheException for any error
-    */
-   CacheEntryLookup getLookup(String cacheName) throws CacheException;
+    /**
+     * Get cache entry lookup.
+     *
+     * @param cacheName the cache name
+     * @return new cache entry lookup instance
+     * @throws CacheException for any error
+     */
+    CacheEntryLookup getLookup(String cacheName) throws CacheException;
 
-   /**
-    * Get exception handler.
-    *
-    * @return the exception handler
-    */
-   CacheExceptionHandler getExceptionHandler();
+    /**
+     * Get exception handler.
+     *
+     * @return the exception handler
+     */
+    CacheExceptionHandler getExceptionHandler();
 }

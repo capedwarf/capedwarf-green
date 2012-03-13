@@ -36,64 +36,55 @@ import java.io.IOException;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Named("LoginHandler")
-public class LoginHandler
-{
-   private User user;
-   private UserHandler userHandler;
-   private HttpServletRequest request;
-   private HttpServletResponse response;
+public class LoginHandler {
+    private User user;
+    private UserHandler userHandler;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
-   /**
-    * Login.
-    *
-    * @throws IOException for any error
-    */
-   public void login() throws IOException
-   {
-      if (user == null)
-      {
-         String requestURI = request.getRequestURI();
-         String loginURL = userHandler.loginURL(requestURI);
-         response.sendRedirect(loginURL);
-      }
-   }
+    /**
+     * Login.
+     *
+     * @throws IOException for any error
+     */
+    public void login() throws IOException {
+        if (user == null) {
+            String requestURI = request.getRequestURI();
+            String loginURL = userHandler.loginURL(requestURI);
+            response.sendRedirect(loginURL);
+        }
+    }
 
-   /**
-    * Logout.
-    *
-    * @throws IOException for any error
-    */
-   public void logout() throws IOException
-   {
-      if (user != null)
-      {
-         String requestURI = request.getRequestURI();
-         String logoutURL = userHandler.logoutURL(requestURI);
-         response.sendRedirect(logoutURL);
-      }
-   }
+    /**
+     * Logout.
+     *
+     * @throws IOException for any error
+     */
+    public void logout() throws IOException {
+        if (user != null) {
+            String requestURI = request.getRequestURI();
+            String logoutURL = userHandler.logoutURL(requestURI);
+            response.sendRedirect(logoutURL);
+        }
+    }
 
-   @Inject
-   public void setUser(@Current User user)
-   {
-      this.user = user;
-   }
+    @Inject
+    public void setUser(@Current User user) {
+        this.user = user;
+    }
 
-   @Inject
-   public void setUserHandler(UserHandler userHandler)
-   {
-      this.userHandler = userHandler;
-   }
+    @Inject
+    public void setUserHandler(UserHandler userHandler) {
+        this.userHandler = userHandler;
+    }
 
-   @Inject
-   public void setRequest(HttpServletRequest request)
-   {
-      this.request = request;
-   }
+    @Inject
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
 
-   @Inject
-   public void setResponse(HttpServletResponse response)
-   {
-      this.response = response;
-   }
+    @Inject
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 }

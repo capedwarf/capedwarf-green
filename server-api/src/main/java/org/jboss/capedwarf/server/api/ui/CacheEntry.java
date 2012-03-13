@@ -29,30 +29,25 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CacheEntry implements Serializable
-{
-   private static final long serialVersionUID = 1l;
+public class CacheEntry implements Serializable {
+    private static final long serialVersionUID = 1l;
 
-   private Object key;
-   private Object value;
+    private Object key;
+    private Object value;
 
-   public CacheEntry()
-   {
-   }
+    public CacheEntry() {
+    }
 
-   public CacheEntry(Object key, Object value)
-   {
-      this.key = key;
-      this.value = value;
-   }
+    public CacheEntry(Object key, Object value) {
+        this.key = key;
+        this.value = value;
+    }
 
-   public Object getKey()
-   {
-      return key;
-   }
+    public Object getKey() {
+        return key;
+    }
 
-   public Object getValue()
-   {
-      return value;
-   }
+    public Object getValue() {
+        return value;
+    }
 }

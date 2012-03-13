@@ -31,10 +31,8 @@ import org.jboss.capedwarf.server.api.mvc.JSONAwareAbstractAction;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class StatusInfoAbstractAction extends JSONAwareAbstractAction<StatusInfo>
-{
-   protected StatusInfo errorResult()
-   {
-      return new StatusInfo(Status.ERROR);
-   }
+public abstract class StatusInfoAbstractAction extends JSONAwareAbstractAction<StatusInfo> {
+    protected StatusInfo errorResult() {
+        return new StatusInfo(Status.ERROR);
+    }
 }

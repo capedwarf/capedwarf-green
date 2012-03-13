@@ -27,13 +27,12 @@ package org.jboss.capedwarf.server.api.io;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface ResourceReader
-{
-   /**
-    * Get resource bytes.
-    *
-    * @param resource the resource name
-    * @return bytes or null if no such resource
-    */
-   byte[] getResource(String resource);
+public interface ResourceReader {
+    /**
+     * Get resource bytes.
+     *
+     * @param resource the resource name
+     * @return bytes or null if no such resource
+     */
+    byte[] getResource(String resource);
 }

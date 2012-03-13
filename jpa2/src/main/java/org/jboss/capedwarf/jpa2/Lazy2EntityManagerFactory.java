@@ -22,55 +22,47 @@
 
 package org.jboss.capedwarf.jpa2;
 
-import java.util.Map;
+import org.jboss.capedwarf.jpa.LazyEntityManagerFactory;
+
 import javax.persistence.Cache;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
-
-import org.jboss.capedwarf.jpa.LazyEntityManagerFactory;
+import java.util.Map;
 
 /**
  * JPA2 lazy EMF.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class Lazy2EntityManagerFactory extends LazyEntityManagerFactory implements EntityManagerFactory
-{
-   public Lazy2EntityManagerFactory(String puName)
-   {
-      super(puName);
-   }
+public class Lazy2EntityManagerFactory extends LazyEntityManagerFactory implements EntityManagerFactory {
+    public Lazy2EntityManagerFactory(String puName) {
+        super(puName);
+    }
 
-   @Override
-   protected EntityManagerFactory getDelegate()
-   {
-      return super.getDelegate();
-   }
+    @Override
+    protected EntityManagerFactory getDelegate() {
+        return super.getDelegate();
+    }
 
-   public CriteriaBuilder getCriteriaBuilder()
-   {
-      return getDelegate().getCriteriaBuilder();
-   }
+    public CriteriaBuilder getCriteriaBuilder() {
+        return getDelegate().getCriteriaBuilder();
+    }
 
-   public Metamodel getMetamodel()
-   {
-      return getDelegate().getMetamodel();
-   }
+    public Metamodel getMetamodel() {
+        return getDelegate().getMetamodel();
+    }
 
-   public Map<String, Object> getProperties()
-   {
-      return getDelegate().getProperties();
-   }
+    public Map<String, Object> getProperties() {
+        return getDelegate().getProperties();
+    }
 
-   public Cache getCache()
-   {
-      return getDelegate().getCache();
-   }
+    public Cache getCache() {
+        return getDelegate().getCache();
+    }
 
-   public PersistenceUnitUtil getPersistenceUnitUtil()
-   {
-      return getDelegate().getPersistenceUnitUtil();
-   }
+    public PersistenceUnitUtil getPersistenceUnitUtil() {
+        return getDelegate().getPersistenceUnitUtil();
+    }
 }

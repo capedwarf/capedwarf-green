@@ -31,24 +31,20 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class PostId implements JSONAware
-{
-   private String id;
+public class PostId implements JSONAware {
+    private String id;
 
-   public String getId()
-   {
-      return id;
-   }
+    public String getId() {
+        return id;
+    }
 
-   public void writeJSONObject(JSONObject json) throws JSONException
-   {
-      // we won't write this
-   }
+    public void writeJSONObject(JSONObject json) throws JSONException {
+        // we won't write this
+    }
 
-   public void readJSONObject(JSONObject json) throws JSONException
-   {
-      String tmp = json.optString("id");
-      if (tmp != null && tmp.length() > 0)
-         id = tmp;
-   }
+    public void readJSONObject(JSONObject json) throws JSONException {
+        String tmp = json.optString("id");
+        if (tmp != null && tmp.length() > 0)
+            id = tmp;
+    }
 }

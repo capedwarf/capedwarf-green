@@ -22,130 +22,131 @@
 
 package org.jboss.capedwarf.connect.server;
 
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
 
 /**
  * Set custom http headers.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HttpHeaders
-{
-   private static final ThreadLocal<Set<Header>> tlh = new ThreadLocal<Set<Header>>();
+public class HttpHeaders {
+    public static final String CONTENT_TYPE = "Content-Type";
 
-   /**
-    * Get headers; read-only.
-    *
-    * @return the headers
-    */
-   public static Set<Header> getHeaders()
-   {
-      Set<Header> set = tlh.get();
-      if (set == null)
-         return Collections.emptySet();
+    private static final ThreadLocal<Set<Header>> tlh = new ThreadLocal<Set<Header>>();
 
-      return Collections.unmodifiableSet(set);
-   }
+    /**
+     * Get headers; read-only.
+     *
+     * @return the headers
+     */
+    public static Set<Header> getHeaders() {
+        Set<Header> set = tlh.get();
+        if (set == null)
+            return Collections.emptySet();
 
-   /**
-    * Cleanup.
-    */
-   public static void clear()
-   {
-      Set<Header> set = tlh.get();
-      if (set != null)
-      {
-         tlh.remove();
-         set.clear();
-      }
-   }
+        return Collections.unmodifiableSet(set);
+    }
 
-   /**
-    * Add header.
-    *
-    * @param name the name
-    * @param value the value
-    */
-   public static void addHeader(String name, String value)
-   {
-      if (name == null)
-         throw new IllegalArgumentException("Null name");
-      if (value == null)
-         throw new IllegalArgumentException("Null value");
+    /**
+     * Cleanup.
+     */
+    public static void clear() {
+        Set<Header> set = tlh.get();
+        if (set != null) {
+            tlh.remove();
+            set.clear();
+        }
+    }
 
-      addHeader(new BasicHeader(name, value));
-   }
+    /**
+     * Set content type.
+     *
+     * @param type the type
+     */
+    public static void setContentType(String type) {
+        for (Header h : getHeaders()) {
+            if (h.getName().equals(CONTENT_TYPE))
+                throw new IllegalArgumentException("Content type already set!");
+        }
 
-   /**
-    * Add header.
-    *
-    * @param header the header
-    */
-   public static void addHeader(Header header)
-   {
-      if (header == null)
-         throw new IllegalArgumentException("Null header");
+        addHeader(CONTENT_TYPE, type);
+    }
 
-      Set<Header> set = tlh.get();
-      if (set == null)
-      {
-         set = new HashSet<Header>();
-         tlh.set(set);
-      }
-      set.add(header);
-   }
+    /**
+     * Add header.
+     *
+     * @param name  the name
+     * @param value the value
+     */
+    public static void addHeader(String name, String value) {
+        if (name == null)
+            throw new IllegalArgumentException("Null name");
+        if (value == null)
+            throw new IllegalArgumentException("Null value");
 
-   /**
-    * Add headers.
-    *
-    * @param headers the headers
-    */
-   public static void addHeaders(Map<String, String> headers)
-   {
-      if (headers == null)
-         throw new IllegalArgumentException("Null headers");
+        addHeader(new BasicHeader(name, value));
+    }
 
-      boolean success = false;
-      try
-      {
-         for (Map.Entry<String, String> entry : headers.entrySet())
-            addHeader(entry.getKey(), entry.getValue());
-         success = true;
-      }
-      finally
-      {
-         if (success == false)
-            clear();
-      }
-   }
+    /**
+     * Add header.
+     *
+     * @param header the header
+     */
+    public static void addHeader(Header header) {
+        if (header == null)
+            throw new IllegalArgumentException("Null header");
 
-   /**
-    * Add headers.
-    *
-    * @param headers the headers
-    */
-   public static void addHeaders(Set<Header> headers)
-   {
-      if (headers == null)
-         throw new IllegalArgumentException("Null headers");
+        Set<Header> set = tlh.get();
+        if (set == null) {
+            set = new HashSet<Header>();
+            tlh.set(set);
+        }
+        set.add(header);
+    }
 
-      boolean success = false;
-      try
-      {
-         for (Header header : headers)
-            addHeader(header);
-         success = true;
-      }
-      finally
-      {
-         if (success == false)
-            clear();
-      }
-   }
+    /**
+     * Add headers.
+     *
+     * @param headers the headers
+     */
+    public static void addHeaders(Map<String, String> headers) {
+        if (headers == null)
+            throw new IllegalArgumentException("Null headers");
+
+        boolean success = false;
+        try {
+            for (Map.Entry<String, String> entry : headers.entrySet())
+                addHeader(entry.getKey(), entry.getValue());
+            success = true;
+        } finally {
+            if (success == false)
+                clear();
+        }
+    }
+
+    /**
+     * Add headers.
+     *
+     * @param headers the headers
+     */
+    public static void addHeaders(Set<Header> headers) {
+        if (headers == null)
+            throw new IllegalArgumentException("Null headers");
+
+        boolean success = false;
+        try {
+            for (Header header : headers)
+                addHeader(header);
+            success = true;
+        } finally {
+            if (success == false)
+                clear();
+        }
+    }
 }

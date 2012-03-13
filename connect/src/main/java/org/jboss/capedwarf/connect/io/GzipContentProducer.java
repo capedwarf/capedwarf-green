@@ -22,33 +22,28 @@
 
 package org.jboss.capedwarf.connect.io;
 
+import org.apache.http.entity.ContentProducer;
+import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
-
-import org.apache.http.entity.ContentProducer;
-import org.jboss.capedwarf.common.serialization.GzipOptionalSerializator;
 
 /**
  * GZIP Content producer.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class GzipContentProducer implements ContentProducer
-{
-   public void writeTo(OutputStream outstream) throws IOException
-   {
-      if (GzipOptionalSerializator.isGzipDisabled())
-      {
-         doWriteTo(outstream);
-      }
-      else
-      {
-         GZIPOutputStream gzip = new GZIPOutputStream(outstream);
-         doWriteTo(gzip);
-         gzip.finish();
-      }
-   }
+public abstract class GzipContentProducer implements ContentProducer {
+    public void writeTo(OutputStream outstream) throws IOException {
+        if (GzipOptionalSerializator.isGzipEnabled()) {
+            GZIPOutputStream gzip = new GZIPOutputStream(outstream);
+            doWriteTo(gzip);
+            gzip.finish();
+        } else {
+            doWriteTo(outstream);
+        }
+    }
 
-   protected abstract void doWriteTo(OutputStream outstream) throws IOException;
+    protected abstract void doWriteTo(OutputStream outstream) throws IOException;
 }

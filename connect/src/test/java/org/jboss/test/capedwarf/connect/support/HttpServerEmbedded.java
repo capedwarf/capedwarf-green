@@ -29,13 +29,12 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface HttpServerEmbedded
-{
-   void start() throws IOException;
+public interface HttpServerEmbedded {
+    void start() throws IOException;
 
-   void addContext(String name, HttpHandler handler);
+    void addContext(String name, HttpHandler handler);
 
-   void removeContext(String name);
+    void removeContext(String name);
 
-   void stop();
+    void stop();
 }

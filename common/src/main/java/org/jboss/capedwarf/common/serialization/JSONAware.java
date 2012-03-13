@@ -8,21 +8,20 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface JSONAware
-{
-   /**
-    * Write JSON object.
-    *
-    * @param json the JSON object
-    * @throws JSONException for any JSON error
-    */
-   void writeJSONObject(JSONObject json) throws JSONException;
+public interface JSONAware {
+    /**
+     * Write JSON object.
+     *
+     * @param json the JSON object
+     * @throws JSONException for any JSON error
+     */
+    void writeJSONObject(JSONObject json) throws JSONException;
 
-   /**
-    * Read from JSON object.
-    * 
-    * @param json the JSON object
-    * @throws JSONException for any JSON error
-    */
-   void readJSONObject(JSONObject json) throws JSONException;
+    /**
+     * Read from JSON object.
+     *
+     * @param json the JSON object
+     * @throws JSONException for any JSON error
+     */
+    void readJSONObject(JSONObject json) throws JSONException;
 }

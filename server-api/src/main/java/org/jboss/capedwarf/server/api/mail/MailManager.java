@@ -27,41 +27,40 @@ package org.jboss.capedwarf.server.api.mail;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface MailManager
-{
-   /**
-    * Send email from admin.
-    *
-    * @param subject the subject
-    * @param textBody the content
-    * @param tos recepients
-    */
-   void sendEmailFromAdmin(String subject, String textBody, String... tos);
+public interface MailManager {
+    /**
+     * Send email from admin.
+     *
+     * @param subject  the subject
+     * @param textBody the content
+     * @param tos      recepients
+     */
+    void sendEmailFromAdmin(String subject, String textBody, String... tos);
 
-   /**
-    * Send email.
-    *
-    * @param sender the sender
-    * @param subject the subject
-    * @param textBody the content
-    * @param tos recepients
-    */
-   void sendEmail(String sender, String subject, String textBody, String... tos);
+    /**
+     * Send email.
+     *
+     * @param sender   the sender
+     * @param subject  the subject
+     * @param textBody the content
+     * @param tos      recepients
+     */
+    void sendEmail(String sender, String subject, String textBody, String... tos);
 
-   /**
-    * Send email to apps admins.
-    *
-    * @param sender the sender
-    * @param subject the subject
-    * @param textBody the content
-    */
-   void sendEmailToAdmins(String sender, String subject, String textBody);
+    /**
+     * Send email to apps admins.
+     *
+     * @param sender   the sender
+     * @param subject  the subject
+     * @param textBody the content
+     */
+    void sendEmailToAdmins(String sender, String subject, String textBody);
 
-   /**
-    * Send email to apps admins.
-    *
-    * @param subject the subject
-    * @param textBody the content
-    */
-   void sendEmailToAdmins(String subject, String textBody);
+    /**
+     * Send email to apps admins.
+     *
+     * @param subject  the subject
+     * @param textBody the content
+     */
+    void sendEmailToAdmins(String subject, String textBody);
 }

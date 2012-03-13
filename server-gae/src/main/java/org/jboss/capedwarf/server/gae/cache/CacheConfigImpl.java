@@ -22,14 +22,14 @@
 
 package org.jboss.capedwarf.server.gae.cache;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import javax.enterprise.context.ApplicationScoped;
-
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
 import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cache config impl.
@@ -37,56 +37,43 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheConfig;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class CacheConfigImpl extends AbstractCacheConfig
-{
-   private static final Map<String, Object> CONSTS;
+public class CacheConfigImpl extends AbstractCacheConfig {
+    private static final Map<String, Object> CONSTS;
 
-   static
-   {
-      CONSTS = new HashMap<String, Object>();
-      CONSTS.put("EXPIRATION_DELTA", GCacheFactory.EXPIRATION_DELTA);
-      CONSTS.put("EXPIRATION_DELTA_MILLIS", GCacheFactory.EXPIRATION_DELTA_MILLIS);
-      CONSTS.put("EXPIRATION", GCacheFactory.EXPIRATION);
-   }
+    static {
+        CONSTS = new HashMap<String, Object>();
+        CONSTS.put("EXPIRATION_DELTA", GCacheFactory.EXPIRATION_DELTA);
+        CONSTS.put("EXPIRATION_DELTA_MILLIS", GCacheFactory.EXPIRATION_DELTA_MILLIS);
+        CONSTS.put("EXPIRATION", GCacheFactory.EXPIRATION);
+    }
 
-   @SuppressWarnings({"unchecked"})
-   protected Map createConfig(String name)
-   {
-      Map config = new HashMap();
-      String prefix = name + ".";
-      for (String key : getProps().stringPropertyNames())
-      {
-         if (key.startsWith(prefix))
-         {
-            String subKey = key.substring(prefix.length());
-            String value = getProps().getProperty(key);
-            Object c = CONSTS.get(subKey);
-            if (c != null)
-            {
-               config.put(c, Integer.parseInt(value));
+    @SuppressWarnings({"unchecked"})
+    protected Map createConfig(String name) {
+        Map config = new HashMap();
+        String prefix = name + ".";
+        for (String key : getProps().stringPropertyNames()) {
+            if (key.startsWith(prefix)) {
+                String subKey = key.substring(prefix.length());
+                String value = getProps().getProperty(key);
+                Object c = CONSTS.get(subKey);
+                if (c != null) {
+                    config.put(c, Integer.parseInt(value));
+                } else {
+                    MemcacheService.SetPolicy policy = null;
+                    for (MemcacheService.SetPolicy p : MemcacheService.SetPolicy.values()) {
+                        if (p.name().equalsIgnoreCase(subKey)) {
+                            policy = p;
+                            break;
+                        }
+                    }
+                    if (policy != null) {
+                        config.put(policy, Boolean.parseBoolean(value));
+                    } else {
+                        config.put(subKey, value); // other custom props
+                    }
+                }
             }
-            else
-            {
-               MemcacheService.SetPolicy policy = null;
-               for (MemcacheService.SetPolicy p : MemcacheService.SetPolicy.values())
-               {
-                  if (p.name().equalsIgnoreCase(subKey))
-                  {
-                     policy = p;
-                     break;
-                  }
-               }
-               if (policy != null)
-               {
-                  config.put(policy, Boolean.parseBoolean(value));
-               }
-               else
-               {
-                  config.put(subKey, value); // other custom props
-               }
-            }
-         }
-      }
-      return config.isEmpty() ? Collections.emptyMap() : config;
-   }
+        }
+        return config.isEmpty() ? Collections.emptyMap() : config;
+    }
 }

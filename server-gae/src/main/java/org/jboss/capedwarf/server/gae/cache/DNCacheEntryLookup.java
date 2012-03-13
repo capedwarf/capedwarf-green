@@ -30,21 +30,19 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class DNCacheEntryLookup extends AbstractCacheEntryLookup
-{
-   @Override
-   protected <T> T toEntity(Class<T> entryType, Object result)
-   {
-      CachedPC cpc = (CachedPC) result;
+public abstract class DNCacheEntryLookup extends AbstractCacheEntryLookup {
+    @Override
+    protected <T> T toEntity(Class<T> entryType, Object result) {
+        CachedPC cpc = (CachedPC) result;
 
-      // Check if we are fully loaded
-      int countLoadedFileds = 0;
-      for (boolean lf : cpc.getLoadedFields())
-         if (lf) countLoadedFileds++;
-      // We only have id loaded (best guess if we're loaded)
-      if (countLoadedFileds <= 1)
-         return null;
+        // Check if we are fully loaded
+        int countLoadedFileds = 0;
+        for (boolean lf : cpc.getLoadedFields())
+            if (lf) countLoadedFileds++;
+        // We only have id loaded (best guess if we're loaded)
+        if (countLoadedFileds <= 1)
+            return null;
 
-      return entryType.cast(cpc.getPersistableObject());
-   }
+        return entryType.cast(cpc.getPersistableObject());
+    }
 }

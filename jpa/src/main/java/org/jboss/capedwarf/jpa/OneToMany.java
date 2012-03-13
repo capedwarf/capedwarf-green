@@ -22,11 +22,7 @@
 
 package org.jboss.capedwarf.jpa;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -38,34 +34,33 @@ import java.util.HashSet;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface OneToMany
-{
-   /**
-    * The join field.
-    *
-    * @return the join pk field
-    */
-   String join() default "";
+public @interface OneToMany {
+    /**
+     * The join field.
+     *
+     * @return the join pk field
+     */
+    String join() default "";
 
-   /**
-    * The element type.
-    *
-    * @return exact elemet type
-    */
-   Class<?> element() default Void.class;
+    /**
+     * The element type.
+     *
+     * @return exact elemet type
+     */
+    Class<?> element() default Void.class;
 
-   /**
-    * The return collection type -- to simplify initialization.
-    * By default we return HashSet.
-    *
-    * @return the collection type
-    */
-   Class<? extends Collection> type() default HashSet.class;
+    /**
+     * The return collection type -- to simplify initialization.
+     * By default we return HashSet.
+     *
+     * @return the collection type
+     */
+    Class<? extends Collection> type() default HashSet.class;
 
-   /**
-    * Order by.
-    *
-    * @return the order by
-    */
-   String orderBy() default "";
+    /**
+     * Order by.
+     *
+     * @return the order by
+     */
+    String orderBy() default "";
 }

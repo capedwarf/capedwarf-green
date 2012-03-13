@@ -1,194 +1,195 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <!-- Parent -->
-  <parent>
-    <groupId>org.jboss.capedwarf.green</groupId>
-    <artifactId>capedwarf-build</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.capedwarf.green</groupId>
+        <artifactId>capedwarf-build</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>capedwarf-server-api</artifactId>
-  <packaging>jar</packaging>
-  <name>CapeDwarf Server Side -- API</name>
-  <url>http://www.jboss.org/capedwarf</url>
-  <description>CapeDwarf Server Side -- API</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>capedwarf-server-api</artifactId>
+    <packaging>jar</packaging>
+    <name>CapeDwarf Server Side -- API</name>
+    <url>http://www.jboss.org/capedwarf</url>
+    <description>CapeDwarf Server Side -- API</description>
 
     <build>
-      <plugins>
-         <!-- plugin>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>maven-datanucleus-plugin</artifactId>
-            <version>2.0.1</version>
-            <configuration>
-               <metadataIncludes>org/jboss/capedwarf/server/api/domain/*.class</metadataIncludes>
-               <verbose>true</verbose>
-               <api>JPA</api>
-            </configuration>
-            <executions>
-               <execution>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>enhance</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin -->
-         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-      </plugins>
+        <plugins>
+            <!-- plugin>
+              <groupId>org.datanucleus</groupId>
+              <artifactId>maven-datanucleus-plugin</artifactId>
+              <version>2.0.1</version>
+              <configuration>
+                 <metadataIncludes>org/jboss/capedwarf/server/api/domain/*.class</metadataIncludes>
+                 <verbose>true</verbose>
+                 <api>JPA</api>
+              </configuration>
+              <executions>
+                 <execution>
+                    <phase>process-classes</phase>
+                    <goals>
+                       <goal>enhance</goal>
+                    </goals>
+                 </execution>
+              </executions>
+           </plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
-   <dependencies>
-
-    <dependency>
-      <groupId>org.jboss.capedwarf.green</groupId>
-      <artifactId>capedwarf-common</artifactId>
-      <exclusions>
-         <exclusion>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-         </exclusion>
-         <!-- exclusion>
-           <groupId>org.hibernate</groupId>
-           <artifactId>hibernate-validator</artifactId>
-         </exclusion -->
-         <exclusion>
-             <groupId>org.json</groupId>
-             <artifactId>json</artifactId>
-         </exclusion>
-       </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.capedwarf.green</groupId>
-      <artifactId>capedwarf-jpa</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.capedwarf.green</groupId>
-      <artifactId>capedwarf-jpa2</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-       <groupId>org.json</groupId>
-       <artifactId>json</artifactId>
-    </dependency>
-
-       <dependency>
-           <groupId>jcache</groupId>
-           <artifactId>jcache</artifactId>
-       </dependency>
-
-       <dependency>
-           <groupId>com.octo.captcha</groupId>
-           <artifactId>jcaptcha-all</artifactId>
-       </dependency>
+    <dependencies>
 
         <dependency>
-          <groupId>org.gatein.captcha</groupId>
-          <artifactId>simplecaptcha</artifactId>
+            <groupId>org.jboss.capedwarf.green</groupId>
+            <artifactId>capedwarf-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+                <!-- exclusion>
+                 <groupId>org.hibernate</groupId>
+                 <artifactId>hibernate-validator</artifactId>
+               </exclusion -->
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-       <dependency>
-           <groupId>net.tanesha.recaptcha4j</groupId>
-           <artifactId>recaptcha4j</artifactId>
-       </dependency>
+        <dependency>
+            <groupId>org.jboss.capedwarf.green</groupId>
+            <artifactId>capedwarf-jpa</artifactId>
+        </dependency>
 
-       <!-- dependency>
-           <groupId>com.google.gae</groupId>
-           <artifactId>appengine-mapper</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>org.jboss.capedwarf.green</groupId>
+            <artifactId>capedwarf-jpa2</artifactId>
+            <optional>true</optional>
+        </dependency>
 
-     <dependency>
-           <groupId>org.apache.hadoop</groupId>
-           <artifactId>hadoop-core</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
 
-     <dependency>
-           <groupId>commons-logging</groupId>
-           <artifactId>commons-logging</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>jcache</groupId>
+            <artifactId>jcache</artifactId>
+        </dependency>
 
-     <dependency>
-           <groupId>com.googlecode.charts4j</groupId>
-           <artifactId>charts4j</artifactId>
-     </dependency -->
+        <dependency>
+            <groupId>com.octo.captcha</groupId>
+            <artifactId>jcaptcha-all</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet.jsp</groupId>
-         <artifactId>jsp-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-jpa_3.0_spec</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-jta_1.1_spec</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>org.gatein.captcha</groupId>
+            <artifactId>simplecaptcha</artifactId>
+        </dependency>
 
-       <dependency>
-           <groupId>org.jboss.seam.solder</groupId>
-           <artifactId>seam-solder</artifactId>
-           <exclusions>
-               <exclusion>
-                   <groupId>javax.el</groupId>
-                   <artifactId>el-api</artifactId>
-               </exclusion>
-               <exclusion>
-                   <groupId>javax.enterprise</groupId>
-                   <artifactId>cdi-api</artifactId>
-               </exclusion>
-               <exclusion>
-                   <groupId>org.slf4j</groupId>
-                   <artifactId>slf4j-api</artifactId>
-               </exclusion>
-               <exclusion>
-                   <groupId>javax.inject</groupId>
-                   <artifactId>javax.inject</artifactId>
-               </exclusion>
-               <exclusion>
-                   <groupId>javax.transaction</groupId>
-                   <artifactId>jta</artifactId>
-               </exclusion>
-           </exclusions>
+        <dependency>
+            <groupId>net.tanesha.recaptcha4j</groupId>
+            <artifactId>recaptcha4j</artifactId>
+        </dependency>
+
+        <!-- dependency>
+             <groupId>com.google.gae</groupId>
+             <artifactId>appengine-mapper</artifactId>
        </dependency>
 
        <dependency>
-          <groupId>javax.enterprise</groupId>
-          <artifactId>cdi-api</artifactId>
+             <groupId>org.apache.hadoop</groupId>
+             <artifactId>hadoop-core</artifactId>
        </dependency>
 
-      <dependency>
-         <groupId>org.jboss.logging</groupId>
-         <artifactId>jboss-logging</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.javassist</groupId>
-         <artifactId>javassist</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-jdk14</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.validation</groupId>
-         <artifactId>validation-api</artifactId>
-      </dependency>
+       <dependency>
+             <groupId>commons-logging</groupId>
+             <artifactId>commons-logging</artifactId>
+       </dependency>
 
-  </dependencies>
+       <dependency>
+             <groupId>com.googlecode.charts4j</groupId>
+             <artifactId>charts4j</artifactId>
+       </dependency -->
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_3.0_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.seam.solder</groupId>
+            <artifactId>seam-solder</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.enterprise</groupId>
+                    <artifactId>cdi-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+    </dependencies>
 
 </project>

@@ -24,49 +24,40 @@ package org.jboss.capedwarf.server.api.tx;
 
 /**
  * Transaction types.
- * 
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum TransactionPropagationType
-{
-   REQUIRED,
-   REQUIRES_NEW,
-   MANDATORY,
-   SUPPORTS,
-   NOT_SUPPORTED,
-   NEVER;
+public enum TransactionPropagationType {
+    REQUIRED,
+    REQUIRES_NEW,
+    MANDATORY,
+    SUPPORTS,
+    NOT_SUPPORTED,
+    NEVER;
 
-   public boolean isNewTransactionRequired(boolean transactionActive)
-   {
-      switch (this)
-      {
-         case REQUIRED:
-            return transactionActive == false;
-         case REQUIRES_NEW:
-            return true;
-         case SUPPORTS:
-            return false;
-         case MANDATORY:
-            if (transactionActive == false)
-            {
-               throw new IllegalStateException("No transaction active on call to MANDATORY method");
-            }
-            else
-            {
-               return false;
-            }
-         case NOT_SUPPORTED:
-         case NEVER:
-            if (transactionActive)
-            {
-               throw new IllegalStateException("Transaction active on call to NEVER method");
-            }
-            else
-            {
-               return false;
-            }
-         default:
-            throw new IllegalArgumentException();
-      }
-   }
+    public boolean isNewTransactionRequired(boolean transactionActive) {
+        switch (this) {
+            case REQUIRED:
+                return transactionActive == false;
+            case REQUIRES_NEW:
+                return true;
+            case SUPPORTS:
+                return false;
+            case MANDATORY:
+                if (transactionActive == false) {
+                    throw new IllegalStateException("No transaction active on call to MANDATORY method");
+                } else {
+                    return false;
+                }
+            case NOT_SUPPORTED:
+            case NEVER:
+                if (transactionActive) {
+                    throw new IllegalStateException("Transaction active on call to NEVER method");
+                } else {
+                    return false;
+                }
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 }

@@ -11,104 +11,93 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:marko.strukelj@gmail.com>Marko Strukelj</a>
  */
-public class FixedLengthInputStream extends FilterInputStream implements Progress
-{
+public class FixedLengthInputStream extends FilterInputStream implements Progress {
 
-   private long length = -1;
-   
-   private long readCount = 0;
+    private long length = -1;
 
-   /**
-    * Creates a <code>FilterInputStream</code>
-    * by assigning the  argument <code>in</code>
-    * to the field <code>this.in</code> so as
-    * to remember it for later use.
-    *
-    * @param in the underlying input stream, or <code>null</code> if
-    *           this instance is to be created without an underlying stream.
-    */
-   public FixedLengthInputStream(InputStream in, long length)
-   {
-      super(in);
-      this.length = length;
-   }
+    private long readCount = 0;
 
-   /**
-    * Get total number of bytes to read
-    * @return length in bytes
-    */
-   public long getLength()
-   {
-      return length;
-   }
+    /**
+     * Creates a <code>FilterInputStream</code>
+     * by assigning the  argument <code>in</code>
+     * to the field <code>this.in</code> so as
+     * to remember it for later use.
+     *
+     * @param in the underlying input stream, or <code>null</code> if
+     *           this instance is to be created without an underlying stream.
+     */
+    public FixedLengthInputStream(InputStream in, long length) {
+        super(in);
+        this.length = length;
+    }
 
-   /**
-    * Get number of bytes already read
-    * @return bytes read
-    */
-   public long getReadCount()
-   {
-      return readCount;
-   }
+    /**
+     * Get total number of bytes to read
+     *
+     * @return length in bytes
+     */
+    public long getLength() {
+        return length;
+    }
 
-   @Override
-   public int read() throws IOException
-   {
-      int c = super.read();
-      if (c != -1)
-         readCount++;
-      return c;
-   }
+    /**
+     * Get number of bytes already read
+     *
+     * @return bytes read
+     */
+    public long getReadCount() {
+        return readCount;
+    }
 
-   @Override
-   public int read(byte[] b, int off, int len) throws IOException
-   {
-      int rc = super.read(b, off, len);
-      if (rc != -1)
-         readCount+=rc;
-      return rc;
-   }
+    @Override
+    public int read() throws IOException {
+        int c = super.read();
+        if (c != -1)
+            readCount++;
+        return c;
+    }
 
-   @Override
-   public long skip(long n) throws IOException
-   {
-      long skipped = super.skip(n);
-      if (skipped >= 0)
-         readCount += skipped;
-      return skipped;
-   }
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        int rc = super.read(b, off, len);
+        if (rc != -1)
+            readCount += rc;
+        return rc;
+    }
 
-   @Override
-   public void close() throws IOException
-   {
-      super.close();
-   }
+    @Override
+    public long skip(long n) throws IOException {
+        long skipped = super.skip(n);
+        if (skipped >= 0)
+            readCount += skipped;
+        return skipped;
+    }
 
-   @Override
-   public void mark(int readlimit)
-   {
-      // not implemented
-   }
+    @Override
+    public void close() throws IOException {
+        super.close();
+    }
 
-   @Override
-   public void reset() throws IOException
-   {
-      // not implemented
-   }
+    @Override
+    public void mark(int readlimit) {
+        // not implemented
+    }
 
-   @Override
-   public boolean markSupported()
-   {
-      return false;
-   }
+    @Override
+    public void reset() throws IOException {
+        // not implemented
+    }
 
-   public long getTotal()
-   {
-      return length;
-   }
+    @Override
+    public boolean markSupported() {
+        return false;
+    }
 
-   public long getProcessed()
-   {
-      return readCount;
-   }
+    public long getTotal() {
+        return length;
+    }
+
+    public long getProcessed() {
+        return readCount;
+    }
 }

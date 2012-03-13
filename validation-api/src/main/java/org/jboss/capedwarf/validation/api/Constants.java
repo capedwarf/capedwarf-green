@@ -27,8 +27,7 @@ package org.jboss.capedwarf.validation.api;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class Constants
-{
-   public static final String USERNAME_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
-   public static final String PASSWORD_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
+public class Constants {
+    public static final String USERNAME_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
+    public static final String PASSWORD_REGEXP = "[a-zA-Z0-9_\\.@\\+\\-]+";
 }

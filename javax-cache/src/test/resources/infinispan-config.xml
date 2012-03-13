@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <infinispan
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="urn:infinispan:config:5.0 http://www.infinispan.org/schemas/infinispan-config-5.0.xsd"
-      xmlns="urn:infinispan:config:5.0">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:5.0 http://www.infinispan.org/schemas/infinispan-config-5.0.xsd"
+        xmlns="urn:infinispan:config:5.0">
 
-   <global>
-      <transport clusterName="TestTM" />
-      <globalJmxStatistics enabled="true" allowDuplicateDomains="true"/>
-   </global>
+    <global>
+        <transport clusterName="TestTM"/>
+        <globalJmxStatistics enabled="true" allowDuplicateDomains="true"/>
+    </global>
 
-   <default>
-      <locking concurrencyLevel="1000" lockAcquisitionTimeout="60000" />
-      <lazyDeserialization enabled="true" />
-      <jmxStatistics enabled="true"/>
-   </default>
+    <default>
+        <locking concurrencyLevel="1000" lockAcquisitionTimeout="60000"/>
+        <lazyDeserialization enabled="true"/>
+        <jmxStatistics enabled="true"/>
+    </default>
 
-   <namedCache name="TestCache" />
-   <namedCache name="StatCache" />
+    <namedCache name="TestCache"/>
+    <namedCache name="StatCache"/>
 </infinispan>

@@ -29,10 +29,8 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateCacheEntryLookup extends AbstractCacheEntryLookup
-{
-   protected Object toImplementationId(Class<?> entryType, Object id)
-   {
-      return null; // CackeKey is too impl detail for Hibernate atm
-   }
+public class HibernateCacheEntryLookup extends AbstractCacheEntryLookup {
+    protected Object toImplementationId(Class<?> entryType, Object id) {
+        return null; // CackeKey is too impl detail for Hibernate atm
+    }
 }

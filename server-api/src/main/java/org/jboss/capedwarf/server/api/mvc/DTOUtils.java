@@ -22,18 +22,18 @@
 
 package org.jboss.capedwarf.server.api.mvc;
 
-import java.io.Serializable;
+import org.jboss.capedwarf.common.dto.DTOModel;
+import org.jboss.capedwarf.common.dto.DTOModelFactory;
+import org.jboss.capedwarf.common.dto.DefaultDTOModelFactory;
+import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.inject.Inject;
-
-import org.jboss.capedwarf.common.dto.DTOModel;
-import org.jboss.capedwarf.common.dto.DTOModelFactory;
-import org.jboss.capedwarf.common.dto.DefaultDTOModelFactory;
-import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+import java.io.Serializable;
 
 /**
  * Simple dto utils.
@@ -41,34 +41,29 @@ import org.jboss.capedwarf.server.api.servlet.RequestHandler;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class DTOUtils
-{
-   private BeanManager beanManager;
+public class DTOUtils {
+    private BeanManager beanManager;
 
-   @Produces
-   @ApplicationScoped
-   public DTOModelFactory produce()
-   {
-      return new EnhancedDTOModelFactory();
-   }
+    @Produces
+    @ApplicationScoped
+    public DTOModelFactory produce() {
+        return new EnhancedDTOModelFactory();
+    }
 
-   private class EnhancedDTOModelFactory extends DefaultDTOModelFactory
-   {
-      @SuppressWarnings({"unchecked"})
-      @Override
-      protected <E extends Serializable> DTOModel createModelInternal(Class<E> clazz)
-      {
-         DTOModel model = super.createModelInternal(clazz);
-         InjectionTarget it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(model.getClass()));
-         CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
-         it.inject(model, cc);
-         return model;
-      }
-   }
+    private class EnhancedDTOModelFactory extends DefaultDTOModelFactory {
+        @SuppressWarnings({"unchecked"})
+        @Override
+        protected <E extends Serializable> DTOModel createModelInternal(Class<E> clazz) {
+            DTOModel model = super.createModelInternal(clazz);
+            InjectionTarget it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(model.getClass()));
+            CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
+            it.inject(model, cc);
+            return model;
+        }
+    }
 
-   @Inject
-   public void setBeanManager(BeanManager beanManager)
-   {
-      this.beanManager = beanManager;
-   }
+    @Inject
+    public void setBeanManager(BeanManager beanManager) {
+        this.beanManager = beanManager;
+    }
 }

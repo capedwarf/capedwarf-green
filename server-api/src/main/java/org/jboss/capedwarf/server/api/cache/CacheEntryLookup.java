@@ -28,14 +28,13 @@ package org.jboss.capedwarf.server.api.cache;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CacheEntryLookup
-{
-   /**
-    * Get cached entry.
-    *
-    * @param entryType the entry type
-    * @param id the entry id
-    * @return cached entry or null if no such entry
-    */
-   <T> T getCachedEntry(Class<T> entryType, Object id);
+public interface CacheEntryLookup {
+    /**
+     * Get cached entry.
+     *
+     * @param entryType the entry type
+     * @param id        the entry id
+     * @return cached entry or null if no such entry
+     */
+    <T> T getCachedEntry(Class<T> entryType, Object id);
 }

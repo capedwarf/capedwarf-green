@@ -22,6 +22,9 @@
 
 package org.jboss.capedwarf.server.jee.mail;
 
+import org.jboss.capedwarf.server.api.mail.impl.AbstractMailManager;
+import org.jboss.capedwarf.server.jee.env.Environment;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.mail.Address;
@@ -31,53 +34,43 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.jboss.capedwarf.server.api.mail.impl.AbstractMailManager;
-import org.jboss.capedwarf.server.jee.env.Environment;
-
 /**
  * JEE mail manager impl.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class BasicMailManager extends AbstractMailManager
-{
-   private Session session;
+public class BasicMailManager extends AbstractMailManager {
+    private Session session;
 
-   public void sendEmail(String sender, String subject, String textBody, String... tos)
-   {
-      if (session == null)
-         return;
+    public void sendEmail(String sender, String subject, String textBody, String... tos) {
+        if (session == null)
+            return;
 
-      try
-      {
-         Address[] addresses = new Address[tos.length];
-         for (int i = 0; i < tos.length; i++)
-            addresses[i] = new InternetAddress(tos[i]);
+        try {
+            Address[] addresses = new Address[tos.length];
+            for (int i = 0; i < tos.length; i++)
+                addresses[i] = new InternetAddress(tos[i]);
 
-         Message msg = new MimeMessage(session);
-         msg.setFrom(new InternetAddress(sender));
-         msg.addRecipients(Message.RecipientType.TO, addresses);
-         msg.setSubject(subject);
-         msg.setText(textBody);
-         Transport.send(msg);
-      }
-      catch (Exception e)
-      {
-         log.warning("Failed to send email: " + e);
-      }
-   }
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(sender));
+            msg.addRecipients(Message.RecipientType.TO, addresses);
+            msg.setSubject(subject);
+            msg.setText(textBody);
+            Transport.send(msg);
+        } catch (Exception e) {
+            log.warning("Failed to send email: " + e);
+        }
+    }
 
-   public void sendEmailToAdmins(String sender, String subject, String textBody)
-   {
-      sendEmail(sender, subject, textBody, adminManager.getAppAdminEmail());
-   }
+    public void sendEmailToAdmins(String sender, String subject, String textBody) {
+        sendEmail(sender, subject, textBody, adminManager.getAppAdminEmail());
+    }
 
-   @Inject
-   public void setEnv(Environment env) throws Exception
-   {
-      session = env.lookupMailSession();
-      if (session == null)
-         log.warning("No mail session setup.");
-   }
+    @Inject
+    public void setEnv(Environment env) throws Exception {
+        session = env.lookupMailSession();
+        if (session == null)
+            log.warning("No mail session setup.");
+    }
 }

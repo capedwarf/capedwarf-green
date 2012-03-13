@@ -1,24 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <!-- Parent -->
-  <parent>
-    <groupId>org.jboss.capedwarf.green</groupId>
-    <artifactId>capedwarf-build</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.capedwarf.green</groupId>
+        <artifactId>capedwarf-build</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>capedwarf-validation-api</artifactId>
-  <packaging>jar</packaging>
-  <name>CapeDwarf Validation API</name>
-  <url>http://www.jboss.org/capedwarf</url>
-  <description>CapeDwarf Validation API</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>capedwarf-validation-api</artifactId>
+    <packaging>jar</packaging>
+    <name>CapeDwarf Validation API</name>
+    <url>http://www.jboss.org/capedwarf</url>
+    <description>CapeDwarf Validation API</description>
 
-  <dependencies>
+    <dependencies>
 
-     <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-     </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 </project>

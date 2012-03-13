@@ -27,30 +27,27 @@ package org.jboss.capedwarf.jpa;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum ProxyingEnum
-{
-   ENABLE,
-   DISABLE;
+public enum ProxyingEnum {
+    ENABLE,
+    DISABLE;
 
-   /**
-    * Begin utils usage.
-    */
-   public void begin()
-   {
-      if (this == ENABLE)
-         ProxyingUtils.enable();
-      else
-         ProxyingUtils.disable();
-   }
+    /**
+     * Begin utils usage.
+     */
+    public void begin() {
+        if (this == ENABLE)
+            ProxyingUtils.enable();
+        else
+            ProxyingUtils.disable();
+    }
 
-   /**
-    * End utils usage.
-    */
-   public void end()
-   {
-      if (this == ENABLE)
-         ProxyingUtils.disable();
-      else
-         ProxyingUtils.enable();
-   }
+    /**
+     * End utils usage.
+     */
+    public void end() {
+        if (this == ENABLE)
+            ProxyingUtils.disable();
+        else
+            ProxyingUtils.enable();
+    }
 }

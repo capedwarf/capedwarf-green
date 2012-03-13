@@ -22,51 +22,46 @@
 
 package org.jboss.capedwarf.server.api.captcha.impl;
 
+import nl.captcha.Captcha;
+import nl.captcha.backgrounds.GradiatedBackgroundProducer;
+
+import javax.enterprise.context.SessionScoped;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
-import javax.enterprise.context.SessionScoped;
-
-import nl.captcha.Captcha;
-import nl.captcha.backgrounds.GradiatedBackgroundProducer;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SessionScoped
-public class SimpleCaptchaService extends AbstractCaptchaService
-{
-   private static final long serialVersionUID = 1L;
+public class SimpleCaptchaService extends AbstractCaptchaService {
+    private static final long serialVersionUID = 1L;
 
-   private int widht = 200;
-   private int height = 40;
+    private int widht = 200;
+    private int height = 40;
 
-   private volatile Captcha captcha;
+    private volatile Captcha captcha;
 
-   public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException
-   {
-      captcha = new Captcha.Builder(widht, height)
-            .addText()
-            .addBackground(new GradiatedBackgroundProducer())
-            .gimp()
-            .addNoise()
-            .addBorder()
-            .build();
-      renderCaptcha(captcha.getImage(), format, out);
-   }
+    public void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException {
+        captcha = new Captcha.Builder(widht, height)
+                .addText()
+                .addBackground(new GradiatedBackgroundProducer())
+                .gimp()
+                .addNoise()
+                .addBorder()
+                .build();
+        renderCaptcha(captcha.getImage(), format, out);
+    }
 
-   public boolean verifyCaptcha(String id, String value)
-   {
-      return captcha != null && captcha.isCorrect(value);
-   }
+    public boolean verifyCaptcha(String id, String value) {
+        return captcha != null && captcha.isCorrect(value);
+    }
 
-   public void setWidht(int widht)
-   {
-      this.widht = widht;
-   }
+    public void setWidht(int widht) {
+        this.widht = widht;
+    }
 
-   public void setHeight(int height)
-   {
-      this.height = height;
-   }
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }

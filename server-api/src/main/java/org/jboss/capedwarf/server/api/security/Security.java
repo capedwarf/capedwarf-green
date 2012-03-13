@@ -24,12 +24,7 @@ package org.jboss.capedwarf.server.api.security;
 
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Marks a secure class or method.
@@ -40,12 +35,11 @@ import java.lang.annotation.Target;
 @InterceptorBinding
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Security
-{
-   /**
-    * Get required roles.
-    *
-    * @return the required roles
-    */
-   @Nonbinding String[] value() default {"admin"};
+public @interface Security {
+    /**
+     * Get required roles.
+     *
+     * @return the required roles
+     */
+    @Nonbinding String[] value() default {"admin"};
 }

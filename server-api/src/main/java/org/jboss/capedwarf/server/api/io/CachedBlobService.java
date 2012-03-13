@@ -22,48 +22,43 @@
 
 package org.jboss.capedwarf.server.api.io;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Decorator
-public abstract class CachedBlobService extends BaseBlobService
-{
-   private BlobService delegate;
-   private BlobCache cache;
+public abstract class CachedBlobService extends BaseBlobService {
+    private BlobService delegate;
+    private BlobCache cache;
 
-   public byte[] loadBytes(String key, long startIndex, long endIndex)
-   {
-      byte[] cached = cache.get(key);
-      if (cached != null)
-         return cached;
+    public byte[] loadBytes(String key, long startIndex, long endIndex) {
+        byte[] cached = cache.get(key);
+        if (cached != null)
+            return cached;
 
-      byte[] bytes = delegate.loadBytes(key, startIndex, endIndex);
-      cache.put(key, bytes);
-      return bytes;
-   }
+        byte[] bytes = delegate.loadBytes(key, startIndex, endIndex);
+        cache.put(key, bytes);
+        return bytes;
+    }
 
-   public String storeBytes(String mimeType, ByteBuffer buffer) throws IOException
-   {
-      String key = delegate.storeBytes(mimeType, buffer);
-      cache.put(key, buffer.array());
-      return key;
-   }
+    public String storeBytes(String mimeType, ByteBuffer buffer) throws IOException {
+        String key = delegate.storeBytes(mimeType, buffer);
+        cache.put(key, buffer.array());
+        return key;
+    }
 
-   @Inject
-   public void setDelegate(@Delegate BlobService delegate)
-   {
-      this.delegate = delegate;
-   }
+    @Inject
+    public void setDelegate(@Delegate BlobService delegate) {
+        this.delegate = delegate;
+    }
 
-   @Inject
-   public void setCache(BlobCache cache)
-   {
-      this.cache = cache;
-   }
+    @Inject
+    public void setCache(BlobCache cache) {
+        this.cache = cache;
+    }
 }

@@ -27,21 +27,20 @@ package org.jboss.capedwarf.server.api.users;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface UserHandler
-{
-   /**
-    * Provide login url.
-    *
-    * @param requestURI the request uri
-    * @return the login url
-    */
-   String loginURL(String requestURI);
+public interface UserHandler {
+    /**
+     * Provide login url.
+     *
+     * @param requestURI the request uri
+     * @return the login url
+     */
+    String loginURL(String requestURI);
 
-   /**
-    * Provide logout url.
-    *
-    * @param requestURI the request uri
-    * @return the login url
-    */
-   String logoutURL(String requestURI);
+    /**
+     * Provide logout url.
+     *
+     * @param requestURI the request uri
+     * @return the login url
+     */
+    String logoutURL(String requestURI);
 }

@@ -22,69 +22,62 @@
 
 package org.jboss.capedwarf.server.api.mvc;
 
+import org.jboss.capedwarf.server.api.servlet.AbstractRequestHandler;
+import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.jboss.capedwarf.server.api.servlet.AbstractRequestHandler;
-import org.jboss.capedwarf.server.api.servlet.RequestHandler;
 
 /**
  * Multi request handler.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class MultiRequestHandler extends AbstractRequestHandler
-{
-   private ServletContext context;
-   private Iterable<HandlerMapping> mappings;
+public class MultiRequestHandler extends AbstractRequestHandler {
+    private ServletContext context;
+    private Iterable<HandlerMapping> mappings;
 
-   protected void doInitialize(ServletContext context)
-   {
-      this.context = context;
-      for (HandlerMapping hm : mappings)
-         hm.initialize(context);
-   }
+    protected void doInitialize(ServletContext context) {
+        this.context = context;
+        for (HandlerMapping hm : mappings)
+            hm.initialize(context);
+    }
 
-   public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      RequestHandler handler = findHandler(req);
-      handler.initialize(context);
-      handler.handle(req, resp);
-   }
+    public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestHandler handler = findHandler(req);
+        handler.initialize(context);
+        handler.handle(req, resp);
+    }
 
-   /**
-    * Find matching request handler.
-    *
-    * @param req the request
-    * @return matching request handler
-    * @throws ServletException if handler is not found
-    */
-   protected RequestHandler findHandler(HttpServletRequest req) throws ServletException
-   {
-      for (HandlerMapping hm : mappings)
-      {
-         RequestHandler handler = hm.findHandler(req);
-         if (handler != null)
-            return handler;
-      }
-      throw new ServletException("No such mapping: " + req.getRequestURL() + " - " + mappings);
-   }
+    /**
+     * Find matching request handler.
+     *
+     * @param req the request
+     * @return matching request handler
+     * @throws ServletException if handler is not found
+     */
+    protected RequestHandler findHandler(HttpServletRequest req) throws ServletException {
+        for (HandlerMapping hm : mappings) {
+            RequestHandler handler = hm.findHandler(req);
+            if (handler != null)
+                return handler;
+        }
+        throw new ServletException("No such mapping: " + req.getRequestURL() + " - " + mappings);
+    }
 
-   @Inject
-   public void setMappings(Instance<HandlerMapping> mappings)
-   {
-      Set<HandlerMapping> hms = new HashSet<HandlerMapping>();
-      for (HandlerMapping hm : mappings)
-         hms.add(hm);
+    @Inject
+    public void setMappings(Instance<HandlerMapping> mappings) {
+        Set<HandlerMapping> hms = new HashSet<HandlerMapping>();
+        for (HandlerMapping hm : mappings)
+            hms.add(hm);
 
-      this.mappings = hms; 
-   }
+        this.mappings = hms;
+    }
 }

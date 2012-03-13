@@ -23,40 +23,36 @@
 
 package org.jboss.test.capedwarf.cache.test;
 
-import java.util.Collections;
-import java.util.Map;
+import org.junit.Assert;
+
 import javax.cache.Cache;
 import javax.cache.CacheFactory;
 import javax.cache.CacheManager;
-
-import org.junit.Assert;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Setup Infinispan cache.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractCacheTest
-{
-   protected CacheManager getCacheManager()
-   {
-      CacheManager manager = CacheManager.getInstance();
-      Assert.assertNotNull(manager);
-      return manager;
-   }
+public abstract class AbstractCacheTest {
+    protected CacheManager getCacheManager() {
+        CacheManager manager = CacheManager.getInstance();
+        Assert.assertNotNull(manager);
+        return manager;
+    }
 
-   protected CacheFactory getCacheFactory() throws Throwable
-   {
-      CacheFactory factory = getCacheManager().getCacheFactory();
-      Assert.assertNotNull(factory);
-      return factory;
-   }
+    protected CacheFactory getCacheFactory() throws Throwable {
+        CacheFactory factory = getCacheManager().getCacheFactory();
+        Assert.assertNotNull(factory);
+        return factory;
+    }
 
-   protected Cache getCache(String name) throws Throwable
-   {
-      Map map = Collections.singletonMap("cache-name", name);
-      Cache cache = getCacheFactory().createCache(map);
-      Assert.assertNotNull(cache);
-      return cache;
-   }
+    protected Cache getCache(String name) throws Throwable {
+        Map map = Collections.singletonMap("cache-name", name);
+        Cache cache = getCacheFactory().createCache(map);
+        Assert.assertNotNull(cache);
+        return cache;
+    }
 }

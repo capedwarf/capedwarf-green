@@ -32,51 +32,43 @@ import javax.persistence.Transient;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @MappedSuperclass
-public abstract class TimestampedEntity extends AbstractEntity implements TimestampAware
-{
-   private static long serialVersionUID = 3l;
+public abstract class TimestampedEntity extends AbstractEntity implements TimestampAware {
+    private static long serialVersionUID = 3l;
 
-   private long timestamp;
-   private long expirationTime;
+    private long timestamp;
+    private long expirationTime;
 
-   public TimestampedEntity()
-   {
-      super();
-   }
+    public TimestampedEntity() {
+        super();
+    }
 
-   @Basic
-   public long getTimestamp()
-   {
-      return timestamp;
-   }
+    @Basic
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-   public void setTimestamp(long timestamp)
-   {
-      this.timestamp = timestamp;
-   }
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-   @Basic
-   public long getExpirationTime()
-   {
-      return expirationTime;
-   }
+    @Basic
+    public long getExpirationTime() {
+        return expirationTime;
+    }
 
-   public void setExpirationTime(long expirationTime)
-   {
-      this.expirationTime = expirationTime;
-   }
+    public void setExpirationTime(long expirationTime) {
+        this.expirationTime = expirationTime;
+    }
 
-   @Transient
-   public String getInfo()
-   {
-      StringBuilder builder = new StringBuilder();
-      addInfo(builder);
-      return builder.toString();
-   }
+    @Transient
+    public String getInfo() {
+        StringBuilder builder = new StringBuilder();
+        addInfo(builder);
+        return builder.toString();
+    }
 
-   protected void addInfo(StringBuilder builder)
-   {
-      builder.append("timestamp=").append(timestamp);
-   }
+    protected void addInfo(StringBuilder builder) {
+        builder.append("timestamp=").append(timestamp);
+    }
 }
 

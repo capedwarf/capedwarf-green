@@ -31,25 +31,24 @@ import java.util.Locale;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CaptchaService
-{
-   /**
-    * Serve CAPTCHA.
-    *
-    * @param id the current id
-    * @param locale the current locale
-    * @param format the format
-    * @param out output stream
-    * @throws IOException for any I/O error
-    */
-   void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException;
+public interface CaptchaService {
+    /**
+     * Serve CAPTCHA.
+     *
+     * @param id     the current id
+     * @param locale the current locale
+     * @param format the format
+     * @param out    output stream
+     * @throws IOException for any I/O error
+     */
+    void serveCaptcha(String id, Locale locale, String format, OutputStream out) throws IOException;
 
-   /**
-    * Verify CAPTCHA.
-    *
-    * @param id the previous id
-    * @param captcha the captcha value
-    * @return true if valid, false otherwise
-    */
-   boolean verifyCaptcha(String id, String captcha);
+    /**
+     * Verify CAPTCHA.
+     *
+     * @param id      the previous id
+     * @param captcha the captcha value
+     * @return true if valid, false otherwise
+     */
+    boolean verifyCaptcha(String id, String captcha);
 }

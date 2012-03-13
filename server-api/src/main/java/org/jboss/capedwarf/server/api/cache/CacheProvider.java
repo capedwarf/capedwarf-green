@@ -36,24 +36,21 @@ import javax.inject.Inject;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CacheProvider
-{
-   private CacheConfig config;
+public class CacheProvider {
+    private CacheConfig config;
 
-   @Produces @Name("")
-   public Cache createAppCache(InjectionPoint ip) throws CacheException
-   {
-      return config.configureCache(ip.getAnnotated().getAnnotation(Name.class).value());
-   }
+    @Produces
+    @Name("")
+    public Cache createAppCache(InjectionPoint ip) throws CacheException {
+        return config.configureCache(ip.getAnnotated().getAnnotation(Name.class).value());
+    }
 
-   public void disposeAppCache(@Disposes @Name("") Cache cache)
-   {
-      config.disposeCache(cache);
-   }
+    public void disposeAppCache(@Disposes @Name("") Cache cache) {
+        config.disposeCache(cache);
+    }
 
-   @Inject
-   public void setConfig(CacheConfig config)
-   {
-      this.config = config;
-   }
+    @Inject
+    public void setConfig(CacheConfig config) {
+        this.config = config;
+    }
 }

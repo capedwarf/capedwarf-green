@@ -30,45 +30,40 @@ import java.nio.ByteBuffer;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractBlobService extends BaseBlobService
-{
-   public Blob toBlob(byte[] bytes)
-   {
-      if (bytes == null)
-         return null;
+public abstract class AbstractBlobService extends BaseBlobService {
+    public Blob toBlob(byte[] bytes) {
+        if (bytes == null)
+            return null;
 
-      return toBlobInternal(bytes);
-   }
+        return toBlobInternal(bytes);
+    }
 
-   protected abstract Blob toBlobInternal(byte[] bytes);
+    protected abstract Blob toBlobInternal(byte[] bytes);
 
-   public byte[] loadBytes(String key, long startIndex, long endIndex)
-   {
-      if (key == null || (startIndex > endIndex))
-         return null;
-      if (startIndex == endIndex)
-         return new byte[0];
+    public byte[] loadBytes(String key, long startIndex, long endIndex) {
+        if (key == null || (startIndex > endIndex))
+            return null;
+        if (startIndex == endIndex)
+            return new byte[0];
 
-      return loadBytesInternal(key, startIndex, endIndex);
-   }
+        return loadBytesInternal(key, startIndex, endIndex);
+    }
 
-   protected abstract byte[] loadBytesInternal(String key, long startIndex, long endIndex);
+    protected abstract byte[] loadBytesInternal(String key, long startIndex, long endIndex);
 
-   public String storeBytes(String mimeType, byte[] bytes) throws IOException
-   {
-      if (bytes == null)
-         return null;
+    public String storeBytes(String mimeType, byte[] bytes) throws IOException {
+        if (bytes == null)
+            return null;
 
-      return storeBytesInternal(mimeType, ByteBuffer.wrap(bytes));
-   }
+        return storeBytesInternal(mimeType, ByteBuffer.wrap(bytes));
+    }
 
-   public String storeBytes(String mimeType, ByteBuffer buffer) throws IOException
-   {
-      if (buffer == null)
-         return null;
+    public String storeBytes(String mimeType, ByteBuffer buffer) throws IOException {
+        if (buffer == null)
+            return null;
 
-      return storeBytesInternal(mimeType, buffer);
-   }
+        return storeBytesInternal(mimeType, buffer);
+    }
 
-   protected abstract String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException;
+    protected abstract String storeBytesInternal(String mimeType, ByteBuffer buffer) throws IOException;
 }

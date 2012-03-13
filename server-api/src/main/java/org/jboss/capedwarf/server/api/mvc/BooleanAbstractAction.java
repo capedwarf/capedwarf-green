@@ -27,10 +27,8 @@ package org.jboss.capedwarf.server.api.mvc;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class BooleanAbstractAction extends ResultAbstractAction<Boolean>
-{
-   protected Boolean errorResult()
-   {
-      return false;
-   }
+public abstract class BooleanAbstractAction extends ResultAbstractAction<Boolean> {
+    protected Boolean errorResult() {
+        return false;
+    }
 }

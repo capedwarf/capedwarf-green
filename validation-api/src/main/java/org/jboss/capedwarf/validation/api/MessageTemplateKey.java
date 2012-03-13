@@ -14,12 +14,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target({METHOD, TYPE})
 @Retention(RUNTIME)
-public @interface MessageTemplateKey
-{
-   /**
-    * The template key.
-    *
-    * @return the key
-    */
-   String value();
+public @interface MessageTemplateKey {
+    /**
+     * The template key.
+     *
+     * @return the key
+     */
+    String value();
 }

@@ -29,12 +29,11 @@ import org.jboss.capedwarf.server.api.servlet.RequestHandler;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Path2Controller extends RequestHandler
-{
-   /**
-    * Get path.
-    *
-    * @return the path
-    */
-   String path();
+public interface Path2Controller extends RequestHandler {
+    /**
+     * Get path.
+     *
+     * @return the path
+     */
+    String path();
 }

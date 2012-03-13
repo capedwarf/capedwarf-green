@@ -34,12 +34,11 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CacheKey
-{
-   /**
-    * Explicit cache key.
-    *
-    * @return the cache key
-    */
-   String value();
+public @interface CacheKey {
+    /**
+     * Explicit cache key.
+     *
+     * @return the cache key
+     */
+    String value();
 }

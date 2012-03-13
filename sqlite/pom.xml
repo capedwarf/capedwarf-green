@@ -1,49 +1,50 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <!-- Parent -->
-  <parent>
-    <groupId>org.jboss.capedwarf.green</groupId>
-    <artifactId>capedwarf-build</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.capedwarf.green</groupId>
+        <artifactId>capedwarf-build</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>capedwarf-sqlite</artifactId>
-  <packaging>jar</packaging>
-  <name>CapeDwarf SQLite</name>
-  <url>http://www.jboss.org/capedwarf</url>
-  <description>CapeDwarf SQLite</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>capedwarf-sqlite</artifactId>
+    <packaging>jar</packaging>
+    <name>CapeDwarf SQLite</name>
+    <url>http://www.jboss.org/capedwarf</url>
+    <description>CapeDwarf SQLite</description>
 
-  <dependencies>
+    <dependencies>
 
-     <dependency>
-       <groupId>org.jboss.capedwarf.green</groupId>
-       <artifactId>capedwarf-common</artifactId>
-       <exclusions>
-          <exclusion>
-             <groupId>javax.validation</groupId>
-             <artifactId>validation-api</artifactId>
-          </exclusion>
-          <!-- exclusion>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-          </exclusion -->
-          <exclusion>
-              <groupId>org.json</groupId>
-              <artifactId>json</artifactId>
-          </exclusion>
-        </exclusions>
-     </dependency>
+        <dependency>
+            <groupId>org.jboss.capedwarf.green</groupId>
+            <artifactId>capedwarf-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+                <!-- exclusion>
+                 <groupId>org.hibernate</groupId>
+                 <artifactId>hibernate-validator</artifactId>
+               </exclusion -->
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-      <dependency>
-          <groupId>com.google.android</groupId>
-          <artifactId>android</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+        </dependency>
 
-     <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <scope>test</scope>
-     </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 </project>

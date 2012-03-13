@@ -22,14 +22,13 @@
 
 package org.jboss.capedwarf.server.api.admin.impl;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import java.io.Serializable;
-import java.util.*;
-
 import org.jboss.capedwarf.server.api.admin.AdminManager;
 import org.jboss.seam.solder.resourceLoader.Resource;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.io.Serializable;
+import java.util.*;
 
 
 /**
@@ -38,74 +37,63 @@ import org.jboss.seam.solder.resourceLoader.Resource;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class BasicAdminManager implements AdminManager, Serializable
-{
-   private static final long serialVersionUID = 1l;
-   private Map<String, Set<String>> users = Collections.emptyMap();
-   private Map<String, Set<String>> roles = Collections.emptyMap();
+public class BasicAdminManager implements AdminManager, Serializable {
+    private static final long serialVersionUID = 1l;
+    private Map<String, Set<String>> users = Collections.emptyMap();
+    private Map<String, Set<String>> roles = Collections.emptyMap();
 
-   public Set<String> getRoles(String identification)
-   {
-      Set<String> set = users.get(identification);
-      return set != null ? set : Collections.<String>emptySet();
-   }
+    public Set<String> getRoles(String identification) {
+        Set<String> set = users.get(identification);
+        return set != null ? set : Collections.<String>emptySet();
+    }
 
-   public boolean isUserInRole(String identification, String role)
-   {
-      Set<String> roles = getRoles(identification);
-      return roles != null && roles.contains(role);
-   }
+    public boolean isUserInRole(String identification, String role) {
+        Set<String> roles = getRoles(identification);
+        return roles != null && roles.contains(role);
+    }
 
-   public Set<String> getUsers(String role)
-   {
-      Set<String> set = roles.get(role);
-      return set != null ? set : Collections.<String>emptySet();
-   }
+    public Set<String> getUsers(String role) {
+        Set<String> set = roles.get(role);
+        return set != null ? set : Collections.<String>emptySet();
+    }
 
-   public String getAppAdminEmail()
-   {
-      return getSingleUser("mail");
-   }
+    public String getAppAdminEmail() {
+        return getSingleUser("mail");
+    }
 
-   public String getAppDevEmail()
-   {
-      return getSingleUser("dev");
-   }
+    public String getAppDevEmail() {
+        return getSingleUser("dev");
+    }
 
-   /**
-    * Get single user.
-    *
-    * @param role the role
-    * @return single role user or exception if no such user
-    */
-   protected String getSingleUser(String role)
-   {
-      Set<String> strings = getUsers(role);
-      if (strings.isEmpty())
-         throw new IllegalArgumentException("No matches for " + role + ", illegal admin.properties: " + users);
+    /**
+     * Get single user.
+     *
+     * @param role the role
+     * @return single role user or exception if no such user
+     */
+    protected String getSingleUser(String role) {
+        Set<String> strings = getUsers(role);
+        if (strings.isEmpty())
+            throw new IllegalArgumentException("No matches for " + role + ", illegal admin.properties: " + users);
 
-      return strings.iterator().next();
-   }
+        return strings.iterator().next();
+    }
 
-   @Inject
-   public void setPropertes(@Resource("admin.properties") Properties props)
-   {
-      users = new HashMap<String, Set<String>>();
-      roles = new HashMap<String, Set<String>>();
-      for (String key : props.stringPropertyNames())
-      {
-         String[] split = props.getProperty(key).split(",");
-         users.put(key, new HashSet<String>(Arrays.asList(split)));
-         for (String role : split)
-         {
-            Set<String> set = roles.get(role);
-            if (set == null)
-            {
-               set = new TreeSet<String>();
-               roles.put(role, set);
+    @Inject
+    public void setPropertes(@Resource("admin.properties") Properties props) {
+        users = new HashMap<String, Set<String>>();
+        roles = new HashMap<String, Set<String>>();
+        for (String key : props.stringPropertyNames()) {
+            String[] split = props.getProperty(key).split(",");
+            users.put(key, new HashSet<String>(Arrays.asList(split)));
+            for (String role : split) {
+                Set<String> set = roles.get(role);
+                if (set == null) {
+                    set = new TreeSet<String>();
+                    roles.put(role, set);
+                }
+                set.add(key);
             }
-            set.add(key);
-         }
-      }
-   }
+        }
+    }
 }

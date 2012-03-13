@@ -27,9 +27,8 @@ package org.jboss.capedwarf.sqlite;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public enum Phase
-{
-   BEFORE,
-   AFTER
+public enum Phase {
+    BEFORE,
+    AFTER
 }
 

@@ -22,8 +22,8 @@
 
 package org.jboss.capedwarf.server.api.mail.impl;
 
-import java.util.Arrays;
 import javax.enterprise.inject.Alternative;
+import java.util.Arrays;
 
 /**
  * Dummy mail manager.
@@ -31,15 +31,12 @@ import javax.enterprise.inject.Alternative;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Alternative
-public class DummyMailManager extends AbstractMailManager
-{
-   public void sendEmail(String sender, String subject, String textBody, String... tos)
-   {
-      log.info(sender + " - " + subject + ": " + textBody + " --> " + Arrays.toString(tos));
-   }
+public class DummyMailManager extends AbstractMailManager {
+    public void sendEmail(String sender, String subject, String textBody, String... tos) {
+        log.info(sender + " - " + subject + ": " + textBody + " --> " + Arrays.toString(tos));
+    }
 
-   public void sendEmailToAdmins(String sender, String subject, String textBody)
-   {
-      log.info(sender + " - " + subject + ": " + textBody + " --> [administrators]");
-   }
+    public void sendEmailToAdmins(String sender, String subject, String textBody) {
+        log.info(sender + " - " + subject + ": " + textBody + " --> [administrators]");
+    }
 }

@@ -22,13 +22,13 @@
 
 package org.jboss.capedwarf.server.gae.persistence;
 
-import java.io.Serializable;
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-
 import org.jboss.capedwarf.jpa.Entity;
 import org.jboss.capedwarf.server.api.persistence.AbstractStatelessAdapterFactory;
 import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import java.io.Serializable;
 
 /**
  * Not really stateless - simply delegates to EM.
@@ -36,61 +36,50 @@ import org.jboss.capedwarf.server.api.persistence.StatelessAdapter;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class StatefulStatelessAdapterFactory extends AbstractStatelessAdapterFactory
-{
-   protected StatelessAdapter doCreateStatelessAdapter(EntityManager em)
-   {
-      return new EMStatelessAdapter(em);
-   }
+public class StatefulStatelessAdapterFactory extends AbstractStatelessAdapterFactory {
+    protected StatelessAdapter doCreateStatelessAdapter(EntityManager em) {
+        return new EMStatelessAdapter(em);
+    }
 
-   private static class EMStatelessAdapter implements StatelessAdapter
-   {
-      private final EntityManager em;
+    private static class EMStatelessAdapter implements StatelessAdapter {
+        private final EntityManager em;
 
-      private EMStatelessAdapter(EntityManager em)
-      {
-         this.em = em;
-      }
+        private EMStatelessAdapter(EntityManager em) {
+            this.em = em;
+        }
 
-      public Long insert(Object entity)
-      {
-         if (entity instanceof Entity == false)
-            throw new IllegalArgumentException("Not Entity: " + entity);
+        public Long insert(Object entity) {
+            if (entity instanceof Entity == false)
+                throw new IllegalArgumentException("Not Entity: " + entity);
 
-         em.persist(entity);
-         em.flush();
-         return ((Entity) entity).getId();
-      }
+            em.persist(entity);
+            em.flush();
+            return ((Entity) entity).getId();
+        }
 
-      public void update(Object entity)
-      {
-         em.merge(entity);
-         em.flush();
-      }
+        public void update(Object entity) {
+            em.merge(entity);
+            em.flush();
+        }
 
-      public void delete(Object entity)
-      {
-         em.remove(entity);
-      }
+        public void delete(Object entity) {
+            em.remove(entity);
+        }
 
-      public <T> T get(Class<T> entityClass, Serializable id)
-      {
-         return em.find(entityClass, id);
-      }
+        public <T> T get(Class<T> entityClass, Serializable id) {
+            return em.find(entityClass, id);
+        }
 
-      public void refresh(Object entity)
-      {
-         em.refresh(entity);
-      }
+        public void refresh(Object entity) {
+            em.refresh(entity);
+        }
 
-      public void close()
-      {
-         // nothing to close
-      }
+        public void close() {
+            // nothing to close
+        }
 
-      public void initialize(Object proxy)
-      {
-         // dunno how to initialize
-      }
-   }
+        public void initialize(Object proxy) {
+            // dunno how to initialize
+        }
+    }
 }

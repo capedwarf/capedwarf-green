@@ -22,54 +22,49 @@
 
 package org.jboss.capedwarf.server.api.dao.impl;
 
-import javax.inject.Inject;
-
 import org.jboss.capedwarf.server.api.dao.TimestampedDAO;
 import org.jboss.capedwarf.server.api.domain.TimestampedEntity;
 import org.jboss.capedwarf.server.api.tx.TransactionPropagationType;
 import org.jboss.capedwarf.server.api.tx.Transactional;
 import org.jboss.capedwarf.server.api.utils.TimestampProvider;
 
+import javax.inject.Inject;
+
 /**
  * Abstract timestamped DAO.
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractTimestampedDAO<T extends TimestampedEntity> extends AbstractGenericDAO<T> implements TimestampedDAO<T>
-{
-   private TimestampProvider tp;
+public abstract class AbstractTimestampedDAO<T extends TimestampedEntity> extends AbstractGenericDAO<T> implements TimestampedDAO<T> {
+    private TimestampProvider tp;
 
-   /**
-    * Get current timestamp.
-    *
-    * @return the timestamp
-    */
-   protected long currentTimestamp()
-   {
-      return tp.currentTimeMillis();
-   }
+    /**
+     * Get current timestamp.
+     *
+     * @return the timestamp
+     */
+    protected long currentTimestamp() {
+        return tp.currentTimeMillis();
+    }
 
-   protected void saveInternal(T entity)
-   {
-      long ts = tp.currentTimeMillis();
-      entity.setTimestamp(ts);
-      entity.setExpirationTime(entity.getExpirationTime() + ts); // current ts is actually delta
-      super.saveInternal(entity);
-   }
+    protected void saveInternal(T entity) {
+        long ts = tp.currentTimeMillis();
+        entity.setTimestamp(ts);
+        entity.setExpirationTime(entity.getExpirationTime() + ts); // current ts is actually delta
+        super.saveInternal(entity);
+    }
 
-   @Transactional(TransactionPropagationType.SUPPORTS)
-   public boolean hasExpired(T entity)
-   {
-      if (entity == null)
-         return true;
+    @Transactional(TransactionPropagationType.SUPPORTS)
+    public boolean hasExpired(T entity) {
+        if (entity == null)
+            return true;
 
-      long expirationTime = entity.getExpirationTime();
-      return expirationTime > tp.currentTimeMillis();
-   }
+        long expirationTime = entity.getExpirationTime();
+        return expirationTime > tp.currentTimeMillis();
+    }
 
-   @Inject
-   public void setTp(TimestampProvider tp)
-   {
-      this.tp = tp;
-   }
+    @Inject
+    public void setTp(TimestampProvider tp) {
+        this.tp = tp;
+    }
 }

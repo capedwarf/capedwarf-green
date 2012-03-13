@@ -37,12 +37,11 @@ import java.lang.annotation.Target;
 @Qualifier
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Name
-{
-   /**
-    * The name.
-    *
-    * @return the name
-    */
-   @Nonbinding String value();
+public @interface Name {
+    /**
+     * The name.
+     *
+     * @return the name
+     */
+    @Nonbinding String value();
 }

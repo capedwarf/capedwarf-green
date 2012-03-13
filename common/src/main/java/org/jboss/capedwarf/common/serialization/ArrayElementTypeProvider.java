@@ -8,28 +8,24 @@ import java.util.List;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ArrayElementTypeProvider implements ElementTypeProvider
-{
-   private List<Class<? extends JSONAware>> types;
+public class ArrayElementTypeProvider implements ElementTypeProvider {
+    private List<Class<? extends JSONAware>> types;
 
-   public ArrayElementTypeProvider(Class<? extends JSONAware>[] types)
-   {
-      if (types == null || types.length == 0)
-         throw new IllegalArgumentException("Null or empty types: " + Arrays.toString(types));
+    public ArrayElementTypeProvider(Class<? extends JSONAware>[] types) {
+        if (types == null || types.length == 0)
+            throw new IllegalArgumentException("Null or empty types: " + Arrays.toString(types));
 
-      this.types = Arrays.asList(types);
-   }
+        this.types = Arrays.asList(types);
+    }
 
-   public ArrayElementTypeProvider(List<Class<? extends JSONAware>> types)
-   {
-      if (types == null || types.isEmpty())
-         throw new IllegalArgumentException("Null or empty types: " + types);
+    public ArrayElementTypeProvider(List<Class<? extends JSONAware>> types) {
+        if (types == null || types.isEmpty())
+            throw new IllegalArgumentException("Null or empty types: " + types);
 
-      this.types = types;
-   }
+        this.types = types;
+    }
 
-   public Class<? extends JSONAware> getType(int index)
-   {
-      return types.get(index);
-   }
+    public Class<? extends JSONAware> getType(int index) {
+        return types.get(index);
+    }
 }

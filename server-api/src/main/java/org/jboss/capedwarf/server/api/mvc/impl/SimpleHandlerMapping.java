@@ -22,17 +22,16 @@
 
 package org.jboss.capedwarf.server.api.mvc.impl;
 
+import org.jboss.capedwarf.server.api.mvc.HandlerMapping;
+import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jboss.capedwarf.server.api.mvc.HandlerMapping;
-import org.jboss.capedwarf.server.api.servlet.RequestHandler;
 
 /**
  * Multi request handler.
@@ -40,42 +39,35 @@ import org.jboss.capedwarf.server.api.servlet.RequestHandler;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public class SimpleHandlerMapping implements HandlerMapping
-{
-   private Map<String, RequestHandler> handlers;
+public class SimpleHandlerMapping implements HandlerMapping {
+    private Map<String, RequestHandler> handlers;
 
-   public void initialize(ServletContext context)
-   {
-   }
+    public void initialize(ServletContext context) {
+    }
 
-   public RequestHandler findHandler(HttpServletRequest req)
-   {
-      String path = req.getPathInfo();
-      RequestHandler handler = handlers.get(path);
-      if (handler != null)
-         return handler;
+    public RequestHandler findHandler(HttpServletRequest req) {
+        String path = req.getPathInfo();
+        RequestHandler handler = handlers.get(path);
+        if (handler != null)
+            return handler;
 
-      for (String ep : handlers.keySet())
-      {
-         if (path.startsWith(ep))
-            return handlers.get(ep);
-      }
-      return null;
-   }
+        for (String ep : handlers.keySet()) {
+            if (path.startsWith(ep))
+                return handlers.get(ep);
+        }
+        return null;
+    }
 
-   @Inject
-   public void setControllers(Instance<Path2Controller> paths)
-   {
-      handlers = new HashMap<String, RequestHandler>();
-      for (Path2Controller p2c : paths)
-      {
-         String path = p2c.path();
-         handlers.put(path, p2c);
-      }
-   }
+    @Inject
+    public void setControllers(Instance<Path2Controller> paths) {
+        handlers = new HashMap<String, RequestHandler>();
+        for (Path2Controller p2c : paths) {
+            String path = p2c.path();
+            handlers.put(path, p2c);
+        }
+    }
 
-   public String toString()
-   {
-      return handlers.toString();
-   }
+    public String toString() {
+        return handlers.toString();
+    }
 }

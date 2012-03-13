@@ -38,86 +38,81 @@ import java.io.Serializable;
  */
 @Named("login")
 @RequestScoped
-public class Login implements Serializable
-{
-   private static final long serialVersionUID = 1l;
+public class Login implements Serializable {
+    private static final long serialVersionUID = 1l;
 
-   /** The admin manager */
-   private AdminManager adminManager;
+    /**
+     * The admin manager
+     */
+    private AdminManager adminManager;
 
-   /** The current user */
-   private User user;
+    /**
+     * The current user
+     */
+    private User user;
 
-   /**
-    * Is the user logged in.
-    *
-    * @param role the role
-    * @return true if logged in, false otherwise
-    */
-   protected boolean isLoggedIn(String role)
-   {
-      if (user != null)
-      {
-         String email = user.getEmail();
-         return adminManager.isUserInRole(email, role);
-      }
-      return false;
-   }
+    /**
+     * Is the user logged in.
+     *
+     * @param role the role
+     * @return true if logged in, false otherwise
+     */
+    protected boolean isLoggedIn(String role) {
+        if (user != null) {
+            String email = user.getEmail();
+            return adminManager.isUserInRole(email, role);
+        }
+        return false;
+    }
 
-   /**
-    * Is the user logged in.
-    *
-    * @return true if user is logged in, false otherwise
-    */
-   public boolean isLoggedIn()
-   {
-      return (user != null);
-   }
+    /**
+     * Is the user logged in.
+     *
+     * @return true if user is logged in, false otherwise
+     */
+    public boolean isLoggedIn() {
+        return (user != null);
+    }
 
-   /**
-    * Is the admin logged in.
-    *
-    * @return true if admin is logged in, false otherwise
-    */
-   public boolean isAdmin()
-   {
-      return isLoggedIn("admin");
-   }
+    /**
+     * Is the admin logged in.
+     *
+     * @return true if admin is logged in, false otherwise
+     */
+    public boolean isAdmin() {
+        return isLoggedIn("admin");
+    }
 
-   /**
-    * Is the editor logged in.
-    *
-    * @return true if admin is logged in, false otherwise
-    */
-   public boolean isEditor()
-   {
-      return isLoggedIn("editor") || isAdmin();
-   }
+    /**
+     * Is the editor logged in.
+     *
+     * @return true if admin is logged in, false otherwise
+     */
+    public boolean isEditor() {
+        return isLoggedIn("editor") || isAdmin();
+    }
 
-   /**
-    * Get user.
-    *
-    * @return the current user
-    */
-   public User getUser()
-   {
-      return user;
-   }
+    /**
+     * Get user.
+     *
+     * @return the current user
+     */
+    public User getUser() {
+        return user;
+    }
 
-   @Inject
-   public void setAdminManager(AdminManager adminManager)
-   {
-      this.adminManager = adminManager;
-   }
+    @Inject
+    public void setAdminManager(AdminManager adminManager) {
+        this.adminManager = adminManager;
+    }
 
-   /**
-    * Set user.
-    *
-    * @param user the user
-    */
-   @Inject
-   public void setUser(@Current User user)
-   {
-      this.user = user;
-   }
+    /**
+     * Set user.
+     *
+     * @param user the user
+     */
+    @Inject
+    public void setUser(@Current User user) {
+        this.user = user;
+    }
 }

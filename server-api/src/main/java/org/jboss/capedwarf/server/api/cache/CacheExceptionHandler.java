@@ -30,17 +30,16 @@ import javax.interceptor.InvocationContext;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CacheExceptionHandler
-{
-   /**
-    * Handle exception.
-    *
-    * @param cache the cache
-    * @param context the invocation context
-    * @param key the key
-    * @param value the value
-    * @param t the throwable
-    * @return possible result
-    */
-   Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t);
+public interface CacheExceptionHandler {
+    /**
+     * Handle exception.
+     *
+     * @param cache   the cache
+     * @param context the invocation context
+     * @param key     the key
+     * @param value   the value
+     * @param t       the throwable
+     * @return possible result
+     */
+    Object handleException(Cache cache, InvocationContext context, Object key, Object value, Throwable t);
 }

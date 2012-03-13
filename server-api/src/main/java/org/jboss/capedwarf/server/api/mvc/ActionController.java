@@ -22,10 +22,9 @@
 
 package org.jboss.capedwarf.server.api.mvc;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.capedwarf.server.api.servlet.AbstractRequestHandler;
+import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
@@ -35,9 +34,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.jboss.capedwarf.server.api.servlet.AbstractRequestHandler;
-import org.jboss.capedwarf.server.api.servlet.RequestHandler;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Simple action request controller.
@@ -45,84 +45,75 @@ import org.jboss.capedwarf.server.api.servlet.RequestHandler;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @ApplicationScoped
-public abstract class ActionController extends AbstractRequestHandler
-{
-   private ServletContext context;
-   private BeanManager beanManager;
+public abstract class ActionController extends AbstractRequestHandler {
+    private ServletContext context;
+    private BeanManager beanManager;
 
-   private Map<String, RequestHandler> actions = Collections.emptyMap();
-   private Map<String, Class> classes = Collections.emptyMap();
+    private Map<String, RequestHandler> actions = Collections.emptyMap();
+    private Map<String, Class> classes = Collections.emptyMap();
 
-   @Inject
-   public void setBeanManager(BeanManager beanManager)
-   {
-      this.beanManager = beanManager;
-   }
+    @Inject
+    public void setBeanManager(BeanManager beanManager) {
+        this.beanManager = beanManager;
+    }
 
-   @Override
-   protected void doInitialize(ServletContext context)
-   {
-      this.context = context;
-   }
+    @Override
+    protected void doInitialize(ServletContext context) {
+        this.context = context;
+    }
 
-   @SuppressWarnings({"unchecked"})
-   public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      String actionName = req.getParameter("action");
-      if (actionName != null)
-      {
-         RequestHandler action = actions.get(actionName);
-         if (action == null)
-         {
-            Class<RequestHandler> ac = classes.get(actionName);
-            if (ac != null)
-            {
-               if (beanManager == null)
-                  throw new IllegalArgumentException("No Weld manager present");
+    @SuppressWarnings({"unchecked"})
+    public void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String actionName = req.getParameter("action");
+        if (actionName != null) {
+            RequestHandler action = actions.get(actionName);
+            if (action == null) {
+                Class<RequestHandler> ac = classes.get(actionName);
+                if (ac != null) {
+                    if (beanManager == null)
+                        throw new IllegalArgumentException("No Weld manager present");
 
-               InjectionTarget<RequestHandler> it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(ac));
-               CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
-               action = it.produce(cc);
-               it.inject(action, cc);
+                    InjectionTarget<RequestHandler> it = beanManager.createInjectionTarget(beanManager.createAnnotatedType(ac));
+                    CreationalContext<RequestHandler> cc = beanManager.createCreationalContext(null);
+                    action = it.produce(cc);
+                    it.inject(action, cc);
 
-               action.initialize(context);
+                    action.initialize(context);
 
-               actions.put(actionName, action);
+                    actions.put(actionName, action);
+                }
             }
-         }
 
-         if (action != null)
-            action.handle(req, resp);
-         else
-            throw new ServletException("No such matching action: " + actionName);
-      }
-   }
+            if (action != null)
+                action.handle(req, resp);
+            else
+                throw new ServletException("No such matching action: " + actionName);
+        }
+    }
 
-   /**
-    * Add non stateless actions.
-    *
-    * @param name the action name
-    * @param clazz the action class
-    */
-   protected void addActionClass(String name, Class<? extends RequestHandler> clazz)
-   {
-      if (classes.isEmpty())
-         classes = new HashMap<String, Class>();
+    /**
+     * Add non stateless actions.
+     *
+     * @param name  the action name
+     * @param clazz the action class
+     */
+    protected void addActionClass(String name, Class<? extends RequestHandler> clazz) {
+        if (classes.isEmpty())
+            classes = new HashMap<String, Class>();
 
-      classes.put(name, clazz);
-   }
+        classes.put(name, clazz);
+    }
 
-   /**
-    * Add stateless actions.
-    *
-    * @param name the action name
-    * @param handler the action handler
-    */
-   protected void addAction(String name, RequestHandler handler)
-   {
-      if (actions.isEmpty())
-         actions = new HashMap<String, RequestHandler>();
+    /**
+     * Add stateless actions.
+     *
+     * @param name    the action name
+     * @param handler the action handler
+     */
+    protected void addAction(String name, RequestHandler handler) {
+        if (actions.isEmpty())
+            actions = new HashMap<String, RequestHandler>();
 
-      actions.put(name, handler);
-   }
+        actions.put(name, handler);
+    }
 }

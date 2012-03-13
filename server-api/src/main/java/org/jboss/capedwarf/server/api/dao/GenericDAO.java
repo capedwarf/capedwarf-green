@@ -22,9 +22,9 @@
 
 package org.jboss.capedwarf.server.api.dao;
 
-import java.util.List;
-
 import org.jboss.capedwarf.server.api.domain.AbstractEntity;
+
+import java.util.List;
 
 /**
  * Generic DAO.
@@ -32,66 +32,65 @@ import org.jboss.capedwarf.server.api.domain.AbstractEntity;
  * @param <T> exact dao type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface GenericDAO<T extends AbstractEntity>
-{
-   /**
-    * Save entity.
-    *
-    * @param entity the entity
-    */
-   void save(T entity);
+public interface GenericDAO<T extends AbstractEntity> {
+    /**
+     * Save entity.
+     *
+     * @param entity the entity
+     */
+    void save(T entity);
 
-   /**
-    * Merge entity.
-    *
-    * @param entity the entity
-    */
-   void merge(T entity);
+    /**
+     * Merge entity.
+     *
+     * @param entity the entity
+     */
+    void merge(T entity);
 
-   /**
-    * Delete entity.
-    *
-    * @param id the entity id
-    * @return 1 if deletion was performed, 0 otherwise
-    */
-   int delete(Long id);
+    /**
+     * Delete entity.
+     *
+     * @param id the entity id
+     * @return 1 if deletion was performed, 0 otherwise
+     */
+    int delete(Long id);
 
-   /**
-    * Delete entity.
-    *
-    * @param entity the entity
-    */
-   void delete(T entity);
+    /**
+     * Delete entity.
+     *
+     * @param entity the entity
+     */
+    void delete(T entity);
 
-   /**
-    * Find entity.
-    *
-    * @param id the entity id
-    * @return found entity or null
-    */
-   T find(Long id);
+    /**
+     * Find entity.
+     *
+     * @param id the entity id
+     * @return found entity or null
+     */
+    T find(Long id);
 
-   /**
-    * Find entity.
-    *
-    * @param clazz the entity class
-    * @param id the entity id
-    * @return found entity or null
-    */
-   <U> U find(Class<U> clazz, Long id);
+    /**
+     * Find entity.
+     *
+     * @param clazz the entity class
+     * @param id    the entity id
+     * @return found entity or null
+     */
+    <U> U find(Class<U> clazz, Long id);
 
-   /**
-    * Find all entities.
-    *
-    * @return all entities
-    */
-   List<T> findAll();
+    /**
+     * Find all entities.
+     *
+     * @return all entities
+     */
+    List<T> findAll();
 
-   /**
-    * Get stateless view.
-    *
-    * @param autoClose shoould we auto close dao
-    * @return get stateless view
-    */
-   StatelessDAO<T> statelessView(boolean autoClose);
+    /**
+     * Get stateless view.
+     *
+     * @param autoClose shoould we auto close dao
+     * @return get stateless view
+     */
+    StatelessDAO<T> statelessView(boolean autoClose);
 }
