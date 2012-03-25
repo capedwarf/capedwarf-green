@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +30,56 @@ public class JSONUtils {
         }
     }
 
+    /**
+     * Write iterable.
+     * 
+     * @param json the json object to write to
+     * @param key  the key
+     * @param iter the iterable
+     * @param transformer the transfomer
+     * @throws JSONException the json exception
+     */
+    public static <T> void writeIterable(JSONObject json, String key, Iterable<T> iter, JSONTransformer<T> transformer) throws JSONException {
+        if (json == null)
+            throw new IllegalArgumentException("Null JSON object");
+        if (key == null)
+            throw new IllegalArgumentException("Null key");
+        
+        JSONArray array = new JSONArray();
+        for (T obj : iter) {
+            transformer.addValue(array, obj);
+        }
+        if (array.length() > 0)
+            json.put(key, array);
+    }
+    
+    /**
+     * Read iterable.
+     * 
+     * @param json the json object to write to
+     * @param key  the key
+     * @param transformer the transfomer
+     * @return list from array
+     * @throws JSONException the json exception
+     */
+    public static <T> List<T> readIterable(JSONObject json, String key, JSONTransformer<T> transformer) throws JSONException {
+        if (json == null)
+            throw new IllegalArgumentException("Null JSON object");
+        if (key == null)
+            throw new IllegalArgumentException("Null key");
+
+        JSONArray array = json.optJSONArray(key);
+        if (array != null && array.length() > 0) {
+            final int length = array.length();
+            List<T> list = new ArrayList<T>(length);
+            for (int i = 0; i < length; i++)
+                list.add(transformer.getValue(array, i));
+            return list;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+    
     /**
      * Write bytes.
      *
