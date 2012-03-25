@@ -60,7 +60,7 @@ public final class JSONTransformers {
         }
     };
 
-    public static final JSONTransformer<Double> DOBLE = new JSONTransformer<Double>() {
+    public static final JSONTransformer<Double> DOUBLE = new JSONTransformer<Double>() {
         public void setValue(JSONObject json, String key, Double value) throws JSONException {
             if (value != null)
                 json.put(key, (double) value);
