@@ -36,6 +36,10 @@ public abstract class Configuration<T> {
 
     private String httpEndpoint;
     private String sslEndpoint;
+    private int soTimeout = 30 * (int) Constants.SECOND;
+    private boolean expectContinue = true;
+    private boolean staleCheckingEnabled;
+    private int socketBufferSize = 8192;
 
     public synchronized static <T> Configuration<T> getInstance() {
         if (instance == null)
@@ -250,5 +254,37 @@ public abstract class Configuration<T> {
 
     public void setSslFactory(SocketFactory sslFactory) {
         this.sslFactory = sslFactory;
+    }
+
+    public int getSoTimeout() {
+        return soTimeout;
+    }
+
+    public void setSoTimeout(int soTimeout) {
+        this.soTimeout = soTimeout;
+    }
+
+    public boolean isExpectContinue() {
+        return expectContinue;
+    }
+
+    public void setExpectContinue(boolean expectContinue) {
+        this.expectContinue = expectContinue;
+    }
+
+    public boolean isStaleCheckingEnabled() {
+        return staleCheckingEnabled;
+    }
+
+    public void setStaleCheckingEnabled(boolean staleCheckingEnabled) {
+        this.staleCheckingEnabled = staleCheckingEnabled;
+    }
+
+    public int getSocketBufferSize() {
+        return socketBufferSize;
+    }
+
+    public void setSocketBufferSize(int socketBufferSize) {
+        this.socketBufferSize = socketBufferSize;
     }
 }
