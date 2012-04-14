@@ -87,6 +87,12 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
             HttpConnectionParams.setConnectionTimeout(params, config.getConnectionTimeout());
             HttpProtocolParams.setVersion(params, config.getHttpVersion());
             HttpProtocolParams.setContentCharset(params, config.getContentCharset());
+            HttpProtocolParams.setUseExpectContinue(params, config.isExpectContinue());
+            HttpConnectionParams.setStaleCheckingEnabled(params, config.isStaleCheckingEnabled());
+            HttpConnectionParams.setConnectionTimeout(params, config.getConnectionTimeout());
+            HttpConnectionParams.setSoTimeout(params, config.getSoTimeout());
+            HttpConnectionParams.setSocketBufferSize(params, config.getSocketBufferSize());
+
 
             // Create and initialize scheme registry
             SchemeRegistry schemeRegistry = new SchemeRegistry();
