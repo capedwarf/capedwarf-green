@@ -83,7 +83,8 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
      */
     private synchronized HttpClient getClient() {
         if (client == null) {
-            HttpParams params = new BasicHttpParams();
+            HttpParams params = createHttpParams();
+
             HttpProtocolParams.setVersion(params, config.getHttpVersion());
             HttpProtocolParams.setContentCharset(params, config.getContentCharset());
             HttpProtocolParams.setUseExpectContinue(params, config.isExpectContinue());
@@ -92,17 +93,33 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
             HttpConnectionParams.setSoTimeout(params, config.getSoTimeout());
             HttpConnectionParams.setSocketBufferSize(params, config.getSocketBufferSize());
 
-            // Create and initialize scheme registry
-            SchemeRegistry schemeRegistry = new SchemeRegistry();
-            schemeRegistry.register(new Scheme("http", config.getPlainFactory(), config.getPort()));
-            schemeRegistry.register(new Scheme("https", config.getSslFactory(), config.getSslPort()));
-
+            SchemeRegistry schemeRegistry = createSchemeRegistry();
             ClientConnectionManager ccm = createClientConnectionManager(params, schemeRegistry);
-
             client = createClient(ccm, params);
         }
 
         return client;
+    }
+
+    /**
+     * Create http params.
+     *
+     * @return http params
+     */
+    protected HttpParams createHttpParams() {
+        return new BasicHttpParams();
+    }
+
+    /**
+     * Create and initialize scheme registry.
+     *
+     * @return the scheme registry
+     */
+    protected SchemeRegistry createSchemeRegistry() {
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", config.getPlainFactory(), config.getPort()));
+        schemeRegistry.register(new Scheme("https", config.getSslFactory(), config.getSslPort()));
+        return schemeRegistry;
     }
 
     /**
