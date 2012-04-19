@@ -41,6 +41,9 @@ public abstract class Configuration<T> {
     private boolean staleCheckingEnabled;
     private int socketBufferSize = 8192;
 
+    private String username;
+    private String password;
+
     public synchronized static <T> Configuration<T> getInstance() {
         if (instance == null)
             return new DefaultConfiguration<T>();
@@ -286,5 +289,21 @@ public abstract class Configuration<T> {
 
     public void setSocketBufferSize(int socketBufferSize) {
         this.socketBufferSize = socketBufferSize;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

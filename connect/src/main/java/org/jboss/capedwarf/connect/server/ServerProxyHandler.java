@@ -3,6 +3,9 @@ package org.jboss.capedwarf.connect.server;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
@@ -11,6 +14,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -35,6 +39,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ServerProxy handler.
@@ -95,7 +100,23 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
 
             SchemeRegistry schemeRegistry = createSchemeRegistry();
             ClientConnectionManager ccm = createClientConnectionManager(params, schemeRegistry);
-            client = createClient(ccm, params);
+            HttpClient tmp = createClient(ccm, params);
+
+            String username = config.getUsername();
+            String password = config.getPassword();
+            if (username != null && password != null) {
+                if (tmp instanceof AbstractHttpClient) {
+                    CredentialsProvider credsProvider = AbstractHttpClient.class.cast(tmp).getCredentialsProvider();
+                    credsProvider.setCredentials(
+                            new AuthScope(config.getHostName(), config.getSslPort()),
+                            new UsernamePasswordCredentials(username, password)
+                    );
+                } else {
+                    Logger.getLogger(getClass().getName()).warning("Cannot set CredentialsProvider on HttpClient: " + tmp);
+                }
+            }
+
+            client = tmp;
         }
 
         return client;
