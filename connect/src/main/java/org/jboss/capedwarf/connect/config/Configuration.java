@@ -44,6 +44,8 @@ public abstract class Configuration<T> {
     private String username;
     private String password;
 
+    private boolean repeatRequest; // in case of GAE server-side
+
     public synchronized static <T> Configuration<T> getInstance() {
         if (instance == null)
             return new DefaultConfiguration<T>();
@@ -305,5 +307,13 @@ public abstract class Configuration<T> {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isRepeatRequest() {
+        return repeatRequest;
+    }
+
+    public void setRepeatRequest(boolean repeatRequest) {
+        this.repeatRequest = repeatRequest;
     }
 }

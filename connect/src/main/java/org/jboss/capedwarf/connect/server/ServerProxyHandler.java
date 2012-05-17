@@ -264,7 +264,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
                 return retVal;
             } catch (Throwable t) {
                 // Lets retry if we're over GAE limit
-                if (result.executionTime > 29 * 1000) {
+                if (config.isRepeatRequest() && result.executionTime > 29 * 1000) {
                     getEnv().log(Constants.TAG_CONNECTION, Level.CONFIG, "Retrying, hit GAE limit: " + (result.executionTime / 1000), null);
                     result = wrapResult(rp.run());
                     if (result.status != 200) {
@@ -277,7 +277,6 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
                         return new ProgressInputStream((InputStream) retVal, fis);
                     }
                     return retVal;
-
                 } else {
                     throw t;
                 }
