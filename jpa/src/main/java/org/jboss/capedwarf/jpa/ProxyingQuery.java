@@ -56,6 +56,9 @@ public class ProxyingQuery extends ProxyingHelper implements Query {
     @SuppressWarnings({"unchecked"})
     public List getResultList() {
         List result = delegate.getResultList();
+        if (result == null)
+            return null;
+
         List list = new ArrayList();
         for (Object entity : result)
             list.add(wrap(entity));

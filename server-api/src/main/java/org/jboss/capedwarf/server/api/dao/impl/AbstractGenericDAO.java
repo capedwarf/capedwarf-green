@@ -68,6 +68,10 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
         return emInjector.getEM();
     }
 
+    protected static boolean isEmpty(Collection c) {
+        return (c == null || c.isEmpty());
+    }
+
     @SuppressWarnings({"unchecked"})
     protected T getSingleResult(Query query) {
         List result = query.getResultList();
@@ -76,25 +80,25 @@ public abstract class AbstractGenericDAO<T extends AbstractEntity> implements Ge
 
     @SuppressWarnings({"unchecked"})
     protected T getSingleResult(Collection result) {
-        return (result.isEmpty()) ? null : (T) result.iterator().next();
+        return (isEmpty(result)) ? null : (T) result.iterator().next();
     }
 
     @SuppressWarnings({"unchecked"})
     protected Long getSingleId(Query query) {
         List result = query.getResultList();
-        return (result.isEmpty()) ? null : ((Number) result.get(0)).longValue();
+        return (isEmpty(result)) ? null : ((Number) result.get(0)).longValue();
     }
 
     @SuppressWarnings({"unchecked"})
     protected String getSingleString(Query query) {
         List result = query.getResultList();
-        return (result.isEmpty()) ? null : (result.get(0)).toString();
+        return (isEmpty(result)) ? null : (result.get(0)).toString();
     }
 
     @SuppressWarnings({"unchecked"})
     protected Long getCount(Query query) {
-        Object result = query.getSingleResult();
-        return ((Number) result).longValue();
+        List result = query.getResultList();
+        return (isEmpty(result)) ? 0L : result.size();
     }
 
     protected boolean idExists(Query query) {
