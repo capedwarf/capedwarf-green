@@ -104,10 +104,6 @@
             <artifactId>appengine-api-1.0-sdk</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-labs</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jpa_3.0_spec</artifactId>
         </dependency>
@@ -117,12 +113,16 @@
         </dependency>
         <dependency>
             <groupId>javax.jdo</groupId>
-            <artifactId>jdo2-api</artifactId>
+            <artifactId>jdo-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jpa</artifactId>
         </dependency>
 
         <dependency>

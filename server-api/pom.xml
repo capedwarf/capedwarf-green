@@ -15,10 +15,10 @@
 
     <build>
         <plugins>
-            <!-- plugin>
+            <plugin>
               <groupId>org.datanucleus</groupId>
               <artifactId>maven-datanucleus-plugin</artifactId>
-              <version>2.0.1</version>
+              <version>3.1.0-m3</version>
               <configuration>
                  <metadataIncludes>org/jboss/capedwarf/server/api/domain/*.class</metadataIncludes>
                  <verbose>true</verbose>
@@ -32,7 +32,7 @@
                     </goals>
                  </execution>
               </executions>
-           </plugin -->
+           </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -73,6 +73,12 @@
             <groupId>org.jboss.capedwarf.green</groupId>
             <artifactId>capedwarf-jpa2</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jpa</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

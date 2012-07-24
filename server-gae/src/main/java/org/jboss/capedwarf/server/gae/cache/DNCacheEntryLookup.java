@@ -32,7 +32,7 @@ import org.jboss.capedwarf.server.api.cache.impl.AbstractCacheEntryLookup;
  */
 public abstract class DNCacheEntryLookup extends AbstractCacheEntryLookup {
     @Override
-    protected <T> T toEntity(Class<T> entryType, Object result) {
+    protected <T> T toEntity(Class<T> entryType, Object oid, Object result) {
         CachedPC cpc = (CachedPC) result;
 
         // Check if we are fully loaded
@@ -43,6 +43,12 @@ public abstract class DNCacheEntryLookup extends AbstractCacheEntryLookup {
         if (countLoadedFileds <= 1)
             return null;
 
-        return entryType.cast(cpc.getPersistableObject());
+        // Create active version of cached object with ObjectProvider connected and same id
+        /*
+        ExecutionContext ec = null;
+        ObjectProvider op = ObjectProviderFactory.newForCachedPC(ec, oid, cpc);
+        return entryType.cast(op.getObject());
+        */
+        return null; // TODO
     }
 }

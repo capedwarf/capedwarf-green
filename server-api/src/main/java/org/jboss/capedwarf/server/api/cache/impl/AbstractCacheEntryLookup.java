@@ -36,6 +36,10 @@ public abstract class AbstractCacheEntryLookup implements CacheEntryLookup {
 
     protected abstract Object toImplementationId(Class<?> entryType, Object id);
 
+    protected <T> T toEntity(Class<T> entryType, Object oid, Object result) {
+        return toEntity(entryType, result);
+    }
+
     protected <T> T toEntity(Class<T> entryType, Object result) {
         return entryType.cast(result);
     }
@@ -52,7 +56,7 @@ public abstract class AbstractCacheEntryLookup implements CacheEntryLookup {
         if (result == null)
             return null;
 
-        return toEntity(entryType, result);
+        return toEntity(entryType, oid, result);
     }
 
     public void setCache(Cache cache) {
