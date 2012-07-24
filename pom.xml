@@ -7,7 +7,7 @@
     </parent>
     <groupId>org.jboss.capedwarf.green</groupId>
     <artifactId>capedwarf-build</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0.Beta15</version>
     <packaging>pom</packaging>
     <name>CapeDwarf Build</name>
     <url>http://www.jboss.org/capedwarf</url>
