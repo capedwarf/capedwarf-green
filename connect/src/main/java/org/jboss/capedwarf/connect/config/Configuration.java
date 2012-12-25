@@ -5,6 +5,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.jboss.capedwarf.common.Constants;
+import org.jboss.capedwarf.connect.retry.RetryStrategy;
 import org.jboss.capedwarf.connect.server.ServerProxyHandler;
 import org.jboss.capedwarf.connect.server.ServerProxyInvocationHandler;
 
@@ -45,6 +46,7 @@ public abstract class Configuration<T> {
     private String password;
 
     private boolean repeatRequest; // in case of GAE server-side
+    private RetryStrategy retryStrategy;
 
     public synchronized static <T> Configuration<T> getInstance() {
         if (instance == null)
@@ -315,5 +317,13 @@ public abstract class Configuration<T> {
 
     public void setRepeatRequest(boolean repeatRequest) {
         this.repeatRequest = repeatRequest;
+    }
+
+    public RetryStrategy getRetryStrategy() {
+        return retryStrategy;
+    }
+
+    public void setRetryStrategy(RetryStrategy retryStrategy) {
+        this.retryStrategy = retryStrategy;
     }
 }

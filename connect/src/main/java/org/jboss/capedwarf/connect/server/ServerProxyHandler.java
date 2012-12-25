@@ -29,11 +29,14 @@ import org.jboss.capedwarf.common.io.ClosedInputStream;
 import org.jboss.capedwarf.common.io.FixedLengthInputStream;
 import org.jboss.capedwarf.common.serialization.*;
 import org.jboss.capedwarf.connect.config.Configuration;
+import org.jboss.capedwarf.connect.retry.RetryContext;
+import org.jboss.capedwarf.connect.retry.RetryStrategy;
 import org.jboss.capedwarf.validation.ValidationHelper;
 
 import javax.validation.constraints.Size;
 import java.io.*;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -46,7 +49,7 @@ import java.util.logging.Logger;
  *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class ServerProxyHandler implements ServerProxyInvocationHandler {
+public class ServerProxyHandler implements ServerProxyInvocationHandler, ResultHandler {
     /**
      * The client
      */
@@ -188,8 +191,8 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
-    protected Object doInvoke(Object proxy, Method method, final Object[] args) throws Throwable {
+    @SuppressWarnings({"UnusedParameters", "unchecked"})
+    protected Object doInvoke(Object proxy, final Method method, final Object[] args) throws Throwable {
         Class<?> declaringClass = method.getDeclaringClass();
         if (declaringClass == Object.class) {
             return null; // only handle ServerProxy methods
@@ -249,34 +252,49 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
                 };
             }
 
-            Result result = wrapResult(rp.run());
-            InputStream content = result.stream;
+            final Result result = wrapResult(rp.run());
             try {
-                if (result.status != 200) {
-                    packResponseError(method, content, result.status);
+                if (result.getStatus() != 200) {
+                    packResponseError(method, result.getStream(), result.getStatus());
                 }
-                FixedLengthInputStream fis = new FixedLengthInputStream(content, result.contentLength);
-                Object retVal;
-                retVal = toValue(method, fis);
-                if (retVal instanceof InputStream) {
-                    return new ProgressInputStream((InputStream) retVal, fis);
-                }
-                return retVal;
-            } catch (Throwable t) {
-                // Lets retry if we're over GAE limit
-                if (config.isRepeatRequest() && result.executionTime > 29 * 1000) {
-                    getEnv().log(Constants.TAG_CONNECTION, Level.CONFIG, "Retrying, hit GAE limit: " + (result.executionTime / 1000), null);
-                    result = wrapResult(rp.run());
-                    if (result.status != 200) {
-                        packResponseError(method, result.stream, result.status);
-                    }
-                    FixedLengthInputStream fis = new FixedLengthInputStream(result.stream, result.contentLength);
-                    Object retVal;
-                    retVal = toValue(method, fis);
-                    if (retVal instanceof InputStream) {
-                        return new ProgressInputStream((InputStream) retVal, fis);
-                    }
-                    return retVal;
+                return toValue(method, result);
+            } catch (final Throwable t) {
+                final RetryStrategy strategy = config.getRetryStrategy();
+                if (strategy != null) {
+                    final RetryContext context = new RetryContext() {
+                        public Throwable cause() {
+                            return t;
+                        }
+
+                        public InvocationHandler invocationHandler() {
+                            return ServerProxyHandler.this;
+                        }
+
+                        public Method method() {
+                            return method;
+                        }
+
+                        public Object[] args() {
+                            return args;
+                        }
+
+                        public HttpClient client() {
+                            return getClient();
+                        }
+
+                        public ResultProducer producer() {
+                            return rp;
+                        }
+
+                        public Result result() {
+                            return result;
+                        }
+
+                        public ResultHandler resultHandler() {
+                            return ServerProxyHandler.this;
+                        }
+                    };
+                    return strategy.retry(context);
                 } else {
                     throw t;
                 }
@@ -294,7 +312,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
      * @param result the result
      * @return modified result
      */
-    protected Result wrapResult(Result result) {
+    public Result wrapResult(Result result) {
         return result;
     }
 
@@ -303,7 +321,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
      *
      * @return the environment
      */
-    protected Environment getEnv() {
+    public Environment getEnv() {
         if (env == null)
             env = EnvironmentFactory.getEnvironment();
 
@@ -413,11 +431,11 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
         try {
             // invoke the post / request
             HttpResponse response = getClient().execute(httppost);
-            result.status = response.getStatusLine().getStatusCode();
+            result.setStatus(response.getStatusLine().getStatusCode());
             Header h = response.getFirstHeader("Content-Length");
             if (h != null)
-                result.contentLength = Long.parseLong(h.getValue());
-            result.stream = response.getEntity().getContent();
+                result.setContentLength(Long.parseLong(h.getValue()));
+            result.setStream(response.getEntity().getContent());
         } finally {
             result.end();
         }
@@ -607,7 +625,7 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
      * @param status the status
      * @throws Throwable for any error
      */
-    protected void packResponseError(Method method, InputStream stream, int status) throws Throwable {
+    public void packResponseError(Method method, InputStream stream, int status) throws Throwable {
         Object value;
         try {
             value = toValue(method, stream);
@@ -615,6 +633,15 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
             throw new RuntimeException("Server error [status: " + status + "] :: ", ex);
         }
         throw new RuntimeException("Server error [status: " + status + "] :: " + value);
+    }
+
+    public Object toValue(Method method, Result result) throws Throwable {
+        FixedLengthInputStream fis = new FixedLengthInputStream(result.getStream(), result.getContentLength());
+        Object retVal = toValue(method, fis);
+        if (retVal instanceof InputStream) {
+            return new ProgressInputStream((InputStream) retVal, fis);
+        }
+        return retVal;
     }
 
     /**
@@ -702,28 +729,5 @@ public class ServerProxyHandler implements ServerProxyInvocationHandler {
         private int directContent = -1;
         private boolean secure;
         private boolean gzip;
-    }
-
-    protected static class Result {
-        private int status;
-        private InputStream stream;
-        private long executionTime;
-        private long contentLength = -1;
-
-        private Result() {
-            executionTime = System.currentTimeMillis();
-        }
-
-        public void end() {
-            executionTime = System.currentTimeMillis() - executionTime;
-        }
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
-    }
-
-    protected interface ResultProducer {
-        Result run() throws Throwable;
     }
 }
