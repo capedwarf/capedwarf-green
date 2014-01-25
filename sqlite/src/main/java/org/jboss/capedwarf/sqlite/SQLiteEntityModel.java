@@ -33,7 +33,7 @@ import java.util.List;
  * @param <T> exact entity type
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-interface SQLiteEntityModel<T> {
+public interface SQLiteEntityModel<T> {
     /**
      * Get table name.
      *

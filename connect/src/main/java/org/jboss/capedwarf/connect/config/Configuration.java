@@ -38,7 +38,7 @@ public abstract class Configuration<T> {
     private String httpEndpoint;
     private String sslEndpoint;
     private int soTimeout = 30 * (int) Constants.SECOND;
-    private boolean expectContinue = true;
+    private boolean expectContinue = false;
     private boolean staleCheckingEnabled;
     private int socketBufferSize = 8192;
 
