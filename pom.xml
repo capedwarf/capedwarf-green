@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>5</version>
+        <version>15</version>
     </parent>
     <groupId>org.jboss.capedwarf.green</groupId>
     <artifactId>capedwarf-build</artifactId>
@@ -32,14 +32,14 @@
         <version.cdi.api>1.0-SP4</version.cdi.api>
         <version.com.google.android>1.5_r4</version.com.google.android>
         <version.com.google.android.maps>3_r3</version.com.google.android.maps>
-        <version.com.google.gae>1.7.0</version.com.google.gae>
-        <version.com.google.gae.api>1.7.0</version.com.google.gae.api>
-        <version.com.google.gae.labs>1.7.0</version.com.google.gae.labs>
-        <version.com.google.guava>11.0.2</version.com.google.guava>
+        <version.com.google.gae>1.9.7</version.com.google.gae>
+        <version.com.google.gae.api>1.9.7</version.com.google.gae.api>
+        <version.com.google.gae.labs>1.9.7</version.com.google.gae.labs>
+        <version.com.google.guava>15.0</version.com.google.guava>
         <version.json>20090211</version.json>
         <version.org.jboss.seam>3.0.0.Final</version.org.jboss.seam>
         <version.org.jboss.logging>3.1.0.GA</version.org.jboss.logging>
-        <version.javassist>3.15.0-GA</version.javassist>
+        <version.javassist>3.18.1-GA</version.javassist>
         <version.slf4j>1.6.1</version.slf4j>
         <version.javax.validation>1.0.0.GA</version.javax.validation>
         <version.javax.servlet>2.5</version.javax.servlet>
@@ -50,11 +50,12 @@
         <version.jcaptcha>1.0-RC6</version.jcaptcha>
         <version.simplecaptcha>1.1.1-GA-Patch01</version.simplecaptcha>
         <version.recaptcha>0.0.7</version.recaptcha>
-        <version.org.datanucleus.core>3.1.0-release</version.org.datanucleus.core>
-        <version.org.datanucleus.jdo>3.0</version.org.datanucleus.jdo>
+        <version.org.datanucleus.core>3.1.3</version.org.datanucleus.core>
+        <version.org.datanucleus.jdo>3.0.1</version.org.datanucleus.jdo>
         <version.org.datanucleus.jpa.spec>1.1.1</version.org.datanucleus.jpa.spec>
         <version.org.datanucleus.jta>1.1.1</version.org.datanucleus.jta>
-        <version.org.infinispan>5.1.4.CR1</version.org.infinispan>
+        <version.org.datanucleus.plugin>3.1.3</version.org.datanucleus.plugin>
+        <version.org.infinispan>6.0.2.Final</version.org.infinispan>
         <version.org.hibernate>4.1.3.Final</version.org.hibernate>
         <version.org.apache.http>4.0.3</version.org.apache.http>
         <version.junit>4.7</version.junit>
@@ -66,36 +67,7 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <debug>true</debug>
-                    <encoding>UTF-8</encoding>
-                    <fork>true</fork>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-9</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-idea-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>

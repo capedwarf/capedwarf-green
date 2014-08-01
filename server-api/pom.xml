@@ -18,7 +18,7 @@
             <plugin>
               <groupId>org.datanucleus</groupId>
               <artifactId>maven-datanucleus-plugin</artifactId>
-              <version>3.1.0-m3</version>
+              <version>${version.org.datanucleus.plugin}</version>
               <configuration>
                  <metadataIncludes>org/jboss/capedwarf/server/api/domain/*.class</metadataIncludes>
                  <verbose>true</verbose>
